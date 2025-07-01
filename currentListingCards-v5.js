@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function() {
                   <div class="current-listing-card-status fw-500">${listing.currentListingStatusLabel || 'Available'}</div>
                   </div>
                   <div class="current-listing-card-body">
-                      
+                      <div class="current-listing-card-status fw-500" style="margin-top:0px;background:blue;">${listing.currentListingStatusLabel || 'Available'}</div>
                       <h5 class="current-listing-card-title center">${listing.streetAddress || 'Address'}, ${listing.City || ''}, ${listing.State || ''}</h5>
                       <p class="current-listing-card-text">${listing.Summary}</p>
                       <p class="current-listing-card-price center fw-500">${formattedPrice}</p>
