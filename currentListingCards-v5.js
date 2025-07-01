@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', function() {
                       <p class="current-listing-card-price center fw-500">${formattedPrice}</p>
                       
                       <div class="listing-popup-button-row" style="justify-content: space-evenly;">
-                          <a href="${listing.ZillowURL || '#'}" target="_blank" class="learn-more-button-zillow-blue">View on Zillow x</a>
+                          <a href="${listing.ZillowURL || '#'}" target="_blank" class="learn-more-button-zillow-blue">View on Zillow x </a>
                           <a href="#wm-popup=/contact-us-popup" class="inquire-button">Inquire</a>
                           </div>
                        </div>
