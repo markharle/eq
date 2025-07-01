@@ -86,13 +86,13 @@ document.addEventListener('DOMContentLoaded', function() {
                   <div class="current-listing-card-status fw-500">${listing.currentListingStatusLabel || 'Available'}</div>
                   </div>
                   <div class="current-listing-card-body">
-                      
+                      <div class="current-listing-card-status fw-500" style="width:100%;background:blue;>${listing.currentListingStatusLabel || 'Available'}</div>
                       <h5 class="current-listing-card-title center">${listing.streetAddress || 'Address'}, ${listing.City || ''}, ${listing.State || ''}</h5>
                       <p class="current-listing-card-text">${listing.Summary}</p>
                       <p class="current-listing-card-price center fw-500">${formattedPrice}</p>
                       
                       <div class="listing-popup-button-row" style="justify-content: space-evenly;">
-                          <a href="${listing.ZillowURL || '#'}" target="_blank" class="learn-more-button-zillow-blue">View on Zillow</a>
+                          <a href="${listing.ZillowURL || '#'}" target="_blank" class="learn-more-button-zillow-blue">View on Zillow x</a>
                           <a href="#wm-popup=/contact-us-popup" class="inquire-button">Inquire</a>
                           </div>
                        </div>
