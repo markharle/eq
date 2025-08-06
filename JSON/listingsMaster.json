@@ -23,7 +23,7 @@
   },
   {
     "Timestamp": "2025-07-04T20:25:38.000Z",
-    "Publish": false,
+    "Publish": true,
     "MLS": "",
     "streetAddress": "440 E Granger Ave.",
     "City": "Des Moines",
