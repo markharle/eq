@@ -1,7 +1,8 @@
 // KPI Tokenizer (Revised for Robustness 02-AUG-2025)
 
 async function fetchAndDisplayTokens() {
-  const url = 'https://script.google.com/macros/s/AKfycbwOWyF6xrdhVAfTzNFF_K_7UzrmUkypkekl6EmnqyEXGjEbsaPOKc18QZ6SsrIl9-5J/exec';
+  // Updated URL to fetch KPI data from the Google Apps Script web app
+  const url = 'https://script.google.com/macros/s/AKfycbwOWyF6xrdhVAfTzNFF_K_7UzrmUkypkekl6EmnqyEXGjEbsaPOKc18QZ6SsrIl9-5J/exec?function=doGetKPI';
   
   // An object to hold our target elements. This makes the code cleaner.
   const elements = {
