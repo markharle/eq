@@ -2,7 +2,7 @@
 
 async function fetchAndDisplayTokens() {
   // Updated URL to fetch KPI data from the Google Apps Script web app
-  // const url = 'https://script.google.com/macros/s/AKfycbzrauZh3iI4ZYGekexd9Z0sO0E1bpL34ohwOAM6TzrrEg-CMBg1oWpGE6SW4vsY-Q0x/exec?function=doGetKPI';
+  const url = 'https://script.google.com/macros/s/AKfycbzrauZh3iI4ZYGekexd9Z0sO0E1bpL34ohwOAM6TzrrEg-CMBg1oWpGE6SW4vsY-Q0x/exec?function=doGetKPI';
   
   // An object to hold our target elements. This makes the code cleaner.
   const elements = {
@@ -82,6 +82,7 @@ document.addEventListener('DOMContentLoaded', fetchAndDisplayTokens);
 
 // If you are using <script defer>, you can just call it directly:
 // fetchAndDisplayTokens();
+
 
 
 
