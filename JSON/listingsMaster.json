@@ -1,5 +1,27 @@
 [
   {
+    "Timestamp": "2025-08-07T14:19:13.000Z",
+    "Publish": true,
+    "MLS": "",
+    "streetAddress": "2717 Des Moines St",
+    "City": "Des Moines",
+    "State": "IA",
+    "Zip": 50315,
+    "County": "Polk",
+    "Neighborhood": "Fairground",
+    "Latitude": 41.5963532,
+    "Longitude": -93.5646938,
+    "Price": 139500,
+    "Status": "Available",
+    "currentListingStatusLabel": "New Listing",
+    "dateSold": "",
+    "imageURL": "https://ap.rdcpix.com/ae2eefa9e2eb632f93362ef4b9aae171l-b1302695381rd-w480_h360.webp",
+    "ZillowURL": "https://www.zillow.com/homedetails/2717-Des-Moines-St-Des-Moines-IA-50317/775262_zpid/",
+    "Summary": "Great value in East Side fairgrounds neighborhood",
+    "priceRange": "Under $150k",
+    "yearSold": ""
+  },
+  {
     "Timestamp": "2025-08-06T13:54:33.000Z",
     "Publish": false,
     "MLS": "",
