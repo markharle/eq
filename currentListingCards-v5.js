@@ -34,7 +34,8 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   
   // Fetch the JSON data   
-  fetch('https://script.google.com/macros/s/AKfycbzaUVXyP2jt1eH7QQUt2pFlRE5b9jJVaqHC3d2TCuIyL58jDocQ5jWrUgd2m9OCEZbG/exec')
+  //fetch('https://script.google.com/macros/s/AKfycbzaUVXyP2jt1eH7QQUt2pFlRE5b9jJVaqHC3d2TCuIyL58jDocQ5jWrUgd2m9OCEZbG/exec')
+  fetch('https://script.google.com/macros/s/AKfycbzrauZh3iI4ZYGekexd9Z0sO0E1bpL34ohwOAM6TzrrEg-CMBg1oWpGE6SW4vsY-Q0x/exec?function=doGetListings')
     .then(response => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
@@ -119,3 +120,4 @@ document.addEventListener('DOMContentLoaded', function() {
       cardDeckOverlay.style.display = 'none';
     });
 });
+
