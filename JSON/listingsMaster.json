@@ -3125,7 +3125,7 @@
   },
   {
     "Timestamp": "",
-    "Publish": false,
+    "Publish": true,
     "MLS": "",
     "streetAddress": "630 Shakespeare Avenue",
     "City": "Stratford",
@@ -8229,7 +8229,7 @@
   },
   {
     "Timestamp": "",
-    "Publish": false,
+    "Publish": true,
     "MLS": "",
     "streetAddress": "312 Arrowhead Drive",
     "City": "Lacona",
@@ -9307,7 +9307,7 @@
   },
   {
     "Timestamp": "",
-    "Publish": false,
+    "Publish": true,
     "MLS": "",
     "streetAddress": "807 S Carroll",
     "City": "Slater",
