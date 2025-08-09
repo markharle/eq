@@ -1,4 +1,4 @@
-<script>
+// Current Listing Cards V2 JS - fetch JSON from GitHub
 document.addEventListener('DOMContentLoaded', function() {
   // Get the card deck container and overlay
   const cardDeckContainer = document.getElementById('listing-card-deck');
@@ -121,6 +121,6 @@ document.addEventListener('DOMContentLoaded', function() {
       cardDeckOverlay.style.display = 'none';
     });
 });
-</script>
+
 
  
