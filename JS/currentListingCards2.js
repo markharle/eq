@@ -1,21 +1,3 @@
-<style>
-.current-listing-card-image {
-    display:flex;
-    justify-content:center;
-}
-.current-listing-card-status {
-    margin-top: 0px;
-    background: #f48132;
-    color: #fff;
-    width: auto;
-    margin-left: 0px;
-    margin-left: 0;
-    margin-top: 0;
-    border: none;
-    padding: 0px 1rem;
-}
-</style>
-
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   // Get the card deck container and overlay
