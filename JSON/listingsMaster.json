@@ -12,7 +12,7 @@
     "Latitude": 41.5963532,
     "Longitude": -93.5646938,
     "Price": 139500,
-    "Status": "Available",
+    "Status": "Sold",
     "currentListingStatusLabel": "New Listing",
     "dateSold": "",
     "imageURL": "https://images.squarespace-cdn.com/content/5db1a8c2af0b1a1c3004a035/2ea1c6fc-9252-4aa7-835a-1311a2085136/DSSMstreetview.jpeg?content-type=image%2Fjpeg",
@@ -3125,7 +3125,7 @@
   },
   {
     "Timestamp": "",
-    "Publish": true,
+    "Publish": false,
     "MLS": "",
     "streetAddress": "630 Shakespeare Avenue",
     "City": "Stratford",
@@ -8229,7 +8229,7 @@
   },
   {
     "Timestamp": "",
-    "Publish": true,
+    "Publish": false,
     "MLS": "",
     "streetAddress": "312 Arrowhead Drive",
     "City": "Lacona",
@@ -9307,7 +9307,7 @@
   },
   {
     "Timestamp": "",
-    "Publish": true,
+    "Publish": false,
     "MLS": "",
     "streetAddress": "807 S Carroll",
     "City": "Slater",
