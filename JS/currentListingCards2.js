@@ -1,3 +1,22 @@
+<style>
+.current-listing-card-image {
+    display:flex;
+    justify-content:center;
+}
+.current-listing-card-status {
+    margin-top: 0px;
+    background: #f48132;
+    color: #fff;
+    width: auto;
+    margin-left: 0px;
+    margin-left: 0;
+    margin-top: 0;
+    border: none;
+    padding: 0px 1rem;
+}
+</style>
+
+<script>
 document.addEventListener('DOMContentLoaded', function() {
   // Get the card deck container and overlay
   const cardDeckContainer = document.getElementById('listing-card-deck');
@@ -35,6 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Fetch the JSON data     
   fetch('https://script.google.com/macros/s/AKfycbzrauZh3iI4ZYGekexd9Z0sO0E1bpL34ohwOAM6TzrrEg-CMBg1oWpGE6SW4vsY-Q0x/exec?function=doGetListings')
+  /* fetch('https://script.google.com/macros/s/AKfycbzaUVXyP2jt1eH7QQUt2pFlRE5b9jJVaqHC3d2TCuIyL58jDocQ5jWrUgd2m9OCEZbG/exec') */
     .then(response => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
@@ -86,7 +106,7 @@ document.addEventListener('DOMContentLoaded', function() {
                   <div class="current-listing-card-status fw-500">${listing.currentListingStatusLabel || 'Available'}</div>
                   </div>
                   <div class="current-listing-card-body">
-                      <div class="current-listing-card-status fw-500" style="margin-top:0px;background:blue;">${listing.currentListingStatusLabel || 'Available'}</div>
+                      <!--<div class="current-listing-card-status fw-500" style="margin-top:0px;background:blue;">${listing.currentListingStatusLabel || 'Available'}</div> -->
                       <h5 class="current-listing-card-title center">${listing.streetAddress || 'Address'}, ${listing.City || ''}, ${listing.State || ''}</h5>
                       <p class="current-listing-card-text">${listing.Summary}</p>
                       <p class="current-listing-card-price center fw-500">${formattedPrice}</p>
@@ -119,6 +139,6 @@ document.addEventListener('DOMContentLoaded', function() {
       cardDeckOverlay.style.display = 'none';
     });
 });
+</script>
 
-
-
+ 
