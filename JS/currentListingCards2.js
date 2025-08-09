@@ -1,4 +1,4 @@
-// Current Listing Cards V2 JS - fetch JSON from GitHub
+// Current Listing Cards V2 JS - fetch JSON from GitHub 
 document.addEventListener('DOMContentLoaded', function() {
   // Get the card deck container and overlay
   const cardDeckContainer = document.getElementById('listing-card-deck');
