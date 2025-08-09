@@ -11,14 +11,14 @@
     "Neighborhood": "Fairground",
     "Latitude": 41.5963532,
     "Longitude": -93.5646938,
-    "Price": 139500,
-    "Status": "Available",
-    "currentListingStatusLabel": "New Listing",
+    "Price": 1039500,
+    "Status": "Sold",
+    "currentListingStatusLabel": "Sold",
     "dateSold": "2025-08-08T00:00:00.000Z",
     "imageURL": "https://images.squarespace-cdn.com/content/5db1a8c2af0b1a1c3004a035/2ea1c6fc-9252-4aa7-835a-1311a2085136/DSSMstreetview.jpeg?content-type=image%2Fjpeg",
     "ZillowURL": "https://www.zillow.com/homedetails/2717-Des-Moines-St-Des-Moines-IA-50317/775262_zpid/",
     "Summary": "Great value in East Side fairgrounds neighborhood",
-    "priceRange": "Under $150k",
+    "priceRange": "$1m and up",
     "yearSold": "2025"
   },
   {
