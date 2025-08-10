@@ -1,4 +1,4 @@
-// sold-listings-map.js
+// sold-listings-map2.js
 
 (function() {
     const cssStyles = `
