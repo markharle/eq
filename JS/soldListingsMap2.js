@@ -1,4 +1,4 @@
-// sold-listings-map2.js
+// sold-listings-2.js
 
 (function() {
     const cssStyles = `
@@ -30,7 +30,7 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        #sold-map-spinner p {
+        #sold--spinner p {
             margin-top: 10px;
             font-size: 16px;
             font-weight:500
