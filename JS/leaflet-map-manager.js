@@ -52,8 +52,8 @@
             return;
         }
 
-        // Inject CSS (if not already in Squarespace Custom CSS)
-        injectMapStyles();
+/*         // Inject CSS (if not already in Squarespace Custom CSS)
+        injectMapStyles(); */
 
         const map = L.map(config.mapId, {
             center: config.center,
