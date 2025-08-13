@@ -23,10 +23,10 @@
             dataFilter: (listing) => listing.Publish && listing.Status === 'Sold',
             // Default function to get the value for filtering/styling (e.g., 'priceRange', 'PropertyType')
             getFilterValue: (listing) => listing.priceRange,
-            // Default function to generate popup content  ${listing.imageURL}
+            // Default function to generate popup content  
             getPopupContent: (listing, formattedPrice) => `
                 <a href="${listing.ZillowURL}" target="_blank">
-                    <div class="listing-popup shadow-3" style="background-image: url('https://images.squarespace-cdn.com/content/v1/5db1a8c2af0b1a1c3004a035/825a54e0-867e-4d3e-a3ca-f94c06734def/Kitchen2.jpeg')">  
+                    <div class="listing-popup shadow-3" style="background-image: url('${listing.imageURL}')">  
                         <div class="listing-popup-content">
                             <h4 class="text-white">${listing.streetAddress}, ${listing.City}, ${listing.State}</h4>
                             <div class="listing-details">
