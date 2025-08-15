@@ -231,8 +231,8 @@ function createMarkers(listings, selectedRanges) {
             markers.push(marker);
             
             const popupContent = `
-                <a href="${listing[9]}" target="_blank"><div class="listing-popup shadow-3" style="background-image: url('${listing[8]}');">
-                <div class="listing-popup-content">
+                <a href="${listing[9]}" target="_blank"><div class="listing-popup shadow-3">
+                <div class="listing-popup-content"  style="background-image: url('${listing[8]}');">
                     <h4>${listing[1]}!</h4>
                     <div class="listing-details">
                     <p>Sold in ${listing[13]} for<br>
