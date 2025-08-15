@@ -233,13 +233,13 @@ function createMarkers(listings, selectedRanges) {
             const popupContent = `
                 <a href="${listing[9]}" target="_blank"><div class="listing-popup shadow-3">
                 <div class="listing-popup-content"  style="background-image: url('${listing[8]}');">
-                    <h4>${listing[1]}!!</h4>
+                    <h4>${listing[1]}</h4>
                     <div class="listing-details">
                     <p>Sold in ${listing[13]} for<br>
                     $${Number(listing[4]).toLocaleString()}</p>
                     </div>
                     <div class="listing-popup-button-row">
-                    <a href="${listing[9]}" target="_blank" class="learn-more-button-zillow">View on Zillow</a>
+                    <a href="${listing[9]}" target="_blank" class="learn-more-button-zillow">View on Zillow.com</a>
                     </div>
                 </div>
                 </div></a>
