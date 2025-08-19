@@ -1,0 +1,114 @@
+<!-- Karla font -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+
+<!-- Raleway font -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+    body {
+        padding: 0;
+        margin: 0;
+        overflow-x: hidden;
+    }
+
+    html, body, #map {
+        height: 100%;
+        font-family: 'Karla', Arial, Helvetica, sans-serif;
+/*         font: 10pt "Helvetica Neue", Arial, Helvetica, sans-serif; */
+    }
+
+    /* Start map, pin, and label styles */
+    #price-range-filters {
+        margin-bottom: 0px;
+        margin-top: -144px;
+        margin-top: -267px;
+    }
+
+    .checkbox-row {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 10px;
+        flex-direction: column;
+    }
+
+
+    label {
+        margin-right: .2rem;
+        font-size: 16px;
+        font-family: 'Karla', arial, sans-serif;
+        font-weight: 500;
+    }
+
+    .listing-count {
+        color: #888;
+        margin-left: 5px;
+        margin-right: 0;
+        font-size: 0.8em;
+        margin-top: 3px;
+        padding: 0;
+        background: #f9f9f9;
+    }
+
+    .map-legend-container {
+        padding: 15px;
+        background-color: #f8f8f8;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        margin-top: -220px !important;
+        z-index: 5000;
+        position: absolute;
+        background: transparent;
+        display: flex;
+        width: 100%;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .legend-icons-row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 2rem;
+        margin-top: -26px;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-direction: column;
+        width:70px;
+        border: 1px solid #c1c1c1;
+        border-radius: 4px;
+        padding: 8px 0;
+        background:#f1f2f3;
+        opacity:.7;
+        /* box-shadow: 0.4px 0.4px 5px hsla(0, 0%, 0%, 0.25), 1.5px 1.4px 10px -3.9px hsla(0, 0%, 0%, 0.19); */
+        box-shadow: 0.4px 0.4px 0.5px hsla(0, 0%, 0%, 0.33), 9.6px 8.8px 11.8px -2px hsla(0, 0%, 0%, 0.24), 25.5px 23.6px 31.5px -3px hsla(0, 0%, 0%, 0.19);
+        width: auto;
+        padding: 1rem;
+        font-weight:600;
+    }
+    .legend-item-label {
+        font-size:.8rem;
+        color:#404040;
+        font-weight:600;
+        line-height:16px;
+    }
+    .label-container {
+        font-size: 12px;
+        font-weight: 600;
+        color: #404040;
+        line-height: 16px;
+        margin-top: -14px;
+    }
+
+/* End map, pin, and label styles */
+
+
