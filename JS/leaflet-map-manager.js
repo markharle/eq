@@ -2,7 +2,6 @@
 
 (function() { // Keep the IIFE to encapsulate this script's scope
 
-
     // --- Main Map Initialization Function ---
     // Expose it globally so it can be called from Squarespace Code Blocks
     window.initializeLeafletMap = function(options) {
@@ -52,9 +51,6 @@
             return;
         }
 
-/*         // Inject CSS (if not already in Squarespace Custom CSS)
-        injectMapStyles(); */
-
         const map = L.map(config.mapId, {
             center: config.center,
             zoom: config.zoom,
@@ -64,6 +60,9 @@
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
+
+        // Initialize the sidebar
+        const sidebar = L.control.sidebar({ container: 'sidebar' }).addTo(map); // <-- Add this line
 
         let allMarkers = [];
         let originalData = []; // Store original fetched data
