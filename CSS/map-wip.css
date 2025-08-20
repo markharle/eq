@@ -99,7 +99,28 @@
         line-height: 16px;
         margin-top: -14px;
     }
-
+    .select-all-container {
+    margin: 12px 0;
+    font-family: 'Karla', arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    }
+    
+    .select-all-container button {
+    background: #42A5F5;
+    border: 0;
+    border-radius: 40px;
+    margin: 0 12px;
+    padding: 4px 12px;
+    color: #fff;
+    font-family: 'Karla', arial, sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    }
+    #toggleAll {
+    margin-top: 1rem;
+    width: 100%;
+    }
 /* End map, pin, and label styles */
 
 
