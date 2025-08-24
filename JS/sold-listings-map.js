@@ -98,7 +98,7 @@ class SoldListingsMap {
         }).addTo(this.map);
     }
     
-    addCustomControls() {
+/*     addCustomControls() {
         // Custom re-center control
         const RecenterControl = L.Control.extend({
             onAdd: function(map) {
@@ -123,7 +123,35 @@ class SoldListingsMap {
         
         new RecenterControl({ position: 'topleft' }).addTo(this.map);
     }
+     */
+addCustomControls() {
+    // Create a separate control for the re-center button
+    const RecenterControl = L.Control.extend({
+        onAdd: function(map) {
+            // Create a separate container for our custom control
+            const container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
+            const button = L.DomUtil.create('a', 'leaflet-control-recenter', container);
+            
+            button.innerHTML = '<i class="fa fa-crosshairs" aria-hidden="true"></i>';
+            button.href = '#';
+            button.title = 'Re-center the map';
+            button.setAttribute('role', 'button');
+            button.setAttribute('aria-label', 'Re-center the map to show all visible listings');
+            
+            L.DomEvent.on(button, 'click', (e) => {
+                L.DomEvent.stopPropagation(e);
+                L.DomEvent.preventDefault(e);
+                this.recenterMap();
+            }, this);
+            
+            return container;
+        }.bind(this)
+    });
     
+    // Add the custom control below the zoom control
+    new RecenterControl({ position: 'topleft' }).addTo(this.map);
+}
+
     setupEventListeners() {
         // Filter checkboxes
         const checkboxes = document.querySelectorAll('input[name="soldPriceRange"]');
