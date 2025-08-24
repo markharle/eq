@@ -4940,20 +4940,18 @@ align-content: center;
 }
 
 .leaflet-popup-content { margin:0!important;}
-.leaflet-popup-content p {margin: 0 1rem!important;}
+.leaflet-popup-content p {
+    margin: 0 1rem!important;
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.25rem;
+    font-family: 'Karla', arial, helvetica, sans-serif;
+    text-shadow: 2px 2px 2px #000;
+}
 
 .leaflet-popup-content-wrapper {
     border-radius: 0!important;;
     padding: 0 0 1rem 0 !important;
-}
-.leaflet-container a.leaflet-popup-close-button {
-    position: absolute;
-    top: 0;
-    right: 0;
-    height: 24px;
-    font-size: 3rem!important;
-    color: #fff!important;
-    width:auto!important;
 }
 
 
@@ -5025,9 +5023,9 @@ border-top: 8px solid #ccc; // Color of the triangle */
         border: 1px solid #fdeadc;
     }
 
-    // Updated selector for active pill */
+   /* Updated selector for active pill */
     .radio-pill input:checked {
-        // Apply styles to the parent .radio-pill when the input is checked */
+        /* Apply styles to the parent .radio-pill when the input is checked */
         background-color: #000 !important; // Active button background */
     }
 
@@ -5598,15 +5596,66 @@ border-top: 8px solid #ccc; // Color of the triangle */
     }
     .leaflet-touch .leaflet-bar a {color: #000 !important;}
     .leaflet-touch .leaflet-bar a:hover {color: #f48132 !important;}
-    .leaflet-container a.leaflet-popup-close-button {
+    
+/*     .leaflet-container a.leaflet-popup-close-button {
     background: #124e66!important;
     padding: 4px 8px!important;
     font-weight:600!important;
     border-radius: 4px;
     opacity:.8;
     font-size: 15px !important;
-    }
+    } */
+
+/* .leaflet-container a.leaflet-popup-close-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 24px;
+    font-size: 3rem!important;
+    color: #fff!important;
+    width:auto!important;
+} */
+
+/* .leaflet-container a.leaflet-popup-close-button {
+    border-radius: 50%;
+    background: #124e66 !important;
+    padding: 8px !important;
+    font-weight: 600 !important;
+    opacity:.8;
+    font-size: 35px !important;
+    height: 40px !important;
+    width:40px!important;
+    top: -20px !important;
+    right: -20px !important;
+    font-size: 3rem!important;
+    color: #fff!important;
+    width:auto!important;
+} */
+.leaflet-container a.leaflet-popup-close-button {
+    border-radius: 0;
+    background: transparent !important;
+    padding: 4px 4px !important;
+    /* font-weight: 600 !important; */
+    /* opacity: .8; */
+    font-size: 35px !important;
+    height: 40px !important;
+    width: 40px !important;
+    /* top: -20px !important; */
+    /* right: -20px !important; */
+    font-size: 2rem !important;
+    font-weight:800;
+    color: #fff !important;
+    /* width: auto !important; */
+    text-shadow: 1px 1px 1px #000;
+}
     
+.leaflet-container a.leaflet-popup-close-button:hover {
+    color: #ccc !important;
+    text-shadow: 1px 1px 1px #000;
+}
+  
+
+
     .map-legend-item {
     font-weight: 400;
     font-family: 'Karla', serif;
@@ -5779,13 +5828,12 @@ label {
     align-items: center;
     gap: 10px;
     flex-direction: column;
-    width:70px;
-    border: 1px solid #c1c1c1;
+    width:80px;
+    border: 1px solid #f1f1f1;
     border-radius: 4px;
     padding: 8px 0;
     background:#f1f2f3;
     opacity:.9;
-    /* box-shadow: 0.4px 0.4px 5px hsla(0, 0%, 0%, 0.25), 1.5px 1.4px 10px -3.9px hsla(0, 0%, 0%, 0.19); */
     box-shadow: 0.4px 0.4px 0.5px hsla(0, 0%, 0%, 0.33), 9.6px 8.8px 11.8px -2px hsla(0, 0%, 0%, 0.24), 25.5px 23.6px 31.5px -3px hsla(0, 0%, 0%, 0.19)
 }
 .legend-item-label {
@@ -5968,10 +6016,12 @@ label {
         gap: 15px;
     }
     .legend-item {
-        display: flex;
-        align-items: center;
-        font-size: 0.9em;
-        color: #333;
+    display: flex;
+    align-items: center;
+    font-size: 0.8em;
+    color: #333;
+    font-weight: 600;
+    line-height: 1.2em;
     }
     .legend-item img {
         width: 24px; /* Match icon size */
@@ -5980,3 +6030,165 @@ label {
     }
 
 /* End BInd AI Updates (12-AUG-2025) */
+
+/* Start Sold Map Listing Page Updates (15-AUG-2025) */
+.map-listing-popup {
+    width: 100%;
+    max-height: 250px;
+    position: relative;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+    border-radius:4px;
+}
+map.listing-popup h4 {
+    margin: 0 0 1rem 0;
+    font-size: 1.65rem;
+    line-height: 1.75rem;
+    text-align: center;
+    }
+    
+map.listing-popup::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    transition: background 0.3s ease;
+    }
+    
+map.listing-popup:hover::before {
+    background: rgba(0, 0, 0, 0.6);
+    }
+
+
+.map-listing-popup-content {
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 2rem 1rem;
+    box-sizing: border-box;
+    color: #ffffff;
+    font-family: 'Karla', arial, sans-serif;
+    padding: 15px;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.8) 100%);
+}
+
+.map-listing-popup-content-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.15);
+    z-index: auto;
+}
+
+.map-listing-popup-content h4 {
+    font-size:1.25rem;
+    line-height:1.5rem;
+    font-family: 'Karla' , arial, serif!important;
+    text-shadow: 2px 2px 2px #000;
+}
+.map-listing-details {
+    text-align: center;
+}
+map.listing-details p {
+    margin: 1rem !important;
+    font-size: 20px;
+    line-height: 26px;
+    font-weight: 400;
+    margin-bottom: 10px;
+    font-size: 0.9em;
+    line-height: 24px;
+    text-shadow: 2px 2px 2px #000;
+}
+
+
+.map-listing-popup-button-container {
+    text-align: center;
+    margin-top: 15px;
+}
+.map-listing-popup-button-container button {
+    padding: 4px!important;
+    margin: 0 5px;
+    width: 90px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-family: 'Karla' , arial, serif!important;
+    text-transform: uppercase;
+    opacity:.75;
+    font-weight: 600;
+    transition: background-color 0.2s ease;
+}
+.map-listing-popup-button-container button:first-of-type { /* Select All */
+    background-color: #007BFF; /* nice blue color */
+    color: white;
+}
+.map-listing-popup-button-container button:first-of-type:hover {
+    background-color: #0056b3; /* darker blue on hover */
+}
+.map-listing-popup-button-container button:last-of-type { /* Clear All */
+    background-color: #28A745; /* fresh green color */
+    color: white;
+}
+.map-listing-popup-button-container button:last-of-type:hover {
+    background-color: #218838; /* darker green on hover */
+}
+
+
+
+
+    
+.map-listing-popup-button-row {
+    display: flex;
+    justify-content: space-evenly;
+    display:flex; justify-content: space-between;padding:10px;
+    text-align: center;
+    text-align: center;
+    margin-top: 15px;
+
+}
+
+.map-learn-more-button-zillow {
+    display: block;
+    text-align: center;
+    padding: 5px;
+    text-decoration: none;
+    font-family: 'Karla' , arial, serif;
+    font-weight:700;
+    font-size: 16px;
+    text-transform:uppercase;
+}
+
+
+.map-learn-more-button-zillow:after{
+    content: url('https://images.squarespace-cdn.com/content/5db1a8c2af0b1a1c3004a035/2fc6efdf-b151-43e8-a07e-c12ffe756a27/zillow-338cc9-16.png'); 
+    display:inline-block;
+    padding-right:3px;
+    padding-left:8px;
+    height: auto;
+    vertical-align: middle;
+}
+
+.map-learn-more-button-zillow a {text-decoration:none!important;}
+
+.map-learn-more-button-zillow a:hover{
+    color:#f48132!important;
+    text-decoration: none!important;
+}
+
+.map-learn-more-button-zillow:hover:after{
+    color:#f48132;
+    content: url('https://images.squarespace-cdn.com/content/5db1a8c2af0b1a1c3004a035/431bcc8b-4d17-4a62-b91c-f8c270801283/zillow-f48132-16.png'); 
+}
+
+
+
+/* End  Sold Map Listing Page Updates )15-SUG-2025) */
