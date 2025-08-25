@@ -11,7 +11,7 @@ const SoldListingsMapConfig = {
     defaultCenter: [41.661315, -93.737999],
     defaultZoom: 13,
     scrollWheelZoom: false,
-    mapPadding: 24
+    mapPadding: 24,
     
     // Tile layer settings
     tileLayer: {
