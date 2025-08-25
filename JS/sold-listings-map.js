@@ -74,7 +74,8 @@ class SoldListingsMap {
         this.map = L.map(this.config.mapId, {
             center: this.config.defaultCenter,
             zoom: this.config.defaultZoom,
-            zoomControl: false
+            zoomControl: false,
+            scrollWheelZoom: this.config.scrollWheelZoom  
         });
         
         // Add tile layer
