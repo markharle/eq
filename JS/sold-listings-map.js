@@ -9,8 +9,9 @@ const SoldListingsMapConfig = {
     mapId: 'map-eq',
     jsonUrl: 'https://cdn.jsdelivr.net/gh/markharle/eq@b100aa62b847aa6135f5e224120478b56d7447a6/JSON/listingsMaster.json',
     defaultCenter: [41.661315, -93.737999],
-    defaultZoom: 11,
-    mapPadding: 24,
+    defaultZoom: 13,
+    scrollWheelZoom: false,
+    mapPadding: 24
     
     // Tile layer settings
     tileLayer: {
