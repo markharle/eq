@@ -59,9 +59,10 @@
                 iconSize: [24, 36], // width, height
                 iconAnchor: [12, 36], // point of the icon which will correspond to marker's location
                 popupAnchor: [0, -36], // point from which the popup should open relative to the iconAnchor
-                className: 'leaflet-marker-icon' // Ensures default styling is applied
+                className: 'leaflet-marker-icon map-pin-shadow' // Add the drop shadow class here
             });
         }
+
 
         // --- MAP INITIALIZATION & LOGIC ---
 
