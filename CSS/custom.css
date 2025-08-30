@@ -5342,14 +5342,14 @@ border-top: 8px solid #ccc; // Color of the triangle */
     top: 3px;
     position: relative;
     }
-    .select-all-container {
+/*     .select-all-container {
     margin: 12px 0;
     font-family: 'Karla', arial, sans-serif;
     display: flex;
     justify-content: center;
-    }
+    } */
     
-    .select-all-container button {
+/*     .select-all-container button {
     background: #42A5F5;
     border: 0;
     border-radius: 40px;
@@ -5359,7 +5359,7 @@ border-top: 8px solid #ccc; // Color of the triangle */
     font-family: 'Karla', arial, sans-serif;
     font-size: 12px;
     text-transform: uppercase;
-    }
+    } */
     #toggleAll {
     margin-top: 1rem;
     width: 100%;
@@ -5968,11 +5968,11 @@ label {
         margin-right: 5px;
         transform: scale(1.1);
     }
-    .select-all-container {
+/*     .select-all-container {
         text-align: center;
         margin-top: 15px;
-    }
-    .select-all-container button {
+    } */
+/*     .select-all-container button {
         padding: 4px 12px!important;
         margin: 0 5px;
         border: none;
@@ -5980,21 +5980,21 @@ label {
         cursor: pointer;
         font-size: 0.9em;
         transition: background-color 0.2s ease;
-    }
-    .select-all-container button:first-of-type { /* Select All */
-        background-color: #28a745; /* Green */
+    } */
+/*     .select-all-container button:first-of-type {
+        background-color: #28a745;
         color: white;
-    }
-    .select-all-container button:first-of-type:hover {
+    } */
+/*     .select-all-container button:first-of-type:hover {
         background-color: #218838;
-    }
-    .select-all-container button:last-of-type { /* Clear All */
-        background-color: #dc3545; /* Red */
+    } */
+/*     .select-all-container button:last-of-type { 
+        background-color: #dc3545; 
         color: white;
-    }
-    .select-all-container button:last-of-type:hover {
+    } */
+/*     .select-all-container button:last-of-type:hover {
         background-color: #c82333;
-    }
+    } */
     /* Legend styles */
     .map-legend-container {
         margin-top: 0px!important;
@@ -6195,7 +6195,7 @@ map.listing-details p {
 
 /* Start leaflet-sidebar map updates (24-AUG-2025)
 /* Custom map controls styling */
-.leaflet-control-recenter {
+/* .leaflet-control-recenter {
     background: white;
     width: 30px;
     height: 30px;
@@ -6214,6 +6214,50 @@ map.listing-details p {
 
 .leaflet-control-recenter:last-child {
     border-bottom: none;
+} */
+/* Custom re-center control styling */
+.leaflet-left {
+    left: 50px;
+}
+.leaflet-control-custom {
+    margin-top: 10px !important; /* Add space between zoom and recenter controls */
+}
+
+.leaflet-control-recenter {
+    background: white;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: #333;
+    border-radius: 2px;
+}
+
+.leaflet-control-recenter:hover {
+    background: #f4f4f4;
+    color: #333;
+    text-decoration: none;
+}
+
+.leaflet-control-recenter:focus {
+    outline: 2px solid #0078ff;
+    outline-offset: 2px;
+}
+
+/* Ensure zoom controls have proper z-index relative to sidebar */
+.leaflet-control-zoom {
+    z-index: 1000 !important;
+}
+
+.leaflet-control-custom {
+    z-index: 1000 !important;
+}
+
+/* Ensure sidebar doesn't overlap map controls */
+.sidebar {
+    z-index: 999 !important;
 }
 
 /* Spinner styles */
@@ -6259,13 +6303,16 @@ map.listing-details p {
     cursor: pointer;
 }
 
-.select-all-container {
+/* .select-all-container {
     margin-top: 15px;
-}
+} */
 
-.select-all-container button {
+/* .select-all-container button {
     margin-right: 10px;
     padding: 5px 10px;
     cursor: pointer;
-}
-/* End leaflet-sidebar map updates (24-AUG-2025)
+} */
+
+/* End leaflet-sidebar map updates (24-AUG-2025) */
+
+
