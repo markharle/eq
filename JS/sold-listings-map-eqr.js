@@ -1,4 +1,4 @@
-// sold-listings-map-eqr.js
+// sold-listings-map-eqr.js - Version 1
 (function() {
     // Declare sidebar variable at a higher scope so it's accessible to closeSidebar
     let sidebar;
