@@ -3235,7 +3235,7 @@
   },
   {
     "Timestamp": "",
-    "Publish": false,
+    "Publish": true,
     "MLS": "",
     "streetAddress": "1340 Meadowlark Road",
     "City": "Boone",
