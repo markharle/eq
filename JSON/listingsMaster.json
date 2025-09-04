@@ -3081,7 +3081,7 @@
   },
   {
     "Timestamp": "",
-    "Publish": false,
+    "Publish": true,
     "MLS": "",
     "streetAddress": "630 Shakespeare Avenue",
     "City": "Stratford",
@@ -4049,7 +4049,7 @@
   },
   {
     "Timestamp": "",
-    "Publish": false,
+    "Publish": true,
     "MLS": "",
     "streetAddress": "309 S Main Street",
     "City": "Baxter",
@@ -5633,7 +5633,7 @@
   },
   {
     "Timestamp": "",
-    "Publish": false,
+    "Publish": true,
     "MLS": "",
     "streetAddress": "807 S Carroll Street",
     "City": "Slater",
@@ -6425,7 +6425,7 @@
   },
   {
     "Timestamp": "",
-    "Publish": false,
+    "Publish": true,
     "MLS": "",
     "streetAddress": "3361 178th Court",
     "City": "Norwalk",
@@ -8185,7 +8185,7 @@
   },
   {
     "Timestamp": "",
-    "Publish": false,
+    "Publish": true,
     "MLS": "",
     "streetAddress": "312 Arrowhead Drive",
     "City": "Lacona",
@@ -9263,7 +9263,7 @@
   },
   {
     "Timestamp": "",
-    "Publish": false,
+    "Publish": true,
     "MLS": "",
     "streetAddress": "807 S Carroll",
     "City": "Slater",
@@ -13113,7 +13113,7 @@
   },
   {
     "Timestamp": "",
-    "Publish": false,
+    "Publish": true,
     "MLS": "",
     "streetAddress": "1832 330th Street",
     "City": "Madrid",
@@ -13201,7 +13201,7 @@
   },
   {
     "Timestamp": "",
-    "Publish": false,
+    "Publish": true,
     "MLS": "",
     "streetAddress": "200 S 15th Street",
     "City": "Newton",
