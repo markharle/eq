@@ -1,6 +1,148 @@
 /**
- * @OnlyCurrentDoc 
+ * @OnlyCurrentDoc
  */
+
+// =================================================================
+// --- GITHUB CONFIGURATION ---
+// =================================================================
+
+/**
+ * Configuration for the GitHub repository where JSON files are stored.
+ * The Personal Access Token (PAT) is stored securely in Script Properties, not here.
+ */
+const GITHUB_CONFIG = {
+  owner: 'markharle', // Your GitHub username
+  repo: 'eq',         // Your GitHub repository name
+  branch: 'main',     // The branch to commit to
+  token_property_key: 'GITHUB_PAT', // The key used to store the token in Script Properties
+  listings_path: 'JSON/listingsMaster.json',
+  kpi_path: 'JSON/KPI_Data.json'
+};
+
+
+
+
+/**
+ * A one-time setup function to store your GitHub Personal Access Token (PAT) securely. Run only when changing the PAT
+ * 1. Create a NEW PAT in GitHub with 'repo' scope.
+ * 2. Copy the new token.
+ * 3. Replace 'YOUR_NEW_TOKEN_HERE' with your actual token below.
+ * 4. In the Apps Script editor, select this function and click 'Run'.
+ * 5. Check the Execution Log for a success message.
+ * 6. IMPORTANT: Remove your token from the code after running successfully.
+ */
+function setGitHubToken() {
+  // PASTE YOUR *NEW* TOKEN HERE. DO NOT CHANGE ANY OTHER LINES.
+  const token = 'YOUR_NEW_TOKEN_HERE'; 
+  
+  if (token === 'YOUR_NEW_TOKEN_HERE' || !token) {
+    Logger.log('ERROR: Please replace "YOUR_NEW_TOKEN_HERE" with your actual GitHub PAT and run again.');
+    return;
+  }
+  
+  PropertiesService.getScriptProperties().setProperty(GITHUB_CONFIG.token_property_key, token);
+  
+  Logger.log('SUCCESS: Your GitHub token has been stored securely in Script Properties. You can now delete the token from this function.');
+}
+
+
+
+// =================================================================
+// --- GITHUB API HELPER FUNCTIONS ---
+// =================================================================
+
+/**
+ * Fetches a file from GitHub, returning its content and SHA hash.
+ * The SHA is required for updating the file later.
+ * @param {string} filePath The path to the file in the repository (e.g., 'JSON/data.json').
+ * @returns {object} An object containing { content: string, sha: string } or throws an error.
+ */
+function getGitHubFile(filePath) {
+  const token = PropertiesService.getScriptProperties().getProperty(GITHUB_CONFIG.token_property_key);
+  if (!token) {
+    throw new Error('GitHub token not found in Script Properties. Please run setGitHubToken().');
+  }
+
+  const url = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${filePath}?ref=${GITHUB_CONFIG.branch}`;
+  
+  const options = {
+    method: 'get',
+    headers: {
+      'Authorization': `token ${token}`,
+      'Accept': 'application/vnd.github.v3+json'
+    },
+    muteHttpExceptions: true
+  };
+
+  const response = UrlFetchApp.fetch(url, options);
+  const responseCode = response.getResponseCode();
+  const responseBody = response.getContentText();
+
+  if (responseCode === 200) {
+    const fileData = JSON.parse(responseBody);
+    // Content is returned Base64 encoded, so we need to decode it.
+    const content = Utilities.newBlob(Utilities.base64Decode(fileData.content, Utilities.Charset.UTF_8)).getDataAsString();
+    return {
+      content: content,
+      sha: fileData.sha
+    };
+  } else if (responseCode === 404) {
+    // File doesn't exist yet, return null sha. This allows creating a new file.
+    Logger.log(`File not found at ${filePath}. A new file will be created on update.`);
+    return { content: null, sha: null };
+  } else {
+    throw new Error(`Failed to get GitHub file '${filePath}'. Status: ${responseCode}. Response: ${responseBody}`);
+  }
+}
+
+/**
+ * Creates or updates a file in a GitHub repository.
+ * @param {string} filePath The path to the file in the repository.
+ * @param {string} newContent The new content for the file.
+ * @param {string} commitMessage A message for the commit.
+ * @param {string|null} sha The SHA hash of the existing file. If null, a new file will be created.
+ */
+function updateGitHubFile(filePath, newContent, commitMessage, sha) {
+  const token = PropertiesService.getScriptProperties().getProperty(GITHUB_CONFIG.token_property_key);
+  if (!token) {
+    throw new Error('GitHub token not found in Script Properties. Please run setGitHubToken().');
+  }
+
+  const url = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${filePath}`;
+  
+  const payload = {
+    message: commitMessage,
+    content: Utilities.base64Encode(newContent, Utilities.Charset.UTF_8),
+    branch: GITHUB_CONFIG.branch
+  };
+
+  // If sha is provided, it means we are updating an existing file.
+  if (sha) {
+    payload.sha = sha;
+  }
+
+  const options = {
+    method: 'put',
+    headers: {
+      'Authorization': `token ${token}`,
+      'Accept': 'application/vnd.github.v3+json'
+    },
+    contentType: 'application/json',
+    payload: JSON.stringify(payload),
+    muteHttpExceptions: true
+  };
+
+  const response = UrlFetchApp.fetch(url, options);
+  const responseCode = response.getResponseCode();
+  const responseBody = response.getContentText();
+
+  if (responseCode !== 200 && responseCode !== 201) { // 201 for created, 200 for updated
+    throw new Error(`Failed to update GitHub file '${filePath}'. Status: ${responseCode}. Response: ${responseBody}`);
+  }
+  
+  Logger.log(`Successfully committed '${commitMessage}' to '${filePath}' in GitHub.`);
+}
+
 
 // =================================================================
 // --- SCRIPT CONFIGURATION --- 
@@ -365,15 +507,12 @@ function showTechnicalDocumentationSidebar() {
 
 // --- START Publish Listing Updates ---
 /**
- * This functions (a) publishes listings (from 'Listings' tab) and (b) updates KPI data (from 'KPI Data' tab). The publish process updates two Google Drive-hosted JSON files that are consumed by eq.com javascript. The function begins with a confirmation dialog, and proceeds if the user clicks 'Yes'
- * Before publishing, it uses the Google Maps Geocoding API to find any missing Latitude and Longitude values. The function populates the Google Sheet with these longitude and latitude values before updating the JSON file.
- * UPDATED to swap headers only AFTER the user confirms the publish action. 
+ * [REFACTORED]
+ * This function publishes listings and KPI data to JSON files in a GitHub repository.
+ * It geocodes missing lat/lon values, then commits the updated JSON to GitHub.
  */
-
-
 function publishListingsToJSON() {
   try {
-    // --- The original publishing logic starts here ---
     var ui = SpreadsheetApp.getUi();
     const message = 
       'Before we make your updates live, take a moment to review everything:\n\n' +
@@ -386,14 +525,11 @@ function publishListingsToJSON() {
 
     if (response !== ui.Button.YES) {
       SpreadsheetApp.getActiveSpreadsheet().toast('Publication cancelled.', 'Status', 5);
-      // Since the user cancelled, we exit BEFORE changing any headers.
       return; 
     }
 
-    // --- MOVED HERE: Set the required TECHNICAL headers for publishing ---
-    // This code now runs only after the user clicks "Yes".
     setTechnicalHeaders();
-    SpreadsheetApp.flush(); // Ensure headers are written before proceeding
+    SpreadsheetApp.flush(); 
 
     var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
     var listingsSheet = spreadsheet.getSheetByName('Listings');
@@ -416,18 +552,15 @@ function publishListingsToJSON() {
       return;
     }
 
-    // --- Geocoding and the rest of the publish logic remains unchanged ---
     var API_KEY = "AIzaSyBzkfNcFjqDH7nQsiVoLViVZYEmKyc-AJY";
     var STREET_COL = 3, CITY_COL = 4, STATE_COL = 5, ZIP_COL = 6, LAT_COL = 9, LON_COL = 10;
     var geocodingPerformed = false;
-    var geocodingCount = 0;
 
     for (var i = 1; i < data.length; i++) {
       var row = data[i];
       if (!row[LAT_COL] || !row[LON_COL]) {
         var streetAddress = row[STREET_COL];
         if (streetAddress) {
-          geocodingCount++;
           var fullAddress = streetAddress + ', ' + row[CITY_COL] + ', ' + row[STATE_COL] + ' ' + row[ZIP_COL];
           var url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + encodeURIComponent(fullAddress) + '&key=' + API_KEY;
           try {
@@ -463,9 +596,15 @@ function publishListingsToJSON() {
     });
     
     var jsonString = JSON.stringify(processedData, null, 2);
-    var listingsFileId = '1vF2LFXlbOUp7rNkLw2iyBFxGhlPii0Ih'; 
-    var listingsFile = DriveApp.getFileById(listingsFileId);
-    listingsFile.setContent(jsonString);
+    
+    // --- GITHUB UPDATE FOR LISTINGS ---
+    const listingsFileInfo = getGitHubFile(GITHUB_CONFIG.listings_path);
+    updateGitHubFile(
+      GITHUB_CONFIG.listings_path, 
+      jsonString, 
+      `Update listings data - ${new Date().toISOString()}`, 
+      listingsFileInfo.sha
+    );
     
     var kpiData = {
       "YearsExperience": kpiSheet.getRange('data_YearsExperience').getValue(),
@@ -477,9 +616,15 @@ function publishListingsToJSON() {
     };
     
     var kpiJsonString = JSON.stringify(kpiData, null, 2);
-    var kpiFileId = '1rzcqE0piWFQZMQV5a7t7QCvA7KFCq-aO'; 
-    var kpiFile = DriveApp.getFileById(kpiFileId);
-    kpiFile.setContent(kpiJsonString);
+
+    // --- GITHUB UPDATE FOR KPI DATA ---
+    const kpiFileInfo = getGitHubFile(GITHUB_CONFIG.kpi_path);
+    updateGitHubFile(
+      GITHUB_CONFIG.kpi_path,
+      kpiJsonString,
+      `Update KPI data - ${new Date().toISOString()}`,
+      kpiFileInfo.sha
+    );
     
     removeEditHighlighting(); 
     
@@ -487,7 +632,7 @@ function publishListingsToJSON() {
     ui.showModalDialog(closeHtml, 'Closing');
     Utilities.sleep(500);
     
-    ui.alert('Publish Complete', 'Your listing and KPI updates have been published successfully!', ui.ButtonSet.OK);
+    ui.alert('Publish Complete', 'Your listing and KPI updates have been published successfully to GitHub!', ui.ButtonSet.OK);
     
   } catch (e) {
     Logger.log('Error updating JSON files: ' + e.toString());
@@ -496,28 +641,78 @@ function publishListingsToJSON() {
     Utilities.sleep(500);
     SpreadsheetApp.getUi().alert('Error Publishing', 'An error occurred: ' + e.toString(), SpreadsheetApp.getUi().ButtonSet.OK);
   } finally {
-    // This block remains the same. It will always run to ensure
-    // the user-friendly headers are restored after the process is finished.
     setSemanticHeaders();
   }
 }
 
-function doGet() {
-  // Get the KPI JSON file
-  var kpiFileId = '1rzcqE0piWFQZMQV5a7t7QCvA7KFCq-aO'; 
-  var kpiFile;
-  try {
-    kpiFile = DriveApp.getFileById(kpiFileId);
-  } catch (e) {
-    Logger.log('Error accessing KPI file in doGet: ' + e.toString());
-    return ContentService.createTextOutput(JSON.stringify({ error: "Failed to access KPI data file." }))
+
+
+/**
+ * Main entry point for the web app.
+ */
+function doGet(e) {
+  if (e.parameter.function === 'doGetListings') {
+    return doGetListings(); // Call the function for Listings JSON
+  } else if (e.parameter.function === 'doGetKPI') {
+    return doGetKPI(); // Call the function for KPI JSON
+  } else {
+    return ContentService.createTextOutput(JSON.stringify({ error: "Invalid function parameter." }))
       .setMimeType(ContentService.MimeType.JSON);
   }
-  
-  // Return the KPI file contents as text
-  return ContentService.createTextOutput(kpiFile.getBlob().getDataAsString())
-    .setMimeType(ContentService.MimeType.JSON);
 }
+
+/**
+ * Web App endpoint to serve the KPI JSON data from GitHub.
+ */
+function doGetKPI() {
+  const rawUrl = `https://raw.githubusercontent.com/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/${GITHUB_CONFIG.branch}/${GITHUB_CONFIG.kpi_path}`;
+  try {
+    const response = UrlFetchApp.fetch(rawUrl, { muteHttpExceptions: true });
+    const responseCode = response.getResponseCode();
+
+    if (responseCode === 200) {
+      const kpiJsonString = response.getContentText();
+      return ContentService.createTextOutput(kpiJsonString)
+        .setMimeType(ContentService.MimeType.JSON);
+    } else {
+      Logger.log(`Error fetching KPI file for doGetKPI. Status: ${responseCode}. URL: ${rawUrl}`);
+      return ContentService.createTextOutput(JSON.stringify({ error: `Failed to access KPI data file. Status: ${responseCode}` }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+  } catch (e) {
+    Logger.log('Error in doGetKPI fetching from GitHub: ' + e.toString());
+    return ContentService.createTextOutput(JSON.stringify({ error: "An unexpected error occurred while fetching KPI data." }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+/**
+ * Web App endpoint to serve the Listings JSON data from GitHub.
+ */
+function doGetListings() {
+  const rawUrl = `https://raw.githubusercontent.com/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/${GITHUB_CONFIG.branch}/${GITHUB_CONFIG.listings_path}`;
+  try {
+    const response = UrlFetchApp.fetch(rawUrl, { muteHttpExceptions: true });
+    const responseCode = response.getResponseCode();
+
+    if (responseCode === 200) {
+      const listingsJsonString = response.getContentText();
+      return ContentService.createTextOutput(listingsJsonString)
+        .setMimeType(ContentService.MimeType.JSON);
+    } else {
+      Logger.log(`Error fetching Listings file for doGetListings. Status: ${responseCode}. URL: ${rawUrl}`);
+      return ContentService.createTextOutput(JSON.stringify({ error: `Failed to access Listings data file. Status: ${responseCode}` }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+  } catch (e) {
+    Logger.log('Error in doGetListings fetching from GitHub: ' + e.toString());
+    return ContentService.createTextOutput(JSON.stringify({ error: "An unexpected error occurred while fetching Listings data." }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+  
+
 
 // --- START 'Add Listing' Google Form Submission Process ---
 /**
@@ -809,17 +1004,12 @@ function storeInitialHeaderOrder() {
 
 
 /**
- * Reads the import file to get a count, shows a detailed confirmation
- * dialog, and if confirmed, displays a "Processing" message while
-
- * triggering the actual import process.
+ * [REFACTORED]
+ * Reads the import file from GitHub to get a count, shows a detailed confirmation
+ * dialog, and if confirmed, triggers the actual import process.
  */
 function startImportProcess() {
-  // --- CONFIGURATION (needed for the pre-check) ---
-  const jsonFileId = '1vF2LFXlbOUp7rNkLw2iyBFxGhlPii0Ih'; 
   const sheetName = 'Listings';
-  // --- END OF CONFIGURATION ---
-
   const ui = SpreadsheetApp.getUi();
   
   try {
@@ -831,27 +1021,29 @@ function startImportProcess() {
       return;
     }
 
-    // --- NEW: PRE-READ THE FILE TO GET THE COUNT FOR THE DIALOG ---
-    const jsonFile = DriveApp.getFileById(jsonFileId);
-    const jsonString = jsonFile.getBlob().getDataAsString();
+    // --- GITHUB READ FOR LISTINGS COUNT ---
+    const rawUrl = `https://raw.githubusercontent.com/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/${GITHUB_CONFIG.branch}/${GITHUB_CONFIG.listings_path}`;
+    const response = UrlFetchApp.fetch(rawUrl, { muteHttpExceptions: true });
+    if (response.getResponseCode() !== 200) {
+      throw new Error(`Could not fetch listings data from GitHub. URL: ${rawUrl}`);
+    }
+    const jsonString = response.getContentText();
     const data = JSON.parse(jsonString);
+
     if (!Array.isArray(data)) {
       ui.alert('Error', 'The data from the source file is not a valid list.', ui.ButtonSet.OK);
       return;
     }
     const newListingsCount = data.length;
-    // --- END OF PRE-READ ---
 
     const existingListingsCount = Math.max(0, sheet.getLastRow() - 1);
 
     const alertTitle = 'Confirm Import';
-    // --- MODIFIED: The alert message now includes the new item count ---
     const alertMessage = `Your '${sheetName}' tab contains ${existingListingsCount} listings. If you continue, you will replace them with ${newListingsCount} new listings from the website.\n\nAre you sure you want to proceed?`;
     
-    const response = ui.alert(alertTitle, alertMessage, ui.ButtonSet.YES_NO);
+    const alertResponse = ui.alert(alertTitle, alertMessage, ui.ButtonSet.YES_NO);
 
-    if (response == ui.Button.YES) {
-      // User confirmed. Show the "Processing..." dialog.
+    if (alertResponse == ui.Button.YES) {
       const html = HtmlService.createHtmlOutputFromFile('processingDialogImportListings')
         .setWidth(560)
         .setHeight(400);
@@ -870,17 +1062,13 @@ function startImportProcess() {
 // =================================================================
 
 /**
- * Performs the actual data import and validation restoration.
+ * [REFACTORED]
+ * Performs the actual data import from GitHub and validation restoration.
  * This function is called by the 'processingDialogImportListings.html' file.
- * It runs on the server while the user sees the "Processing" message.
  */
 function performTheActualImport() {
-  // --- CONFIGURATION ---
-  const jsonFileId = '1vF2LFXlbOUp7rNkLw2iyBFxGhlPii0Ih'; 
   const sheetName = 'Listings';
   const COLUMNS_WITH_VALIDATION = ['B', 'E', 'F', 'H', 'I', 'L' ,'M' ,'N' ,'P'];
-  // --- END OF CONFIGURATION ---
-
   const ui = SpreadsheetApp.getUi();
 
   try {
@@ -891,7 +1079,6 @@ function performTheActualImport() {
       throw new Error(`Sheet "${sheetName}" not found!`);
     }
     
-    // --- STEP 1: CAPTURE RULE BLUEPRINTS (BUILDERS) ---
     const validationRuleBuilders = {};
     COLUMNS_WITH_VALIDATION.forEach(columnLetter => {
       const originalRule = sheet.getRange(`${columnLetter}2`).getDataValidation();
@@ -900,8 +1087,13 @@ function performTheActualImport() {
       }
     });
     
-    const jsonFile = DriveApp.getFileById(jsonFileId);
-    const jsonString = jsonFile.getBlob().getDataAsString();
+    // --- GITHUB READ FOR LISTINGS IMPORT ---
+    const rawUrl = `https://raw.githubusercontent.com/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/${GITHUB_CONFIG.branch}/${GITHUB_CONFIG.listings_path}`;
+    const response = UrlFetchApp.fetch(rawUrl, { muteHttpExceptions: true });
+    if (response.getResponseCode() !== 200) {
+      throw new Error(`Could not fetch listings data from GitHub for import. URL: ${rawUrl}`);
+    }
+    const jsonString = response.getContentText();
     const data = JSON.parse(jsonString);
 
     if (!Array.isArray(data)) {
@@ -916,18 +1108,15 @@ function performTheActualImport() {
       )
     );
 
-    // Step 2: Clear existing content
     if (sheet.getLastRow() > 1) {
       const rangeToClear = sheet.getRange(2, 1, sheet.getLastRow() - 1, sheet.getLastColumn());
       rangeToClear.clearContent();
     }
 
-    // Step 3: Write new data
     if (values.length > 0) {
       sheet.getRange(2, 1, values.length, values[0].length).setValues(values);
     }
 
-    // --- STEP 4: REBUILD AND APPLY RULES FROM THE SAVED BLUEPRINTS ---
     SpreadsheetApp.flush();
     
     COLUMNS_WITH_VALIDATION.forEach(columnLetter => {
@@ -939,14 +1128,11 @@ function performTheActualImport() {
       }
     });
 
-    // Show the final success message.
     ui.alert('Success!', `Successfully imported ${newListingsCount} items and restored validation rules.`, ui.ButtonSet.OK);
     
-    // Return a value to trigger the withSuccessHandler in the HTML
     return true; 
 
   } catch (e) {
-    // If an error happens, throw it so the withFailureHandler in the HTML can catch it.
     throw new Error(e.message);
   }
 }
@@ -1056,4 +1242,3 @@ function showDocInModal(docUrl) {
   // Display the modal dialog to the user.
   SpreadsheetApp.getUi().showModalDialog(htmlOutput, 'User Documentation');
 }
-
