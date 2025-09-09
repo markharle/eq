@@ -9,8 +9,8 @@
         // --- CONFIGURATION & CONSTANTS ---
         const MAP_ID = 'listings-map-eqr';
         /* const JSON_URL = 'https://cdn.jsdelivr.net/gh/markharle/eq@b100aa62b847aa6135f5e224120478b56d7447a6/JSON/listingsMaster.json'; */
-        /* const JSON_URL = 'https://raw.githubusercontent.com/markharle/eq/refs/heads/main/JSON/listingsMaster.json'; */
-        const JSON_URL = 'https://script.google.com/macros/s/AKfycbzrauZh3iI4ZYGekexd9Z0sO0E1bpL34ohwOAM6TzrrEg-CMBg1oWpGE6SW4vsY-Q0x/exec?function=doGetListings';
+        const JSON_URL = 'https://raw.githubusercontent.com/markharle/eq/refs/heads/main/JSON/listingsMaster.json'; 
+        /*const JSON_URL = 'https://script.google.com/macros/s/AKfycbzrauZh3iI4ZYGekexd9Z0sO0E1bpL34ohwOAM6TzrrEg-CMBg1oWpGE6SW4vsY-Q0x/exec?function=doGetListings'; */
         const SPINNER_ID = 'sold-map-spinner';
         const DEFAULT_CENTER = [41.661315, -93.737999];
         const DEFAULT_ZOOM = 11;
