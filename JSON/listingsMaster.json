@@ -1,5 +1,27 @@
 [
   {
+    "Timestamp": "2025-09-10T20:55:06.000Z",
+    "Publish": true,
+    "MLS": "",
+    "streetAddress": "3025 Dean Avenue",
+    "City": "Des Moines",
+    "State": "IA",
+    "Zip": 50317,
+    "County": "Polk",
+    "Neighborhood": "Fairground",
+    "Latitude": 41.5912098,
+    "Longitude": -93.5570233,
+    "Price": 230000,
+    "Status": "Sold",
+    "currentListingStatusLabel": "Sold",
+    "dateSold": "2025-08-01T00:00:00.000Z",
+    "imageURL": "https://photos.zillowstatic.com/fp/cada03af53d8841e3b88e3fb0b0600e3-cc_ft_1536.webp",
+    "ZillowURL": "https://www.zillow.com/homedetails/3025-Dean-Ave-Des-Moines-IA-50317/775767_zpid/",
+    "Summary": "Updated property right next to the Iowa State Fairgrounds.",
+    "priceRange": "$150k - $249k",
+    "yearSold": ""
+  },
+  {
     "Timestamp": "2025-09-10T17:32:32.000Z",
     "Publish": true,
     "MLS": "",
