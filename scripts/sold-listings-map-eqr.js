@@ -1,4 +1,5 @@
 // sold-listings-map-eqr.js - Version 1
+// Edited 17-SEP-2025 to change release from v1,2.0 to v1.3.0.  REMOVED COMMA IN PATH) //
 (function() {
     // Declare sidebar variable at a higher scope so it's accessible to closeSidebar
     let sidebar;
