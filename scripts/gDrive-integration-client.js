@@ -302,7 +302,7 @@ class DocumentBrowser {
 
   hideLoading() {
     document.getElementById('loading-spinner').style.display = 'none';
-    document.getElementById('document-grid');
+    document.getElementById('document-grid').style.display = 'grid';
     const blurb = document.getElementById('filter-blurb');
     if (blurb) blurb.style.display = 'block';
   }
