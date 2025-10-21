@@ -7,7 +7,7 @@ class DocumentBrowser {
       'technical-documents': '1GmgTkDO7ilriJsgcgGkl6FcKVwvBGgT6',
       'site-admin-documents': '10ekn8q0aFbN3568Ip1PVySKYK_pXzazR',
       'squarespace-procedures': '1RpFUADyFCViFlTRbtJQYrVr3YcYNBrMX',
-      'components': '18rWbm0C-6Vcg9bZ30_-8vkiLgqLOBmRe'
+      'components': '1rGgkOCblVgitGdKLNyLK6xBBgGpah3EF'
     };
     this.folderBlurbs = {
       'all': '<strong>All Folders</strong><br>All documents are shown below. To narrow your search, select a document category from the <strong>Folders</strong> field above or search by keyword.',
@@ -15,7 +15,7 @@ class DocumentBrowser {
       'technical-documents': '<strong>Developer Documents</strong><br>These documents provide details of our APIs, Google Apps Scripts Javascipt, and related technical inforation.',
       'site-admin-documents': '<strong>Site Admin Documents</strong><br>Documents for <strong>Site Administrators</strong> only, including application authorization and configuration guides.',
       'squarespace-procedures': '<strong>Squarespace Procedures</strong><br>Step-by-step guides and procedures for managing content and features on the Squarespace platform.',
-      'components': '<strong>Components</strong><br>Details of the key UI components we use to render content on our website pages.'  
+      'components': '<strong>Components</strong><br>Details of the key UI components we use to render content on our website pages. These document contains both instructions for managing content in the component and technical details for our Site Administrators and Developers.'  
     };
     this.folderIcons = {
       'listings-management': {
@@ -69,11 +69,11 @@ class DocumentBrowser {
               <label for="folder-select" class="file-type">Folders:</label>
               <select id="folder-select" class="folder-select">
                 <option value="all">All Folders</option>
-                <option value="listings-management">Listings Management</option>
-                <option value="squarespace-procedures">Squarespace Procedures</option>
-                <option value="technical-documents">Developer Documents</option>
-                <option value="site-admin-documents">Site Admin Documents</option>
                 <option value="components">Components</option>
+                <option value="technical-documents">Developer Documents</option>
+                <option value="listings-management">Listings Management</option>
+                <option value="site-admin-documents">Site Admin Documents</option>
+                <option value="squarespace-procedures">Squarespace Procedures</option>             
               </select>
             </div>
             
