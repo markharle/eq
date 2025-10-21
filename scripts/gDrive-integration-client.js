@@ -16,6 +16,7 @@ class DocumentBrowser {
       'site-admin-documents': '<strong>Site Admin Documents</strong><br>Documents for <strong>Site Administrators</strong> only, including application authorization and configuration guides.',
       'squarespace-procedures': '<strong>Squarespace Procedures</strong><br>Step-by-step guides and procedures for managing content and features on the Squarespace platform.',
       'components': '<strong>Components</strong><br>Details of the key UI components we use to render content on our website pages.'  
+    };
     this.folderIcons = {
       'listings-management': {
         src: 'https://images.squarespace-cdn.com/content/5db1a8c2af0b1a1c3004a035/1ba44a2d-6743-444e-93f9-a9d26ea9d120/1745674-404040.png?content-type=image%2Fpng',
