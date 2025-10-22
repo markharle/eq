@@ -50,6 +50,11 @@ class DocumentBrowser {
     this.filterType = 'all';
     this.loading = false;
     
+    // NEW: Pagination properties
+    this.currentPage = 1;
+    this.itemsPerPage = options.itemsPerPage || 12; // Default 12 items per page
+    this.maxVisiblePages = 7; // Number of page buttons to show
+    
     this.init();
   }
 
@@ -104,6 +109,7 @@ class DocumentBrowser {
         </div>
         <div id="filter-blurb" class="filter-blurb"></div>
         <div class="document-card-document-grid" id="document-grid"></div>
+        <div class="pagination-container" id="pagination-container" style="display: none;"></div>
         <div class="error-message" id="error-message" style="display: none;">
           <p>Unable to load documents. Please try again later.</p>
         </div>
@@ -122,32 +128,34 @@ class DocumentBrowser {
       } else {
         this.selectedFolders = [value];
       }
+      this.currentPage = 1; // Reset to first page when filtering
       this.filterDocuments();
     });
 
     // MODIFIED: Enhanced search functionality with clear button logic
     const searchInput = document.getElementById('document-search');
-    const clearSearchBtn = document.getElementById('clear-search-btn'); // NEW: Get the clear button
+    const clearSearchBtn = document.getElementById('clear-search-btn');
 
     searchInput.addEventListener('input', (e) => {
       this.searchTerm = e.target.value.toLowerCase();
-      // NEW: Show or hide the clear button based on input value
       clearSearchBtn.style.display = this.searchTerm.length > 0 ? 'block' : 'none';
+      this.currentPage = 1; // Reset to first page when searching
       this.filterDocuments();
     });
 
-    // NEW: Add click event listener for the clear button
     clearSearchBtn.addEventListener('click', () => {
-      searchInput.value = ''; // Clear the input field
-      this.searchTerm = ''; // Clear the search term in our class
-      clearSearchBtn.style.display = 'none'; // Hide the button
-      this.filterDocuments(); // Re-run the filter to update the view
-      searchInput.focus(); // Put focus back on the search input
+      searchInput.value = '';
+      this.searchTerm = '';
+      clearSearchBtn.style.display = 'none';
+      this.currentPage = 1; // Reset to first page when clearing search
+      this.filterDocuments();
+      searchInput.focus();
     });
 
     const filterSelect = document.getElementById('document-filter');
     filterSelect.addEventListener('change', (e) => {
       this.filterType = e.target.value;
+      this.currentPage = 1; // Reset to first page when filtering
       this.filterDocuments();
     });
   }
@@ -191,6 +199,7 @@ class DocumentBrowser {
       this.filteredDocuments = [...this.documents];
       this.renderDocuments();
       this.updateDocumentCount();
+      this.renderPagination();
       
     } catch (error) {
       console.error('Error loading documents:', error);
@@ -223,16 +232,179 @@ class DocumentBrowser {
     });
     this.renderDocuments();
     this.updateDocumentCount();
+    this.renderPagination();
+  }
+
+  // NEW: Get paginated documents
+  getPaginatedDocuments() {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    return this.filteredDocuments.slice(startIndex, endIndex);
+  }
+
+  // NEW: Get total number of pages
+  getTotalPages() {
+    return Math.ceil(this.filteredDocuments.length / this.itemsPerPage);
   }
 
   renderDocuments() {
     const grid = document.getElementById('document-grid');
+    const paginatedDocs = this.getPaginatedDocuments();
+    
     if (this.filteredDocuments.length === 0) {
       grid.innerHTML = `<div class="no-documents"><p>No documents found matching your criteria.</p></div>`;
       return;
     }
-    const cards = this.filteredDocuments.map(doc => this.createDocumentCard(doc)).join('');
+    
+    const cards = paginatedDocs.map(doc => this.createDocumentCard(doc)).join('');
     grid.innerHTML = cards;
+  }
+
+  // NEW: Render pagination controls
+  renderPagination() {
+    const paginationContainer = document.getElementById('pagination-container');
+    const totalPages = this.getTotalPages();
+    
+    if (totalPages <= 1) {
+      paginationContainer.style.display = 'none';
+      return;
+    }
+    
+    paginationContainer.style.display = 'flex';
+    paginationContainer.innerHTML = this.createPaginationHTML(totalPages);
+    this.attachPaginationEventListeners();
+  }
+
+  // NEW: Create pagination HTML
+  createPaginationHTML(totalPages) {
+    let paginationHTML = '<div class="pagination">';
+    
+    // Previous button
+    const prevDisabled = this.currentPage === 1 ? 'disabled' : '';
+    paginationHTML += `
+      <button class="pagination-btn pagination-prev ${prevDisabled}" 
+              data-page="${this.currentPage - 1}" 
+              ${prevDisabled ? 'disabled' : ''}>
+        <span>‹</span>
+      </button>
+    `;
+    
+    // Page numbers
+    const pageNumbers = this.getVisiblePageNumbers(totalPages);
+    
+    pageNumbers.forEach(pageNum => {
+      if (pageNum === '...') {
+        paginationHTML += '<span class="pagination-ellipsis">...</span>';
+      } else {
+        const isActive = pageNum === this.currentPage ? 'active' : '';
+        paginationHTML += `
+          <button class="pagination-btn pagination-page ${isActive}" 
+                  data-page="${pageNum}">
+            ${pageNum}
+          </button>
+        `;
+      }
+    });
+    
+    // Next button
+    const nextDisabled = this.currentPage === totalPages ? 'disabled' : '';
+    paginationHTML += `
+      <button class="pagination-btn pagination-next ${nextDisabled}" 
+              data-page="${this.currentPage + 1}" 
+              ${nextDisabled ? 'disabled' : ''}>
+        <span>›</span>
+      </button>
+    `;
+    
+    paginationHTML += '</div>';
+    
+    // Add page info
+    const startItem = (this.currentPage - 1) * this.itemsPerPage + 1;
+    const endItem = Math.min(this.currentPage * this.itemsPerPage, this.filteredDocuments.length);
+    
+    paginationHTML += `
+      <div class="pagination-info">
+        Showing ${startItem}-${endItem} of ${this.filteredDocuments.length} documents
+      </div>
+    `;
+    
+    return paginationHTML;
+  }
+
+  // NEW: Get visible page numbers with ellipsis logic
+  getVisiblePageNumbers(totalPages) {
+    const current = this.currentPage;
+    const maxVisible = this.maxVisiblePages;
+    const pages = [];
+    
+    if (totalPages <= maxVisible) {
+      // Show all pages if total is less than max visible
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      // Always show first page
+      pages.push(1);
+      
+      if (current > 3) {
+        pages.push('...');
+      }
+      
+      // Show pages around current page
+      const start = Math.max(2, current - 1);
+      const end = Math.min(totalPages - 1, current + 1);
+      
+      for (let i = start; i <= end; i++) {
+        if (!pages.includes(i)) {
+          pages.push(i);
+        }
+      }
+      
+      if (current < totalPages - 2) {
+        pages.push('...');
+      }
+      
+      // Always show last page
+      if (!pages.includes(totalPages)) {
+        pages.push(totalPages);
+      }
+    }
+    
+    return pages;
+  }
+
+  // NEW: Attach event listeners to pagination buttons
+  attachPaginationEventListeners() {
+    const paginationBtns = document.querySelectorAll('.pagination-btn:not(.disabled)');
+    
+    paginationBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const page = parseInt(e.currentTarget.getAttribute('data-page'));
+        if (page && page !== this.currentPage) {
+          this.goToPage(page);
+        }
+      });
+    });
+  }
+
+  // NEW: Go to specific page
+  goToPage(page) {
+    const totalPages = this.getTotalPages();
+    
+    if (page < 1 || page > totalPages) {
+      return;
+    }
+    
+    this.currentPage = page;
+    this.renderDocuments();
+    this.renderPagination();
+    
+    // Scroll to top of document grid
+    const grid = document.getElementById('document-grid');
+    if (grid) {
+      grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   }
 
   getFolderIconHtml(folderKey) {
@@ -289,12 +461,13 @@ class DocumentBrowser {
   updateDocumentCount() {
     const countElement = document.getElementById('count-text');
     const countContainer = document.getElementById('document-count');
-    const count = this.filteredDocuments.length;
-    const total = this.documents.length;
-    if (count === total) {
-      countElement.textContent = `${count} document${count !== 1 ? 's' : ''} found`;
+    const totalFiltered = this.filteredDocuments.length;
+    const totalDocuments = this.documents.length;
+    
+    if (totalFiltered === totalDocuments) {
+      countElement.textContent = `${totalFiltered} document${totalFiltered !== 1 ? 's' : ''} found`;
     } else {
-      countElement.textContent = `${count} of ${total} document${total !== 1 ? 's' : ''} shown`;
+      countElement.textContent = `${totalFiltered} of ${totalDocuments} document${totalDocuments !== 1 ? 's' : ''} shown`;
     }
     countContainer.style.display = 'block';
   }
@@ -302,6 +475,7 @@ class DocumentBrowser {
   showLoading() {
     document.getElementById('loading-spinner').style.display = 'block';
     document.getElementById('document-grid').style.display = 'none';
+    document.getElementById('pagination-container').style.display = 'none';
     document.getElementById('error-message').style.display = 'none';
     const blurb = document.getElementById('filter-blurb');
     if (blurb) blurb.style.display = 'none';
@@ -318,6 +492,7 @@ class DocumentBrowser {
     document.getElementById('error-message').style.display = 'block';
     document.getElementById('document-grid').style.display = 'none';
     document.getElementById('document-count').style.display = 'none';
+    document.getElementById('pagination-container').style.display = 'none';
   }
 
   escapeHtml(text) {
@@ -328,5 +503,7 @@ class DocumentBrowser {
 }
  
 document.addEventListener('DOMContentLoaded', function() {
-  new DocumentBrowser('document-browser-container');
+  new DocumentBrowser('document-browser-container', {
+    itemsPerPage: 12 // You can customize this
+  });
 });
