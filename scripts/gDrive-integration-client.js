@@ -1,6 +1,6 @@
 class DocumentBrowser {
   constructor(containerId, options = {}) {
-    this.container = document.getElementById(containerId);
+    this.container = document.getElementById(containerId); 
     this.apiBaseUrl = 'https://getdrivedocuments-561483368663.us-central1.run.app/';
     this.folders = {
       'listings-management': '1NwP8AIf-SIwZ7Ek9SNeS82OcH0lNWgJe',
