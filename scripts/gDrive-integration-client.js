@@ -504,6 +504,6 @@ class DocumentBrowser {
  
 document.addEventListener('DOMContentLoaded', function() {
   new DocumentBrowser('document-browser-container', {
-    itemsPerPage: 12 // You can customize this
+    // itemsPerPage: 12 // You can customize this
   });
 });
