@@ -52,7 +52,7 @@ class DocumentBrowser {
     
     // NEW: Pagination properties
     this.currentPage = 1;
-    this.itemsPerPage = options.itemsPerPage || 12; // Default 12 items per page
+    this.itemsPerPage = options.itemsPerPage || 20; // Default 20 items per page
     this.maxVisiblePages = 7; // Number of page buttons to show
     
     this.init();
