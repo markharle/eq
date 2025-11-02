@@ -1,6 +1,5 @@
-// sold-listings-map-eqr.js - Version 1
-// Edited 17-SEP-2025 to change release from v1,2.0 to v1.3.0.  REMOVED COMMA IN PATH) //
-(function() {
+// sold-listings-map.js - Unified version for all pages (with optional neighborhood filtering)
+(function(config = {}) {
     // Declare sidebar variable at a higher scope so it's accessible to closeSidebar
     let sidebar;
     
@@ -8,13 +7,12 @@
     document.addEventListener('DOMContentLoaded', function() {
 
         // --- CONFIGURATION & CONSTANTS ---
-        const MAP_ID = 'listings-map-eqr';
-        /* const JSON_URL = 'https://cdn.jsdelivr.net/gh/markharle/eq@b100aa62b847aa6135f5e224120478b56d7447a6/JSON/listingsMaster.json'; */
-        const JSON_URL = 'https://raw.githubusercontent.com/markharle/eq/refs/heads/main/JSON/listingsMaster.json'; 
-        /*const JSON_URL = 'https://script.google.com/macros/s/AKfycbzrauZh3iI4ZYGekexd9Z0sO0E1bpL34ohwOAM6TzrrEg-CMBg1oWpGE6SW4vsY-Q0x/exec?function=doGetListings'; */
-        const SPINNER_ID = 'sold-map-spinner';
-        const DEFAULT_CENTER = [41.661315, -93.737999];
-        const DEFAULT_ZOOM = 11;
+        const MAP_ID = config.mapId || 'listings-map-eqr';
+        const JSON_URL = config.jsonUrl || 'https://raw.githubusercontent.com/markharle/eq/refs/heads/main/JSON/listingsMaster.json';
+        const SPINNER_ID = config.spinnerId || 'sold-map-spinner';
+        const NEIGHBORHOOD_FILTER = config.neighborhood || 'All'; // Default to 'All' for backward compatibility
+        const DEFAULT_CENTER = config.defaultCenter || [41.661315, -93.737999];
+        const DEFAULT_ZOOM = config.defaultZoom || 11;
         const MAP_PADDING = [24, 24];
 
         const ICON_CONFIG = {
@@ -100,9 +98,24 @@
                 if (!response.ok) throw new Error('Network response was not ok.');
                 const allListings = await response.json();
 
-                const soldListings = allListings.filter(listing =>
+                // Apply base filters (published and sold)
+                let soldListings = allListings.filter(listing =>
                     listing.Publish === true && listing.Status === 'Sold'
                 );
+
+                // Apply neighborhood filter if specified (and not 'All')
+                if (NEIGHBORHOOD_FILTER && NEIGHBORHOOD_FILTER !== 'All') {
+                    const originalCount = soldListings.length;
+                    soldListings = soldListings.filter(listing => 
+                        listing.Neighborhood === NEIGHBORHOOD_FILTER
+                    );
+                    
+                    // Log for debugging
+                    console.log(`Filtering by neighborhood: ${NEIGHBORHOOD_FILTER}`);
+                    console.log(`Filtered from ${originalCount} to ${soldListings.length} listings`);
+                } else {
+                    console.log(`Showing all neighborhoods (${soldListings.length} listings total)`);
+                }
 
                 // 2. Initialize Leaflet Map
                 const map = L.map(MAP_ID, {
@@ -275,4 +288,7 @@
         // Run the initialization function
         initializeMap();
     });
-})();
+
+    // Return the config for potential debugging
+    return config;
+})(window.SoldListingsMapConfig);
