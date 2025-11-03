@@ -13,7 +13,7 @@
         const NEIGHBORHOOD_FILTER = config.neighborhood || 'All'; // Default to 'All' for backward compatibility
         const STATUS_FILTER = config.statusFilter || 'Sold'; // NEW: Configurable status filter
         const DEFAULT_CENTER = config.defaultCenter || [41.661315, -93.737999];
-        const DEFAULT_ZOOM = config.defaultZoom || 11;
+        const DEFAULT_ZOOM = config.defaultZoom || 11; // NEW: Configurable default zoom
         const MAP_PADDING = [24, 24];
 
         // --- DOM ELEMENT SELECTORS ---
