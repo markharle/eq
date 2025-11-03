@@ -274,16 +274,7 @@
                     }
                 };
 
-                // 8. Add Custom Controls (Legend and Re-center)
-                // Legend Control
-                const legend = L.control({ position: 'bottomright' });
-                legend.onAdd = function(map) {
-                    const div = L.DomUtil.get('sold-listings-map-legend-container');
-                    div.style.display = 'block';
-                    return div;
-                };
-                legend.addTo(map);
-
+                // 8. Add Custom Controls (Re-center only)
                 // Re-center Control
                 const RecenterControl = L.Control.extend({
                     onAdd: function(map) {
