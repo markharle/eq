@@ -16,16 +16,6 @@
         const DEFAULT_ZOOM = config.defaultZoom || 11;
         const MAP_PADDING = [24, 24];
 
-        const ICON_CONFIG = {
-            'Under $150k': 'https://images.squarespace-cdn.com/content/5db1a8c2af0b1a1c3004a035/89a054d7-d05e-46dd-8cad-7976e8859ea7/1208040-A0E7E5.png',
-            '$150k - $249k': 'https://images.squarespace-cdn.com/content/5db1a8c2af0b1a1c3004a035/6242ece6-b2d8-4aba-9701-bf61cf062ee3/1208040-76D7C4.png',
-            '$250k - $499k': 'https://images.squarespace-cdn.com/content/5db1a8c2af0b1a1c3004a035/e3172350-8018-4d9b-b810-a61640ec9732/1208040-AED581.png',
-            '$500k - $749k': 'https://images.squarespace-cdn.com/content/5db1a8c2af0b1a1c3004a035/dc14b087-873b-4017-9d73-f70573139805/1208040-FFD54F.png',
-            '$750k - $999k': 'https://images.squarespace-cdn.com/content/5db1a8c2af0b1a1c3004a035/85122a0d-6caf-4b33-be07-8a3806cda25e/1208040-F48132.png',
-            '$1m and up': 'https://images.squarespace-cdn.com/content/5db1a8c2af0b1a1c3004a035/c553d3bf-9d91-4cb5-94e8-9579d1bd3011/1208040-7E57C2b.png',
-            'OTHER': 'https://images.squarespace-cdn.com/content/5db1a8c2af0b1a1c3004a035/89a054d7-d05e-46dd-8cad-7976e8859ea7/1208040-A0E7E5.png'
-        };
-
         // --- DOM ELEMENT SELECTORS ---
         const spinner = document.getElementById(SPINNER_ID);
         const filterCheckboxes = document.querySelectorAll('#price-range-filter-container input[name="soldPriceRange"]');
@@ -67,18 +57,54 @@
         }
 
         /**
-         * Creates a Leaflet Icon object for a given price range.
-         * @param {string} priceRange - The price range category.
-         * @returns {L.Icon} - A Leaflet Icon object.
+         * Formats price for display on the pill marker.
+         * @param {number} price - The price to format.
+         * @returns {string} - The shortened price string for display on pin.
          */
-        function getIconForPriceRange(priceRange) {
-            const iconUrl = ICON_CONFIG[priceRange] || ICON_CONFIG['OTHER'];
-            return L.icon({
-                iconUrl: iconUrl,
-                iconSize: [24, 36], // width, height
-                iconAnchor: [12, 36], // point of the icon which will correspond to marker's location
-                popupAnchor: [0, -36], // point from which the popup should open relative to the iconAnchor
-                className: 'leaflet-marker-icon  map-pin-shadow' // drop shadow class  map-pin-shadow
+        function formatPriceForPin(price) {
+            if (typeof price !== 'number' || isNaN(price)) {
+                return 'N/A';
+            }
+            
+            if (price >= 1000000) {
+                // For prices 1M and above, show as millions with 2 decimal places
+                // Round up to nearest 10k
+                const roundedPrice = Math.ceil(price / 10000) * 10000;
+                const millions = roundedPrice / 1000000;
+                return millions.toFixed(2) + 'm';
+            } else {
+                // For prices under 1M, show as thousands, rounded up
+                const thousands = Math.ceil(price / 1000);
+                return thousands + 'k';
+            }
+        }
+
+        /**
+         * Creates a custom pill-style divIcon for displaying price.
+         * @param {number} price - The price to display on the pin.
+         * @returns {L.DivIcon} - A Leaflet DivIcon object.
+         */
+        function createPillIcon(price) {
+            const priceText = formatPriceForPin(price);
+            
+            return L.divIcon({
+                html: `<div style="
+                    background-color: #000;
+                    color: #fff;
+                    font-family: Arial, sans-serif;
+                    font-size: 8px;
+                    padding: 2px 6px;
+                    border-radius: 10px;
+                    white-space: nowrap;
+                    font-weight: bold;
+                    text-align: center;
+                    border: 1px solid #333;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+                ">${priceText}</div>`,
+                className: 'custom-pill-marker',
+                iconSize: [null, null], // Let the content determine the size
+                iconAnchor: [null, null], // Will be centered automatically
+                popupAnchor: [0, -10] // Popup appears above the pill
             });
         }
 
@@ -219,7 +245,7 @@
                 filteredListings.forEach(listing => {
                     if (listing.Latitude && listing.Longitude) {
                         const formattedPrice = formatPrice(listing.Price);
-                        const icon = getIconForPriceRange(listing.priceRange);
+                        const icon = createPillIcon(listing.Price);
 
                         const marker = L.marker([listing.Latitude, listing.Longitude], {
                             icon: icon,
