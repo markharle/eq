@@ -83,14 +83,18 @@
         /**
          * Creates a custom pill-style divIcon for displaying price.
          * @param {number} price - The price to display on the pin.
+         * @param {string} status - The listing status ('Sold', 'Available', etc.).
          * @returns {L.DivIcon} - A Leaflet DivIcon object.
          */
-        function createPillIcon(price) {
+        function createPillIcon(price, status) {
             const priceText = formatPriceForPin(price);
+            
+            // Determine background color based on status
+            const backgroundColor = status === 'Available' ? '#008000' : '#000';
             
             return L.divIcon({
                 html: `<div style="
-                    background-color: #000;
+                    background-color: ${backgroundColor};
                     color: #fff;
                     font-family: Arial, sans-serif;
                     font-size: 8px;
@@ -247,7 +251,7 @@
                 filteredListings.forEach(listing => {
                     if (listing.Latitude && listing.Longitude) {
                         const formattedPrice = formatPrice(listing.Price);
-                        const icon = createPillIcon(listing.Price);
+                        const icon = createPillIcon(listing.Price, listing.Status);
 
                         const marker = L.marker([listing.Latitude, listing.Longitude], {
                             icon: icon,
