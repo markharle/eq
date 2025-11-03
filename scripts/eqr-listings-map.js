@@ -14,6 +14,7 @@
         const STATUS_FILTER = config.statusFilter || 'Sold'; // NEW: Configurable status filter
         const DEFAULT_CENTER = config.defaultCenter || [41.661315, -93.737999];
         const DEFAULT_ZOOM = config.defaultZoom || 11; // NEW: Configurable default zoom
+        const USE_AUTO_BOUNDS = config.useAutoBounds !== false; // NEW: Option to disable auto-fit to bounds
         const MAP_PADDING = [24, 24];
 
         // --- DOM ELEMENT SELECTORS ---
@@ -211,10 +212,11 @@
 
                 console.log(`Status filter: ${STATUS_FILTER}, Total listings: ${filteredListings.length}`);
 
-                // 2. Initialize Leaflet Map
+                // 2. Initialize Leaflet Map with configured zoom and center
                 const map = L.map(MAP_ID, {
                     scrollWheelZoom: false // Good default for embedded maps
-                });
+                }).setView(DEFAULT_CENTER, DEFAULT_ZOOM);
+                
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 }).addTo(map);
@@ -291,10 +293,13 @@
                 // 7. Map Bounds and Centering Logic
                 const updateMapBounds = (hasVisibleMarkers) => {
                     if (hasVisibleMarkers && markersLayer.getLayers().length > 0) {
-                        // Get the bounds of the currently visible markers
-                        const bounds = markersLayer.getBounds();
-                        // Fit the map to the bounds with padding
-                        map.fitBounds(bounds, { padding: MAP_PADDING });
+                        if (USE_AUTO_BOUNDS) {
+                            // Get the bounds of the currently visible markers
+                            const bounds = markersLayer.getBounds();
+                            // Fit the map to the bounds with padding
+                            map.fitBounds(bounds, { padding: MAP_PADDING });
+                        }
+                        // If USE_AUTO_BOUNDS is false, keep the current zoom/center
                     } else {
                         map.setView(DEFAULT_CENTER, DEFAULT_ZOOM);
                     }
@@ -312,7 +317,11 @@
 
                         L.DomEvent.on(container, 'click', (e) => {
                             L.DomEvent.stop(e);
-                            updateMapBounds(markersLayer.getLayers().length > 0);
+                            if (USE_AUTO_BOUNDS && markersLayer.getLayers().length > 0) {
+                                updateMapBounds(true);
+                            } else {
+                                map.setView(DEFAULT_CENTER, DEFAULT_ZOOM);
+                            }
                         });
                         return container;
                     },
