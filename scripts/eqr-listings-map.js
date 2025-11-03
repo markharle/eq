@@ -15,6 +15,7 @@
         const DEFAULT_CENTER = config.defaultCenter || [41.661315, -93.737999];
         const DEFAULT_ZOOM = config.defaultZoom || 11; // NEW: Configurable default zoom
         const USE_AUTO_BOUNDS = config.useAutoBounds !== false; // NEW: Option to disable auto-fit to bounds
+        const MAP_TITLE = config.mapTitle || ''; // NEW: Configurable map title
         const MAP_PADDING = [24, 24];
 
         // --- DOM ELEMENT SELECTORS ---
@@ -24,6 +25,60 @@
         const clearAllBtn = document.getElementById('clear-all-btn');
 
         // --- HELPER FUNCTIONS ---
+
+        /**
+         * Creates and adds a title overlay to the map.
+         * @param {L.Map} map - The Leaflet map instance.
+         */
+        function addMapTitle(map) {
+            if (!MAP_TITLE || MAP_TITLE.trim() === '') {
+                return; // Don't add title if none is specified
+            }
+
+            const MapTitleControl = L.Control.extend({
+                onAdd: function(map) {
+                    const container = L.DomUtil.create('div', 'map-title-control');
+                    const title = L.DomUtil.create('h4', 'map-title', container);
+                    title.innerHTML = MAP_TITLE;
+                    
+                    // Apply styles
+                    container.style.cssText = `
+                        position: absolute;
+                        top: 12px;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        z-index: 1000;
+                        pointer-events: none;
+                        width: auto;
+                        background: none;
+                        border: none;
+                        box-shadow: none;
+                    `;
+                    
+                    title.style.cssText = `
+                        margin: 0;
+                        padding: 8px 16px;
+                        background-color: rgba(255, 255, 255, 0.9);
+                        border: 1px solid #ccc;
+                        border-radius: 4px;
+                        font-family: Arial, sans-serif;
+                        font-size: 16px;
+                        font-weight: bold;
+                        color: #333;
+                        text-align: center;
+                        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                        white-space: nowrap;
+                    `;
+                    
+                    return container;
+                },
+                onRemove: function(map) {
+                    // Cleanup if needed
+                }
+            });
+
+            new MapTitleControl({ position: 'topcenter' }).addTo(map);
+        }
 
         /**
          * Filters listings based on the configured status filter.
@@ -225,10 +280,13 @@
                     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 }).addTo(map);
 
-                // 3. Initialize Sidebar - ASSIGN TO THE HIGHER SCOPE VARIABLE
+                // 3. Add map title (NEW)
+                addMapTitle(map);
+
+                // 4. Initialize Sidebar - ASSIGN TO THE HIGHER SCOPE VARIABLE
                 sidebar = L.control.sidebar('sidebar').addTo(map);
 
-                // 4. Calculate counts and update UI
+                // 5. Calculate counts and update UI
                 const priceRangeCounts = {};
                 filterCheckboxes.forEach(cb => priceRangeCounts[cb.value] = 0);
                 filteredListings.forEach(listing => {
@@ -244,7 +302,7 @@
                     }
                 });
 
-                // 5. Create markers - store all markers in an array for filtering
+                // 6. Create markers - store all markers in an array for filtering
                 const allMarkers = [];
                 const markersLayer = L.featureGroup().addTo(map);
 
@@ -273,7 +331,7 @@
                     }
                 });
 
-                // 6. Filtering Logic
+                // 7. Filtering Logic
                 const updateMarkers = () => {
                     const selectedPriceRanges = Array.from(filterCheckboxes)
                         .filter(cb => cb.checked)
@@ -294,7 +352,7 @@
                     updateMapBounds(visibleMarkers.length > 0);
                 };
 
-                // 7. Map Bounds and Centering Logic
+                // 8. Map Bounds and Centering Logic
                 const updateMapBounds = (hasVisibleMarkers) => {
                     if (hasVisibleMarkers && markersLayer.getLayers().length > 0) {
                         if (USE_AUTO_BOUNDS) {
@@ -309,7 +367,7 @@
                     }
                 };
 
-                // 8. Add Custom Controls (Re-center only)
+                // 9. Add Custom Controls (Re-center only)
                 // Re-center Control
                 const RecenterControl = L.Control.extend({
                     onAdd: function(map) {
@@ -335,7 +393,7 @@
                 });
                 new RecenterControl({ position: 'topleft' }).addTo(map);
 
-                // 9. Attach Event Listeners
+                // 10. Attach Event Listeners
                 filterCheckboxes.forEach(cb => cb.addEventListener('change', updateMarkers));
 
                 selectAllBtn.addEventListener('click', () => {
@@ -348,7 +406,7 @@
                     updateMarkers();
                 });
 
-                // 10. ADD CUSTOM CLOSE BUTTON EVENT LISTENERS
+                // 11. ADD CUSTOM CLOSE BUTTON EVENT LISTENERS
                 const customCloseButtons = document.querySelectorAll('.sidebar-body-close');
                 customCloseButtons.forEach(button => {
                     button.addEventListener('click', function(e) {
