@@ -35,49 +35,41 @@
                 return; // Don't add title if none is specified
             }
 
-            const MapTitleControl = L.Control.extend({
-                onAdd: function(map) {
-                    const container = L.DomUtil.create('div', 'map-title-control');
-                    const title = L.DomUtil.create('h4', 'map-title', container);
-                    title.innerHTML = MAP_TITLE;
-                    
-                    // Apply styles
-                    container.style.cssText = `
-                        position: absolute;
-                        top: 12px;
-                        left: 50%;
-                        transform: translateX(-50%);
-                        z-index: 1000;
-                        pointer-events: none;
-                        width: auto;
-                        background: none;
-                        border: none;
-                        box-shadow: none;
-                    `;
-                    
-                    title.style.cssText = `
-                        margin: 0;
-                        padding: 8px 16px;
-                        background-color: rgba(255, 255, 255, 0.9);
-                        border: 1px solid #ccc;
-                        border-radius: 4px;
-                        font-family: Arial, sans-serif;
-                        font-size: 16px;
-                        font-weight: bold;
-                        color: #333;
-                        text-align: center;
-                        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-                        white-space: nowrap;
-                    `;
-                    
-                    return container;
-                },
-                onRemove: function(map) {
-                    // Cleanup if needed
-                }
-            });
-
-            new MapTitleControl({ position: 'topcenter' }).addTo(map);
+            // Get the map container
+            const mapContainer = map.getContainer();
+            
+            // Create title element
+            const titleContainer = document.createElement('div');
+            titleContainer.className = 'map-title-overlay';
+            titleContainer.style.cssText = `
+                position: absolute;
+                top: 12px;
+                left: 50%;
+                transform: translateX(-50%);
+                z-index: 1000;
+                pointer-events: none;
+            `;
+            
+            const titleElement = document.createElement('h4');
+            titleElement.className = 'map-title';
+            titleElement.innerHTML = MAP_TITLE;
+            titleElement.style.cssText = `
+                margin: 0;
+                padding: 8px 16px;
+                background-color: rgba(255, 255, 255, 0.9);
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                font-family: Arial, sans-serif;
+                font-size: 16px;
+                font-weight: bold;
+                color: #333;
+                text-align: center;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                white-space: nowrap;
+            `;
+            
+            titleContainer.appendChild(titleElement);
+            mapContainer.appendChild(titleContainer);
         }
 
         /**
@@ -280,8 +272,10 @@
                     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 }).addTo(map);
 
-                // 3. Add map title (NEW)
-                addMapTitle(map);
+                // 3. Add map title (NEW) - Wait for map to be ready
+                map.whenReady(() => {
+                    addMapTitle(map);
+                });
 
                 // 4. Initialize Sidebar - ASSIGN TO THE HIGHER SCOPE VARIABLE
                 sidebar = L.control.sidebar('sidebar').addTo(map);
