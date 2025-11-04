@@ -12,7 +12,6 @@
         const SPINNER_ID = config.spinnerId || 'sold-map-spinner';
         const NEIGHBORHOOD_FILTER = config.neighborhood || 'All'; // Default to 'All' for backward compatibility
         const STATUS_FILTER = config.statusFilter || 'Sold'; // NEW: Configurable status filter
-        const DEFAULT_CENTER = config.defaultCenter || [41.661315, -93.737999];
         const DEFAULT_ZOOM = config.defaultZoom || 11; // NEW: Configurable default zoom
         const USE_AUTO_BOUNDS = config.useAutoBounds !== false; // NEW: Option to disable auto-fit to bounds
         const MAP_TITLE = config.mapTitle || ''; // NEW: Configurable map title
@@ -56,17 +55,16 @@
             titleElement.style.cssText = `
                 margin: 0;
                 padding: 8px 16px;
-                background-color: #F0FFFF;
-                border: 1px solid #89CFF0;
+                background-color: rgba(255, 255, 255, 0.9);
+                border: 1px solid #ccc;
                 border-radius: 4px;
-                font-family: Karla, Arial, sans-serif!important;
+                font-family: Arial, sans-serif;
                 font-size: 16px;
-                font-weight: 500;
+                font-weight: bold;
                 color: #333;
                 text-align: center;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.6);
+                box-shadow: 0 2px 4px rgba(0,0,0,0.2);
                 white-space: nowrap;
-                opacity:.75;
             `;
             
             titleContainer.appendChild(titleElement);
@@ -263,43 +261,20 @@
 
                 console.log(`Status filter: ${STATUS_FILTER}, Total listings: ${filteredListings.length}`);
 
-                // 2. Initialize Leaflet Map with configured zoom and center
+                // 2. Initialize Leaflet Map
                 const map = L.map(MAP_ID, {
                     scrollWheelZoom: false // Good default for embedded maps
-                }).setView(DEFAULT_CENTER, DEFAULT_ZOOM);
-                
+                });
+
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 }).addTo(map);
 
-                // 3. Add map title (NEW) - Wait for map to be ready
-                map.whenReady(() => {
-                    addMapTitle(map);
-                });
-
-                // 4. Initialize Sidebar - ASSIGN TO THE HIGHER SCOPE VARIABLE
-                sidebar = L.control.sidebar('sidebar').addTo(map);
-
-                // 5. Calculate counts and update UI
-                const priceRangeCounts = {};
-                filterCheckboxes.forEach(cb => priceRangeCounts[cb.value] = 0);
-                filteredListings.forEach(listing => {
-                    if (priceRangeCounts.hasOwnProperty(listing.priceRange)) {
-                        priceRangeCounts[listing.priceRange]++;
-                    }
-                });
-
-                filterCheckboxes.forEach(cb => {
-                    const countSpan = cb.parentElement.querySelector('.listing-count');
-                    if (countSpan) {
-                        countSpan.textContent = `(${priceRangeCounts[cb.value] || 0})`;
-                    }
-                });
-
-                // 6. Create markers - store all markers in an array for filtering
-                const allMarkers = [];
+                // 3. Initialize markers layer
                 const markersLayer = L.featureGroup().addTo(map);
 
+                // 4. Create markers and add to the markers layer
+                const allMarkers = [];
                 filteredListings.forEach(listing => {
                     if (listing.Latitude && listing.Longitude) {
                         const formattedPrice = formatPrice(listing.Price);
@@ -322,10 +297,44 @@
                         marker.bindTooltip(tooltipContent);
 
                         allMarkers.push(marker);
+                        markersLayer.addLayer(marker); // Add marker to the layer
                     }
                 });
 
-                // 7. Filtering Logic
+                // 5. Auto-center the map to the bounds of the markers
+                if (allMarkers.length > 0) {
+                    const bounds = markersLayer.getBounds();
+                    map.fitBounds(bounds);
+                } else {
+                    // If no markers, set to default zoom and center (optional)
+                    map.setView([41.661315, -93.737999], DEFAULT_ZOOM);
+                }
+
+                // 6. Add map title (NEW) - Wait for map to be ready
+                map.whenReady(() => {
+                    addMapTitle(map);
+                });
+
+                // 7. Initialize Sidebar - ASSIGN TO THE HIGHER SCOPE VARIABLE
+                sidebar = L.control.sidebar('sidebar').addTo(map);
+
+                // 8. Calculate counts and update UI
+                const priceRangeCounts = {};
+                filterCheckboxes.forEach(cb => priceRangeCounts[cb.value] = 0);
+                filteredListings.forEach(listing => {
+                    if (priceRangeCounts.hasOwnProperty(listing.priceRange)) {
+                        priceRangeCounts[listing.priceRange]++;
+                    }
+                });
+
+                filterCheckboxes.forEach(cb => {
+                    const countSpan = cb.parentElement.querySelector('.listing-count');
+                    if (countSpan) {
+                        countSpan.textContent = `(${priceRangeCounts[cb.value] || 0})`;
+                    }
+                });
+
+                // 9. Filtering Logic
                 const updateMarkers = () => {
                     const selectedPriceRanges = Array.from(filterCheckboxes)
                         .filter(cb => cb.checked)
@@ -343,25 +352,17 @@
                         markersLayer.addLayer(marker);
                     });
 
-                    updateMapBounds(visibleMarkers.length > 0);
-                };
-
-                // 8. Map Bounds and Centering Logic
-                const updateMapBounds = (hasVisibleMarkers) => {
-                    if (hasVisibleMarkers && markersLayer.getLayers().length > 0) {
-                        if (USE_AUTO_BOUNDS) {
-                            // Get the bounds of the currently visible markers
-                            const bounds = markersLayer.getBounds();
-                            // Fit the map to the bounds with padding
-                            map.fitBounds(bounds, { padding: MAP_PADDING });
-                        }
-                        // If USE_AUTO_BOUNDS is false, keep the current zoom/center
+                    // Auto-center the map to the bounds of the visible markers
+                    if (visibleMarkers.length > 0) {
+                        const bounds = markersLayer.getBounds();
+                        map.fitBounds(bounds);
                     } else {
-                        map.setView(DEFAULT_CENTER, DEFAULT_ZOOM);
+                        // If no visible markers, set to default zoom and center (optional)
+                        map.setView([41.661315, -93.737999], DEFAULT_ZOOM);
                     }
                 };
 
-                // 9. Add Custom Controls (Re-center only)
+                // 10. Add Custom Controls (Re-center only)
                 // Re-center Control
                 const RecenterControl = L.Control.extend({
                     onAdd: function(map) {
@@ -373,10 +374,13 @@
 
                         L.DomEvent.on(container, 'click', (e) => {
                             L.DomEvent.stop(e);
-                            if (USE_AUTO_BOUNDS && markersLayer.getLayers().length > 0) {
-                                updateMapBounds(true);
+                            // Auto-center the map to the bounds of the visible markers
+                            if (markersLayer.getLayers().length > 0) {
+                                const bounds = markersLayer.getBounds();
+                                map.fitBounds(bounds);
                             } else {
-                                map.setView(DEFAULT_CENTER, DEFAULT_ZOOM);
+                                // If no visible markers, set to default zoom and center (optional)
+                                map.setView([41.661315, -93.737999], DEFAULT_ZOOM);
                             }
                         });
                         return container;
@@ -387,7 +391,7 @@
                 });
                 new RecenterControl({ position: 'topleft' }).addTo(map);
 
-                // 10. Attach Event Listeners
+                // 11. Attach Event Listeners
                 filterCheckboxes.forEach(cb => cb.addEventListener('change', updateMarkers));
 
                 selectAllBtn.addEventListener('click', () => {
@@ -400,7 +404,7 @@
                     updateMarkers();
                 });
 
-                // 11. ADD CUSTOM CLOSE BUTTON EVENT LISTENERS
+                // 12. ADD CUSTOM CLOSE BUTTON EVENT LISTENERS
                 const customCloseButtons = document.querySelectorAll('.sidebar-body-close');
                 customCloseButtons.forEach(button => {
                     button.addEventListener('click', function(e) {
