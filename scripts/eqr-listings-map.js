@@ -137,7 +137,7 @@
             const priceText = formatPriceForPin(price);
             
             // Determine background color based on status
-            const backgroundColor = status === 'Available' ? '#008000' : '#000';
+            const backgroundColor = status === 'Available' ? '#008000' : '#808080';
             
             return L.divIcon({
                 html: `<div style="
@@ -150,7 +150,6 @@
                     white-space: nowrap;
                     font-weight: bold;
                     text-align: center;
-                    border: 1px solid #333;
                     box-shadow: 0 2px 4px rgba(0,0,0,0.3);
                 ">${priceText}</div>`,
                 className: 'custom-pill-marker',
