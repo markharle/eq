@@ -56,16 +56,17 @@
             titleElement.style.cssText = `
                 margin: 0;
                 padding: 8px 16px;
-                background-color: rgba(255, 255, 255, 0.9);
-                border: 1px solid #ccc;
+                background-color: #F0FFFF;
+                border: 1px solid #89CFF0;
                 border-radius: 4px;
-                font-family: Arial, sans-serif;
+                font-family: Karla, Arial, sans-serif!important;
                 font-size: 16px;
-                font-weight: bold;
+                font-weight: 500;
                 color: #333;
                 text-align: center;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                box-shadow: 0 2px 4px rgba(0,0,0,0.6);
                 white-space: nowrap;
+                opacity:.75;
             `;
             
             titleContainer.appendChild(titleElement);
