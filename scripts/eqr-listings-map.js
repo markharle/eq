@@ -10,12 +10,14 @@
         const MAP_ID = config.mapId || 'listings-map-eqr';
         const JSON_URL = config.jsonUrl || 'https://raw.githubusercontent.com/markharle/eq/refs/heads/main/JSON/listingsMaster.json';
         const SPINNER_ID = config.spinnerId || 'sold-map-spinner';
-        const NEIGHBORHOOD_FILTER = config.neighborhood || 'All'; // Default to 'All' for backward compatibility
-        const STATUS_FILTER = config.statusFilter || 'Sold'; // NEW: Configurable status filter
-        const DEFAULT_ZOOM = config.defaultZoom || 11; // NEW: Configurable default zoom
-        const USE_AUTO_BOUNDS = config.useAutoBounds !== false; // NEW: Option to disable auto-fit to bounds
-        const MAP_TITLE = config.mapTitle || ''; // NEW: Configurable map title
+        const STATUS_FILTER = config.statusFilter || 'Sold';
+        const DEFAULT_ZOOM = config.defaultZoom || 11;
+        const MAP_TITLE = config.mapTitle || '';
         const MAP_PADDING = [24, 24];
+
+        // --- NEW: Location Filter Configuration ---
+        const NEIGHBORHOOD_FILTER = config.neighborhood || 'All';
+        const CITY_FILTER = config.city || 'All'; // NEW: Add city filter config
 
         // --- DOM ELEMENT SELECTORS ---
         const spinner = document.getElementById(SPINNER_ID);
@@ -245,21 +247,31 @@
                 // Apply base filters (published and status)
                 let filteredListings = filterByStatus(allListings);
 
-                // Apply neighborhood filter if specified (and not 'All')
+                // --- MODIFIED: Location Filtering Logic ---
+                const originalCount = filteredListings.length;
+
+                // Prioritize Neighborhood filter first
                 if (NEIGHBORHOOD_FILTER && NEIGHBORHOOD_FILTER !== 'All') {
-                    const originalCount = filteredListings.length;
                     filteredListings = filteredListings.filter(listing => 
                         listing.Neighborhood === NEIGHBORHOOD_FILTER
                     );
-                    
-                    // Log for debugging
                     console.log(`Filtering by neighborhood: ${NEIGHBORHOOD_FILTER}`);
-                    console.log(`Filtered from ${originalCount} to ${filteredListings.length} listings`);
-                } else {
-                    console.log(`Showing all neighborhoods (${filteredListings.length} listings total)`);
+                } 
+                // If no neighborhood filter, check for a city filter
+                else if (CITY_FILTER && CITY_FILTER !== 'All') {
+                    filteredListings = filteredListings.filter(listing => 
+                        listing.City === CITY_FILTER
+                    );
+                    console.log(`Filtering by city: ${CITY_FILTER}`);
+                } 
+                // If neither is specified, show all
+                else {
+                    console.log(`Showing all neighborhoods and cities.`);
                 }
-
+                
+                console.log(`Filtered from ${originalCount} to ${filteredListings.length} listings`);
                 console.log(`Status filter: ${STATUS_FILTER}, Total listings: ${filteredListings.length}`);
+                // --- END MODIFICATION ---
 
                 // 2. Initialize Leaflet Map
                 const map = L.map(MAP_ID, {
@@ -304,18 +316,18 @@
                 // 5. Auto-center the map to the bounds of the markers
                 if (allMarkers.length > 0) {
                     const bounds = markersLayer.getBounds();
-                    map.fitBounds(bounds);
+                    map.fitBounds(bounds, { padding: MAP_PADDING });
                 } else {
-                    // If no markers, set to default zoom and center (optional)
+                    // If no markers, set to a default center
                     map.setView([41.661315, -93.737999], DEFAULT_ZOOM);
                 }
 
-                // 6. Add map title (NEW) - Wait for map to be ready
+                // 6. Add map title - Wait for map to be ready
                 map.whenReady(() => {
                     addMapTitle(map);
                 });
 
-                // 7. Initialize Sidebar - ASSIGN TO THE HIGHER SCOPE VARIABLE
+                // 7. Initialize Sidebar
                 sidebar = L.control.sidebar('sidebar').addTo(map);
 
                 // 8. Calculate counts and update UI
@@ -355,15 +367,14 @@
                     // Auto-center the map to the bounds of the visible markers
                     if (visibleMarkers.length > 0) {
                         const bounds = markersLayer.getBounds();
-                        map.fitBounds(bounds);
+                        map.fitBounds(bounds, { padding: MAP_PADDING });
                     } else {
-                        // If no visible markers, set to default zoom and center (optional)
+                        // If no visible markers, set to default center
                         map.setView([41.661315, -93.737999], DEFAULT_ZOOM);
                     }
                 };
 
                 // 10. Add Custom Controls (Re-center only)
-                // Re-center Control
                 const RecenterControl = L.Control.extend({
                     onAdd: function(map) {
                         const container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-recenter');
@@ -374,12 +385,10 @@
 
                         L.DomEvent.on(container, 'click', (e) => {
                             L.DomEvent.stop(e);
-                            // Auto-center the map to the bounds of the visible markers
                             if (markersLayer.getLayers().length > 0) {
                                 const bounds = markersLayer.getBounds();
-                                map.fitBounds(bounds);
+                                map.fitBounds(bounds, { padding: MAP_PADDING });
                             } else {
-                                // If no visible markers, set to default zoom and center (optional)
                                 map.setView([41.661315, -93.737999], DEFAULT_ZOOM);
                             }
                         });
