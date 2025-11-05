@@ -12,7 +12,7 @@
 </button>
 
 <!-- Scroll To Top Button Javascript -->
-<script>
+
 (function() {
   let throttlePause;
 
@@ -59,4 +59,4 @@
   });
   window.addEventListener('DOMContentLoaded', checkPos)
 }());
-</script>
+
