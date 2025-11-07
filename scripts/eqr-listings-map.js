@@ -57,13 +57,13 @@
             titleElement.style.cssText = `
                 margin: 0;
                 padding: 8px 16px;
-                background-color: rgba(255, 255, 255, 0.9);
+                background-color: rgba(255, 255, 255, 0.78);
                 border: 1px solid #ccc;
                 border-radius: 4px;
-                font-family: Arial, sans-serif;
-                font-size: 16px;
-                font-weight: bold;
-                color: #333;
+                font-family: Karla, Arial, sans-serif!important;
+                font-size: 14px;
+                font-weight: 600;
+                color: #666666;
                 text-align: center;
                 box-shadow: 0 2px 4px rgba(0,0,0,0.2);
                 white-space: nowrap;
