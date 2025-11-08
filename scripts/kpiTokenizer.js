@@ -40,7 +40,7 @@ async function fetchAndDisplayTokens() {
     // --- Data Processing with Validation ---
 
     // Years of Experience
-    const yearsExperience = (data.YearsExperience || 0) + ' yrs';
+    const yearsExperience = (data.YearsExperience || 0) + ' +';
 
     // Total Clients
     const totalClients = data.TotalClients || 0;
