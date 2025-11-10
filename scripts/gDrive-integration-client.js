@@ -131,7 +131,7 @@ class DocumentBrowser {
       const value = e.target.value;
       this.updateFilterBlurb(value);
       if (value === 'all') {
-        this.selectedFolders = ['listings-management','technical-documents','site-admin-documents','squarespace-procedures','components,'html-templates'];
+        this.selectedFolders = ['listings-management','technical-documents','site-admin-documents','squarespace-procedures','components','html-templates'];
       } else {
         this.selectedFolders = [value];
       }
