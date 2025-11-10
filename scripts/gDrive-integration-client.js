@@ -7,7 +7,8 @@ class DocumentBrowser {
       'technical-documents': '1GmgTkDO7ilriJsgcgGkl6FcKVwvBGgT6',
       'site-admin-documents': '10ekn8q0aFbN3568Ip1PVySKYK_pXzazR',
       'squarespace-procedures': '1RpFUADyFCViFlTRbtJQYrVr3YcYNBrMX',
-      'components': '1rGgkOCblVgitGdKLNyLK6xBBgGpah3EF'
+      'components': '1rGgkOCblVgitGdKLNyLK6xBBgGpah3EF',
+      'html-templates': '1o10um1En3ht6efrWV9AGUoKoM-XWGMqK'
     };
     this.folderBlurbs = {
       'all': '<strong>All Folders</strong><br>All documents are shown below. To narrow your search, select a document category from the <strong>Folders</strong> field above or search by keyword.',
@@ -15,7 +16,8 @@ class DocumentBrowser {
       'technical-documents': '<strong>Developer Documents</strong><br>These documents provide details of our APIs, Google Apps Scripts Javascipt, and related technical inforation.',
       'site-admin-documents': '<strong>Site Admin Documents</strong><br>Documents for <strong>Site Administrators</strong> only, including application authorization and configuration guides.',
       'squarespace-procedures': '<strong>Squarespace Procedures</strong><br>Step-by-step guides and procedures for managing content and features on the Squarespace platform.',
-      'components': '<strong>Components</strong><br>Details of the key UI components we use to render content on our website pages. These document contains both instructions for managing content in the component and technical details for our Site Administrators and Developers.'  
+      'components': '<strong>Components</strong><br>Details of the key UI components we use to render content on our website pages. These document contains both instructions for managing content in the component and technical details for our Site Administrators and Developers.',  
+ 'html-templates': '<strong>HTML Templates</strong><br>Pre-built HTML markup for common page elements like Calls to Action and Text/Image elements. Simply copy / paste / update into a code block on your page.'       
     };
     this.folderIcons = {
       'listings-management': {
@@ -38,12 +40,16 @@ class DocumentBrowser {
         src: 'https://images.squarespace-cdn.com/content/5db1a8c2af0b1a1c3004a035/0197578c-159d-4150-acf1-fe3741b67be2/4814706-404040.png',
         alt: 'Components'
       },      
+      'html-templates': {
+        src: 'https://images.squarespace-cdn.com/content/5db1a8c2af0b1a1c3004a035/48d7ae64-d61d-4318-baa0-8fa599ab11a6/2104056-404040.png',
+        alt: 'HTML Templates'
+      },          
       'default': {
         src: 'https://images.squarespace-cdn.com/content/5db1a8c2af0b1a1c3004a035/78f66660-350f-4af2-97b5-2aade9e8cdf7/643174-404040.png',
         alt: 'Other'
       }
     };
-    this.selectedFolders = ['listings-management','technical-documents','site-admin-documents','squarespace-procedures','components'];
+    this.selectedFolders = ['listings-management','technical-documents','site-admin-documents','squarespace-procedures','components','htmo-templates'];
     this.documents = [];
     this.filteredDocuments = [];
     this.searchTerm = '';
@@ -76,6 +82,7 @@ class DocumentBrowser {
                 <option value="all">All Folders</option>
                 <option value="components">Components</option>
                 <option value="technical-documents">Developer Documents</option>
+                <option value="html-templates">HTML Templates</option>
                 <option value="listings-management">Listings Management</option>
                 <option value="site-admin-documents">Site Admin Documents</option>
                 <option value="squarespace-procedures">Squarespace Procedures</option>             
@@ -124,7 +131,7 @@ class DocumentBrowser {
       const value = e.target.value;
       this.updateFilterBlurb(value);
       if (value === 'all') {
-        this.selectedFolders = ['listings-management','technical-documents','site-admin-documents','squarespace-procedures','components'];
+        this.selectedFolders = ['listings-management','technical-documents','site-admin-documents','squarespace-procedures','components,'html-templates'];
       } else {
         this.selectedFolders = [value];
       }
@@ -216,7 +223,8 @@ class DocumentBrowser {
       'technical-documents': 'Technical Documents',
       'site-admin-documents': 'Site Admin Documents',
       'squarespace-procedures': 'Squarespace Procedures',
-      'components': 'Components'
+      'components': 'Components',
+      'html-templates': 'HTML Templates'
     };
     return displayNames[folderKey] || folderKey;
   }
