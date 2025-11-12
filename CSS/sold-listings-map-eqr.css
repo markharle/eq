@@ -186,14 +186,14 @@ align-content: flex-start;
     height:420px;
 } */
 #sidebar {
-    height: 175px;
-    left: 20px;
+    /*height: 175px; */
+    left: 10px;
     /* width: 60px; */
 }
 
 @media screen and (max-width:768px){
 #sidebar {
-    height: 175px;
+    /*height: 175px;*/
     left: 0px;
     border: none;
     box-shadow: none;
