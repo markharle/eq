@@ -378,24 +378,31 @@
   color: #495057;
   flex-grow: 0;
   font-weight: 400;
+  line-height: 1.5rem;
 }
 .modal-text-01-text-full {
-  margin: 0;
+    margin: 0;
+/*   font-size: 0.9rem;
+  line-height: 1.4; */
+  color: #495057;
+  flex-grow: 0;
+  font-weight: 400;
+  line-height: 1.5rem;
 }
-.modal-text-01-full h4 {
+/* .modal-text-01-full h4 {
   margin: 0 0 0.5rem 0;
   font-size: 1.25rem;
   line-height: 1.4;
   color: #495057;
   font-weight: 400;
-}
+} */
 
-.modal-text-01-full p {
+/* .modal-text-01-full p {
     font-weight: 400!important;
     font-family: Karla, arial, helvetica, sans-serif!important;
     font-size: 1.0 rem!important;
     margin-top: 0 !important;
-}
+} */
 
 /* Responsive behavior for smaller screens */
 @media (max-width: 768px) {
