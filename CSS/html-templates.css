@@ -314,4 +314,94 @@
     padding: 1rem;
   }
 }
+<!-- modal-text-01 template -->
+.modal-text-01-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 2rem 0;
+}
 
+.modal-text-01-header {
+  margin: 0 0 1rem 0;
+  font-size: 2rem;
+  line-height: 1.4;
+  color: #495057;
+  font-weight: 500;
+  font-family: "PT Sans Narrow", Arial, sans-serif!important;
+  letter-spacing: .5px;
+  align-self: flex-start;
+}
+
+.modal-text-01-element {
+  display: grid;
+  grid-template-columns: 67% 33%;
+  width: 100%;
+  min-height: 125px;
+  height: auto;
+}
+
+.modal-text-01-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-text-01-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.modal-text-01-content {
+  /* padding: 1rem 1.25rem; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.modal-text-01-text {
+  margin: 0;
+/*   font-size: 0.9rem;
+  line-height: 1.4; */
+  color: #495057;
+  flex-grow: 0;
+  font-weight: 400;
+}
+.modal-text-01-text-full {
+  margin: 0;
+}
+.modal-text-01-full h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.25rem;
+  line-height: 1.4;
+  color: #495057;
+  font-weight: 400;
+}
+
+.modal-text-01-full p {
+    font-weight: 400!important;
+    font-family: Karla, arial, helvetica, sans-serif!important;
+    font-size: 1.0 rem!important;
+    margin-top: 0 !important;
+}
+
+/* Responsive behavior for smaller screens */
+@media (max-width: 768px) {
+  .modal-text-01-element {
+    grid-template-columns: 1fr; /* Stack image on top of content */
+    max-width: 350px;
+  }
+  
+  .modal-text-01-image {
+    height: 150px; /* Give image a fixed height when stacked */
+    order: 1; /* Keep image on top in mobile */
+  }
+  
+  .modal-text-01-content {
+    padding: 1rem;
+    order: 2; /* Keep content below image in mobile */
+  }
+}
