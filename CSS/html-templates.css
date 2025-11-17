@@ -323,9 +323,9 @@
 }
 
 .modal-text-01-header {
-  margin: 0 0 1rem 0;
+  margin: 1rem 0 1rem 0;
   font-size: 2rem;
-  line-height: 1.4;
+  line-height: 1.75;
   color: #495057;
   font-weight: 500;
   font-family: "PT Sans Narrow", Arial, sans-serif!important;
@@ -335,9 +335,9 @@
 .modal-text-01-sub-header {
     margin: .5rem 0;
     font-size: 1.5rem;
-    line-height: 1.75;
+    line-height: 1.5;
     color: #495057;
-    font-weight: 400;
+    font-weight: 500;
     font-family: "PT Sans Narrow", Arial, sans-serif !important;
     letter-spacing: .5px;
     align-self:flex-start;
