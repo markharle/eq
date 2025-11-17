@@ -332,7 +332,16 @@
   letter-spacing: .5px;
   align-self: flex-start;
 }
-
+.modal-text-01-sub-header {
+    margin: .5rem 0;
+    font-size: 1.5rem;
+    line-height: 1.75;
+    color: #495057;
+    font-weight: 400;
+    font-family: "PT Sans Narrow", Arial, sans-serif !important;
+    letter-spacing: .5px;
+    align-self:flex-start;
+}
 .modal-text-01-element {
   display: grid;
   grid-template-columns: 67% 33%;
