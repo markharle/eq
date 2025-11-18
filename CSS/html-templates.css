@@ -85,7 +85,7 @@
   color: #0056b3;
 }
 
-/* Responsive behavior for smaller screens */
+/* Responsive behavior */
 @media (max-width: 768px) {
   .cta-card-01-element {
     grid-template-columns: 1fr; /* Stack image on top of content */
@@ -194,7 +194,7 @@
   color: #0056b3;
 }
 
-/* Responsive behavior for smaller screens */
+/* Responsive behavior  */
 @media (max-width: 768px) {
   .cta-card-02-element {
     grid-template-columns: 1fr; /* Stack image on top of content */
@@ -299,7 +299,7 @@
   color: #0056b3;
 }
 
-/* Responsive behavior for smaller screens */
+/* Responsive behavior */
 @media (max-width: 768px) {
   .cta-card-03-element {
     grid-template-columns: 1fr; /* Stack image on top of content */
@@ -314,7 +314,95 @@
     padding: 1rem;
   }
 }
-<!-- modal-text-01 template -->
+<!-- cta-card-04-card-04 template  / modal-text-01 template -->
+<!-- Used for styling modal popup pages, e.g., schools-->
+
+.cta-card-04-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: .5rem 0;
+}
+
+.cta-card-04-header {
+  margin: 0 0 1rem 0;
+  font-size: 1.25rem;
+  line-height: 1.4;
+  color: #495057;
+  font-weight: 500;
+  font-family: "PT Sans Narrow", Arial, sans-serif;
+  letter-spacing: .5px;
+  align-self: flex-start;
+}
+
+.cta-card-04-element {
+  display: grid;
+  grid-template-columns: 67% 33%;
+  width: 100%;
+  min-height: 125px;
+  height: auto;
+}
+
+.cta-card-04-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cta-card-04-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 6px;
+  box-shadow: .4px .4px .5px rgba(0, 0, 0, .33), 9.6px 8.8px 11.8px -2px rgba(0, 0, 0, .24), 25.5px 23.6px 31.5px -3px rgba(0, 0, 0, .19);
+}
+
+.cta-card-04-content {
+  padding: 0 1.25rem 0 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* .cta-card-04-text {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: #495057;
+  flex-grow: 0;
+  font-weight: 500;
+} */
+.cta-card-04-text {
+    margin: 0;
+    color: #495057;
+    flex-grow: 0;
+    font-weight: 400;
+    line-height: 1.5rem;
+}
+
+/* Responsive behavior for smaller screens */
+@media (max-width: 768px) {
+  .cta-card-04-element {
+    grid-template-columns: 1fr; /* Stack image on top of content */
+    max-width: 350px;
+  }
+  
+  .cta-card-04-image {
+    height: 150px; /* Give image a fixed height when stacked */
+    order: 1; /* Keep image on top in mobile */
+  }
+  
+  .cta-card-04-content {
+    padding: 1.25rem 0 0 0;
+    order: 2; /* Keep content below image in mobile */
+  }
+}
+
+
+
+
 .modal-text-01-container {
   display: flex;
   flex-direction: column;
@@ -376,36 +464,19 @@
 
 .modal-text-01-text {
   margin: 0;
-/*   font-size: 0.9rem;
-  line-height: 1.4; */
   color: #495057;
   flex-grow: 0;
   font-weight: 400;
   line-height: 1.5rem;
 }
 .modal-text-01-text-full {
-    margin: 0;
-/*   font-size: 0.9rem;
-  line-height: 1.4; */
+  margin: 0;
   color: #495057;
   flex-grow: 0;
   font-weight: 400;
   line-height: 1.5rem;
 }
-/* .modal-text-01-full h4 {
-  margin: 0 0 0.5rem 0;
-  font-size: 1.25rem;
-  line-height: 1.4;
-  color: #495057;
-  font-weight: 400;
-} */
 
-/* .modal-text-01-full p {
-    font-weight: 400!important;
-    font-family: Karla, arial, helvetica, sans-serif!important;
-    font-size: 1.0 rem!important;
-    margin-top: 0 !important;
-} */
 
 /* Responsive behavior for smaller screens */
 @media (max-width: 768px) {
@@ -425,10 +496,12 @@
   }
   .modal-text-01-header {
     font-size: 1.5rem;
-    line-height: 1.75;
+    line-height: 1.25;
+    text-wrap: balance;
 }
 .modal-text-01-sub-header {
     font-size: 1.25rem;
     line-height: 1.5;
+    text-wrap: balance;
 }
 }
