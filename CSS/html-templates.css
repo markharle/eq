@@ -390,7 +390,7 @@
   }
   
   .cta-card-04-image {
-    height: 150px; /* Give image a fixed height when stacked */
+    /* height: 150px; Give image a fixed height when stacked */
     order: 1; /* Keep image on top in mobile */
   }
   
