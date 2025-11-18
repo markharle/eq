@@ -8,7 +8,8 @@
 
         // --- CONFIGURATION & CONSTANTS ---
         const MAP_ID = config.mapId || 'listings-map-eqr';
-        const JSON_URL = config.jsonUrl || 'https://raw.githubusercontent.com/markharle/eq/refs/heads/main/JSON/listingsMaster.json';
+        //const JSON_URL = config.jsonUrl || 'https://raw.githubusercontent.com/markharle/eq/refs/heads/main/JSON/listingsMaster.json';
+        const JSON_URL = config.jsonUrl || 'https://cdn.jsdelivr.net/gh/markharle/eq@main/JSON/listingsMaster.json';
         const SPINNER_ID = config.spinnerId || 'sold-map-spinner';
         const STATUS_FILTER = config.statusFilter || 'Sold';
         const DEFAULT_ZOOM = config.defaultZoom || 11;
