@@ -478,7 +478,7 @@
 }
 
 
-/* Responsive behavior for smaller screens */
+/* Responsive s */
 @media (max-width: 768px) {
   .modal-text-01-element {
     grid-template-columns: 1fr; /* Stack image on top of content */
@@ -505,3 +505,123 @@
     text-wrap: balance;
 }
 }
+
+
+/* Start CTA Button-032 /
+    .custom-arrow {
+      --arrow-width: 20px;
+      --arrow-spacer: 4px;
+      --arrow-plus-spacer: calc(var(--arrow-width) + var(--arrow-spacer));
+      overflow: hidden;
+      position: absolute;
+      right: -.2em;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: var(--arrow-plus-spacer);
+    }
+
+    .custom-arrow svg {
+      height: 16px;
+      width: var(--arrow-width);
+    }
+
+/*     .custom-arrow svg:last-of-type {
+      margin-left: var(--arrow-spacer);
+    } */
+
+    .custom-arrow-clip {
+      align-items: center;
+      display: flex;
+      overflow: hidden;
+      width: calc(var(--arrow-plus-spacer) + var(--arrow-width));
+    }
+
+    /* Container */
+    @media (min-width: 560px) {
+      .cta-button-container-032 {
+        align-items: center;
+        display: flex;
+        justify-content: center;
+      }
+    }
+
+    .cta-button-container-032 .custom-button {
+      width: 100%;
+    }
+
+    @media (min-width: 560px) {
+      .cta-button-container-032 .custom-button {
+        width: auto;
+      }
+    }
+
+    .cta-button-container-032 .custom-button:not(:first-of-type) {
+      margin-top: 1rem;
+    }
+
+    @media (min-width: 560px) {
+      .cta-button-container-032 .custom-button:not(:first-of-type) {
+        margin-left: 1rem;
+        margin-top: 0;
+      }
+    }
+
+    /* Buttons */
+    .custom-button {
+      --button-background: transparent;
+      --button-color: black;
+      background-color: var(--button-background);
+      border-radius: 4px;
+      border: 0;
+      box-shadow: none;
+      color: var(--button-color);
+      cursor: pointer;
+      display: inline-block;
+      font-size: 1rem;
+      font-weight: 500;
+      height: 64px;
+      line-height: 1;
+      padding-left: 1rem;
+      padding-right: 2rem;
+      position: relative;
+      text-align: left;
+      text-decoration: none;
+      transition: box-shadow 150ms cubic-bezier(0.61, 1, 0.88, 1);
+      white-space: nowrap;
+    }
+
+    .custom-button:hover,
+    .custom-button:focus {
+      box-shadow: 0 3px 7px 1px rgba(50, 50, 50, 0.25);
+    }
+
+    .custom-button.yellow-bg {
+      --button-background: #ccc;
+    }
+
+    .custom-button.purple-bg {
+      /* --button-background: #024271!important; */
+      --button-background: #f48132!important;
+      --button-color: #ffb31c;
+    }
+
+    .custom-button > span {
+      display: block;
+      line-height: 1;
+      padding-right: 1.5rem;
+      color:#fff!important;
+      font-size:1.1rem;
+    }
+
+    .custom-button > span:first-of-type {
+      color: #fff;
+      font-size: .85rem;
+      line-height: 1.5;
+      margin-top:12px;
+      text-transform:uppercase;
+    }
+    .custom-button:hover {
+      color:#ccc!important;
+    }
+
+/* End CTA Button-032 /
