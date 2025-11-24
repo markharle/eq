@@ -478,7 +478,7 @@
 }
 
 
-/* Responsive s */
+/* Responsive  */
 @media (max-width: 768px) {
   .modal-text-01-element {
     grid-template-columns: 1fr; /* Stack image on top of content */
@@ -623,10 +623,11 @@
     .custom-button:hover {
       color:#ccc!important;
     }
+/* End CTA Button-032 */
 
-/* End CTA Button-032 /
+/* Start community-cta-03 */
 
-/* Start community-cta-03 /
+
 .community-cta-03 {
   text-align:center;
   padding-bottom:3rem;
@@ -694,4 +695,4 @@
     opacity:.5;
     color: #013E4E;}
 
-/* End community-cta-03 /
+/* End community-cta-03 */
