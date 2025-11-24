@@ -625,3 +625,73 @@
     }
 
 /* End CTA Button-032 /
+
+/* Start community-cta-03 /
+.community-cta-03 {
+  text-align:center;
+  padding-bottom:3rem;
+}
+.community-cta-03 h1, h2, h3, h4, h5{
+    font-family: "PT Sans Narrow", Arial, sans-serif !important;
+}
+.community-cta-03 p{
+    font-family: Karla, Arial, sans-serif !important;
+    font-size: 1.5rem;
+    line-height: 2rem;
+    text-wrap: balance;
+}
+.community-cta-03 a{
+	color: #fff;
+    text-transform: uppercase;
+    font-size: 83%;
+    letter-spacing: 0.5px;
+    transition: color 0.3s ease-in-out;
+}
+.link-wrapper {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    margin-bottom:1rem;
+}
+
+@media (max-width:767px){
+.link-wrapper {
+    justify-content: center;
+    flex-direction: column;
+    flex-wrap: wrap;
+    padding: 0 1rem;
+    margin-bottom:0;
+}
+
+.link-wrapper .btn-cta:first-child {
+    margin-bottom:1rem;
+    margin-right: 0 !important;
+}
+}
+ 
+
+
+.btn-cta {
+    border: 1px solid #fff;
+    padding: .25rem .5rem;
+    border-radius: 6px;
+}
+
+.link-wrapper .btn-cta:first-child {
+    margin-right:1rem;
+}
+
+
+.btn-cta:after{
+    content:'\f0da';
+    font-family:FontAwesome;
+    display:inline-block;
+    padding-right:3px;
+    padding-left:8px
+}
+    .btn-cta:hover {
+    background:#fff;
+    opacity:.5;
+    color: #013E4E;}
+
+/* End community-cta-03 /
