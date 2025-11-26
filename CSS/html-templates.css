@@ -625,8 +625,8 @@
     }
 /* End CTA Button-032 */
 
-/* Start community-cta-03 */
 
+/* Start community-cta-03 */
 
 .community-cta-03 {
   text-align:center;
@@ -663,39 +663,60 @@
     padding: 0 1rem;
     margin-bottom:0;
 }
-
-.link-wrapper .btn-cta:first-child {
+.btn-cta-contact {
     margin-bottom:1rem;
-    margin-right: 0 !important;
+}
+.community-cta-03 a{
+    width:100%
 }
 }
  
-
-
-.btn-cta {
+.btn-cta-explore {
     border: 1px solid #fff;
     padding: .25rem .5rem;
     border-radius: 6px;
 }
 
-.link-wrapper .btn-cta:first-child {
-    margin-right:1rem;
-}
-
-
-.btn-cta:after{
-    content:'\f0da';
+.btn-cta-explore:after{
+    content:'\f278';  
     font-family:FontAwesome;
     display:inline-block;
     padding-right:3px;
     padding-left:8px
 }
-    .btn-cta:hover {
+    .btn-cta-explore:hover {
     background:#fff;
     opacity:.5;
-    color: #013E4E;}
+    color: #013E4E;
+}
+
+.btn-cta-contact {
+    border: 1px solid #fff;
+    padding: .25rem .5rem;
+    border-radius: 6px;
+    margin-right:1rem;
+}
+
+.btn-cta-contact:after{
+    content:'\f095';  
+    font-family:FontAwesome;
+    display:inline-block;
+    padding-right:3px;
+    padding-left:8px
+}
+.btn-cta-contact:hover {
+    background:#fff;
+    opacity:.5;
+    color: #013E4E;
+}
+
+.btn-cta-header {
+    margin-bottom:1.5rem;
+}
+
 
 /* End community-cta-03 */
+
 
 
 /* Start Modal Popup Body / Text with Right-Aligned Image Block */
@@ -834,4 +855,3 @@
 .cta-bg-gray { background-color: #444444; }
 
 /* End CTA Button – two-line with right arrow icon (cta-button-088) */
-
