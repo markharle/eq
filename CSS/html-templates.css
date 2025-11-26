@@ -760,3 +760,78 @@
 }
 
 /* End Modal Popup Body / Text with Right-Aligned Image Block */
+
+/* Start CTA Button – two-line with right arrow icon  (cta-button-088) */
+
+.cta-button-wrapper {
+  text-align: center;            /* Center the button horizontally on the page */
+}
+.cta-button-wrapper svg {
+  margin-left:2rem;
+}
+.cta-button {
+  display: inline-flex;          /* Width is based on content */
+  align-items: center;           /* Vertically center text and icon */
+  padding: 1rem 2rem;          /* As requested */
+  border-radius: 4px;            /* 4px corner radius */
+  border: none;
+  text-decoration: none;
+  color: #ffffff;                /* Default text + icon color */
+  cursor: pointer;
+  white-space: nowrap;           /* Keep lines from wrapping awkwardly */
+}
+
+
+.cta-button__text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+  align-items: flex-start;  /* ensure left alignment of the two lines */
+  text-align: left;         /* force left text alignment */
+  color:#fff;
+  font-weight:800;
+  font-family: karla, arial, helvetica, sans-serif;
+}
+
+/* Top line */
+.cta-button__top {
+  font-size: .85rem;
+  text-transform: uppercase;
+}
+
+/* Bottom line */
+.cta-button__bottom {
+  font-size: 1.1rem;
+  font-weight:400;
+}
+
+/* Icon: right side of button, vertically centered */
+.cta-button__icon {
+  margin-left: 1.5rem;         /* Space between text and icon */
+  font-size: 1rem;             /* Adjust if you want a larger/smaller arrow */
+  color:#fff;
+}
+
+.cta-button:hover {
+  box-shadow: 0 3px 7px 1px rgba(50, 50, 50, 0.25);
+  opacity:.65;
+}
+
+
+
+.cta-button:focus {
+  outline: 2px solid rgba(255, 255, 255, 0.7);
+  outline-offset: 2px;
+
+}
+
+
+
+/*  Background Color as Separate Class */
+
+.cta-bg-orange { background-color: #f48132;}
+.cta-bg-blue { background-color: #0055aa; }
+.cta-bg-gray { background-color: #444444; }
+
+/* End CTA Button – two-line with right arrow icon (cta-button-088) */
+
