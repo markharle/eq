@@ -752,7 +752,8 @@
   margin: 0 0 1.25rem 1.5rem;  /* Space below and to the left of the image */
   display: block;
   border-radius: 6px;
-  box-shadow: .4px .4px .5px rgba(0, 0, 0, .33), 9.6px 8.8px 11.8px -2px rgba(0, 0, 0, .24), 25.5px 23.6px 31.5px -3px rgba(0, 0, 0, .19);
+  /*box-shadow: .4px .4px .5px rgba(0, 0, 0, .33), 9.6px 8.8px 11.8px -2px rgba(0, 0, 0, .24), 25.5px 23.6px 31.5px -3px */
+  box-shadow: .4px .4px 5px rgba(0, 0, 0, .25), 1.5px 1.4px 10px -3.9px rgba(0, 0, 0, .19);
 }
 
 /* Optional: tweak spacing for h4 / p inside this component only */
