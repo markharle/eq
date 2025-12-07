@@ -800,6 +800,7 @@
   color: #ffffff;                /* Default text + icon color */
   cursor: pointer;
   white-space: nowrap;           /* Keep lines from wrapping awkwardly */
+  box-shadow: .4px .4px 5px rgba(0, 0, 0, .25), 1.5px 1.4px 10px -3.9px rgba(0, 0, 0, .19);
 }
 
 
