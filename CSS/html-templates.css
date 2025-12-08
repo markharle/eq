@@ -854,8 +854,14 @@
 /*  Background Color as Separate Class */
 
 .cta-bg-orange { background-color: #f48132;}
-.cta-bg-blue { background-color: #0055aa; }
-.cta-bg-gray { background-color: #444444; }
+.cta-bg-blue { 
+	/* background-color: #0055aa; */
+	background-color: #00426F;
+}
+.cta-bg-gray { 
+	/* background-color: #444444; */
+	background-color: #2A2829;
+}
 
 /* End CTA Button – two-line with right arrow icon (cta-button-088) */
 
