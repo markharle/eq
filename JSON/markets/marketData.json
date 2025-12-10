@@ -3,6 +3,7 @@
     "entity": "Des Moines",
     "type": "City",
     "date": "2025-12-08",
+    "currentTrend": "DSM sadfasdf asdfasdf ipsum dolor sit amet. Vestibuoum amicus curae para ti.",
     "currentValue": 205977,
     "change": 0.012,
     "historicalData": {
@@ -18,6 +19,7 @@
     "entity": "Ankeny",
     "type": "City",
     "date": "2025-12-08",
+    "currentTrend": "Ankeny Hawks  dremonins nunca nada para nosotrtos voma drosca qen.",
     "currentValue": 336974,
     "change": 0.023,
     "historicalData": {
@@ -33,6 +35,7 @@
     "entity": "Columbus Park",
     "type": "Neighborhood",
     "date": "2025-12-08",
+    "currentTrend": "Columbus McKinley Park monins nunca nada para nosotrtos voma drosca qen.",
     "currentValue": 155407,
     "change": -0.028,
     "historicalData": {
@@ -48,6 +51,7 @@
     "entity": "Beaverdale",
     "type": "Neighborhood",
     "date": "2025-12-08",
+    "currentTrend": "Beaverdale BGF lorem ipsum dolor sit amet. Vestibuoum amicus curae para ti.",
     "currentValue": 252446,
     "change": 0.029,
     "historicalData": {
@@ -63,6 +67,7 @@
     "entity": "Waukee",
     "type": "City",
     "date": "12/8/2025`",
+    "currentTrend": "Waukee wervdremonins nunca nada para nosotrtos voma drosca qen.",
     "currentValue": 341519,
     "change": -0.011,
     "historicalData": {
@@ -78,6 +83,7 @@
     "entity": "Winterset",
     "type": "City",
     "date": "1210/2025",
+    "currentTrend": "Winterset Covered Bridges alskdfas asdf asdf",
     "currentValue": 283658,
     "change": 0.01,
     "historicalData": {
