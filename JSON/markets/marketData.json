@@ -3,90 +3,90 @@
     "entity": "Des Moines",
     "type": "City",
     "date": "2025-12-08",
-    "currentValue": "DSM sadfasdf asdfasdf ipsum dolor sit amet. Vestibuoum amicus curae para ti.",
-    "change": 205977,
+    "currentValue": 205977,
+    "change": 0.012,
     "historicalData": {
-      "2020": 0.012,
-      "2021": 157110,
-      "2022": 171313,
-      "2023": 186661,
-      "2024": 195991,
-      "2025": 204684
+      "2020": 157110,
+      "2021": 171313,
+      "2022": 186661,
+      "2023": 195991,
+      "2024": 204684,
+      "2025": 205977
     }
   },
   {
     "entity": "Ankeny",
     "type": "City",
     "date": "2025-12-08",
-    "currentValue": "Ankeny Hawks  dremonins nunca nada para nosotrtos voma drosca qen.",
-    "change": 336974,
+    "currentValue": 336974,
+    "change": 0.023,
     "historicalData": {
-      "2020": 0.023,
-      "2021": 264420,
-      "2022": 296779,
-      "2023": 318758,
-      "2024": 323431,
-      "2025": 330899
+      "2020": 264420,
+      "2021": 296779,
+      "2022": 318758,
+      "2023": 323431,
+      "2024": 330899,
+      "2025": 336974
     }
   },
   {
     "entity": "Columbus Park",
     "type": "Neighborhood",
     "date": "2025-12-08",
-    "currentValue": "Columbus Park monins nunca nada para nosotrtos voma drosca qen.",
-    "change": 155407,
+    "currentValue": 155407,
+    "change": -0.028,
     "historicalData": {
-      "2020": -0.028,
-      "2021": 126461,
-      "2022": 133526,
-      "2023": 145513,
-      "2024": 154143,
-      "2025": 159347
+      "2020": 126461,
+      "2021": 133526,
+      "2022": 145513,
+      "2023": 154143,
+      "2024": 159347,
+      "2025": 155407
     }
   },
   {
     "entity": "Beaverdale",
     "type": "Neighborhood",
     "date": "2025-12-08",
-    "currentValue": "Beaverdale BGF lorem ipsum dolor sit amet. Vestibuoum amicus curae para ti.",
-    "change": 252446,
+    "currentValue": 252446,
+    "change": 0.029,
     "historicalData": {
-      "2020": 0.029,
-      "2021": 189164,
-      "2022": 207910,
-      "2023": 226455,
-      "2024": 237604,
-      "2025": 247306
+      "2020": 189164,
+      "2021": 207910,
+      "2022": 226455,
+      "2023": 237604,
+      "2024": 247306,
+      "2025": 252446
     }
   },
   {
     "entity": "Waukee",
     "type": "City",
     "date": "12/8/2025`",
-    "currentValue": "Waukee wervdremonins nunca nada para nosotrtos voma drosca qen.",
-    "change": 341519,
+    "currentValue": 341519,
+    "change": -0.011,
     "historicalData": {
-      "2020": -0.011,
-      "2021": 298165,
-      "2022": 324099,
-      "2023": 345199,
-      "2024": 345260,
-      "2025": 346418
+      "2020": 298165,
+      "2021": 324099,
+      "2022": 345199,
+      "2023": 345260,
+      "2024": 346418,
+      "2025": 341519
     }
   },
   {
     "entity": "Winterset",
     "type": "City",
     "date": "1210/2025",
-    "currentValue": "Winterset Bridges alskdfas asdf asdf",
-    "change": 283658,
+    "currentValue": 283658,
+    "change": 0.01,
     "historicalData": {
-      "2020": 0.01,
-      "2021": 217883,
-      "2022": 238299,
-      "2023": 261452,
-      "2024": 268862,
-      "2025": 284656
+      "2020": 217883,
+      "2021": 238299,
+      "2022": 261452,
+      "2023": 268862,
+      "2024": 284656,
+      "2025": 283658
     }
   }
 ]
