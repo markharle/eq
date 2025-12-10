@@ -3,7 +3,7 @@
     "entity": "Des Moines",
     "type": "City",
     "date": "2025-12-08",
-    "currentValue": "DSM lorem ipsum dolor sit amet. Vestibuoum amicus curae para ti.",
+    "currentValue": "DSM sadfasdf asdfasdf ipsum dolor sit amet. Vestibuoum amicus curae para ti.",
     "change": 205977,
     "historicalData": {
       "2020": 0.012,
@@ -81,7 +81,7 @@
     "currentValue": "Winterset alskdfas asdf asdf",
     "change": 283658,
     "historicalData": {
-      "2020": 0.011,
+      "2020": 1,
       "2021": 217883,
       "2022": 238299,
       "2023": 261452,
