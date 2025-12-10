@@ -73,5 +73,20 @@
       "2024": 345260,
       "2025": 346418
     }
+  },
+  {
+    "entity": "Winterset",
+    "type": "City",
+    "date": "1210/2025",
+    "currentValue": "Winterset alskdfas asdf asdf",
+    "change": 283658,
+    "historicalData": {
+      "2020": 0.01,
+      "2021": 217883,
+      "2022": 238299,
+      "2023": 261452,
+      "2024": 268862,
+      "2025": 284656
+    }
   }
 ]
