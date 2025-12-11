@@ -3,7 +3,7 @@
     "entity": "Des Moines",
     "type": "City",
     "date": "2025-12-08",
-    "currentTrend": "DSM sadfasdf asdfasdf ipsum dolor sit amet. Vestibuoum amicus curae para ti.",
+    "currentTrend": "Market activity here is highly localized, with intense demand for updated historic homes in established neighborhoods like Beaverdale and Waterbury, alongside a steady flow of downtown condo inventory. Contact me to pinpoint the specific pockets of the city that align with your lifestyle and investment goals.",
     "currentValue": 205977,
     "change": 0.012,
     "historicalData": {
@@ -19,7 +19,7 @@
     "entity": "Ankeny",
     "type": "City",
     "date": "2025-12-08",
-    "currentTrend": "Ankeny's real estate market in late 2025 shows a cooling but stable trend, with median home prices around the mid-$300Ks, slightly down year-over-year but still appreciating moderately.",
+    "currentTrend": "With the highest transaction volume in the metro, Ankeny offers a fast-moving mix of inventory ranging from entry-level townhomes to high-end custom builds in districts like Prairie Trail. Reach out to me to help you navigate the rapid pace and diverse price points of this northern hub.",
     "currentValue": 336974,
     "change": 0.023,
     "historicalData": {
@@ -35,7 +35,7 @@
     "entity": "Columbus Park",
     "type": "Neighborhood",
     "date": "2025-12-08",
-    "currentTrend": "Columbus McKinley Park monins nunca nada para nosotrtos voma drosca qen.",
+    "currentTrend": "This historic south-side neighborhood remains a strong value-driven market, attracting buyers looking for affordable character homes and proximity to downtown without the western suburb price tag. Contact me to uncover the hidden gems and renovation opportunities that are quietly gaining attention here.",
     "currentValue": 155407,
     "change": -0.028,
     "historicalData": {
@@ -51,7 +51,7 @@
     "entity": "Beaverdale",
     "type": "Neighborhood",
     "date": "2025-12-08",
-    "currentTrend": "Beaverdale BGF lorem ipsum dolor sit amet. Vestibuoum amicus curae para ti.",
+    "currentTrend": "This is arguably the metro?s most distinctive resale market, where demand for the iconic \"Beaverdale Brick\" creates a consistently competitive environment for well-maintained properties. Let?s connect so I can help you act quickly when a classic home hits the market in this charming, walkable community.",
     "currentValue": 252446,
     "change": 0.029,
     "historicalData": {
@@ -67,7 +67,7 @@
     "entity": "Waukee",
     "type": "City",
     "date": "12/8/2025`",
-    "currentTrend": "Waukee wervdremonins nunca nada para nosotrtos voma drosca qen.",
+    "currentTrend": "Driven by a surge in luxury new construction and rapid commercial development, Waukee remains a competitive market where turnkey properties command top dollar. Contact me to get the inside track on the latest building phases and incentives in this premium community.",
     "currentValue": 341519,
     "change": -0.011,
     "historicalData": {
@@ -83,7 +83,7 @@
     "entity": "Winterset",
     "type": "City",
     "date": "1210/2025",
-    "currentTrend": "Winterset, IA's real estate market shows increasing prices but longer selling times, indicating a shift towards a buyer's market with more inventory than demand, though it's still competitive, featuring a mix of affordable starter homes and higher-end properties",
+    "currentTrend": "Demand here is specifically focused on hard-to-find acreages and historic properties, creating a tight niche market with limited inventory turnover compared to the metro core. Contact me to uncover these unique land and lifestyle listings as soon as they hit the market.",
     "currentValue": 283658,
     "change": 0.01,
     "historicalData": {
@@ -93,6 +93,54 @@
       "2023": 268862,
       "2024": 284656,
       "2025": 283658
+    }
+  },
+  {
+    "entity": "Altoona",
+    "type": "CIty",
+    "date": "2025-12-11",
+    "currentTrend": "Altoona consistently offers some of the best price-per-square-foot value in the metro, balancing a healthy supply of new construction near the entertainment hub with a strong resale market. Reach out to me so we can compare the latest builder incentives against existing home inventory.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "Norwalk",
+    "type": "City",
+    "date": "2025-12-11",
+    "currentTrend": "Driven by the expansion of luxury golf course communities and aggressive tax abatements, Norwalk has rapidly shifted into a premium destination for buyers seeking high-end amenities on the south side. Call me to explore the specific developments driving this surge in value.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "Pleasant Hill",
+    "type": "City",
+    "date": "2025-12-11",
+    "currentTrend": "With a lower turnover rate than the western suburbs, Pleasant Hill is a remarkably stable market characterized by larger lots and scenic, established neighborhoods. Contact me today, and I will keep a close watch for the rare opportunities that arise in this tight eastern community.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
     }
   }
 ]
