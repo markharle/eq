@@ -25,16 +25,18 @@ function formatCurrentValue(value) {
 
 /**
  * Formats change value with arrow icon, percentage, and color
- * Removes % and - characters, applies formatting rules
+ * Multiplies by 100, rounds to 2 decimal places, removes % and - characters, applies formatting rules
  */
 function formatChange(changeValue) {
   if (changeValue === null || changeValue === undefined) {
     return "N/A";
   }
 
-  // Convert to string and remove % and - characters
-  let cleanValue = String(changeValue).replace(/%/g, "").replace(/-/g, "");
-  const numValue = parseFloat(cleanValue);
+  // Convert to number and multiply by 100
+  let numValue = parseFloat(changeValue) * 100;
+  
+  // Round to 2 decimal places
+  numValue = Math.round(numValue * 100) / 100;
 
   // Determine arrow direction and color based on value
   let arrow = "";
@@ -48,8 +50,11 @@ function formatChange(changeValue) {
     color = "#00FF00"; // Green for positive
   }
 
+  // Format the number to always show 2 decimal places
+  const formattedValue = Math.abs(numValue).toFixed(2);
+
   // Build the HTML with color styling
-  const html = `<span style="color: ${color};">${arrow}${Math.abs(numValue)}% 1-yr</span>`;
+  const html = `<span style="color: ${color};">${arrow}${formattedValue}% 1-yr</span>`;
   return html;
 }
 
