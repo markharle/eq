@@ -1,0 +1,98 @@
+[
+  {
+    "entity": "Des Moines",
+    "type": "City",
+    "date": "2025-12-08",
+    "currentTrend": "DSM sadfasdf asdfasdf ipsum dolor sit amet. Vestibuoum amicus curae para ti.",
+    "currentValue": 205977,
+    "change": 0.012,
+    "historicalData": {
+      "2020": 157110,
+      "2021": 171313,
+      "2022": 186661,
+      "2023": 195991,
+      "2024": 204684,
+      "2025": 205977
+    }
+  },
+  {
+    "entity": "Ankeny",
+    "type": "City",
+    "date": "2025-12-08",
+    "currentTrend": "Ankeny Hawks  dremonins nunca nada para nosotrtos voma drosca qen.",
+    "currentValue": 336974,
+    "change": 0.023,
+    "historicalData": {
+      "2020": 264420,
+      "2021": 296779,
+      "2022": 318758,
+      "2023": 323431,
+      "2024": 330899,
+      "2025": 336974
+    }
+  },
+  {
+    "entity": "Columbus Park",
+    "type": "Neighborhood",
+    "date": "2025-12-08",
+    "currentTrend": "Columbus McKinley Park monins nunca nada para nosotrtos voma drosca qen.",
+    "currentValue": 155407,
+    "change": -0.028,
+    "historicalData": {
+      "2020": 126461,
+      "2021": 133526,
+      "2022": 145513,
+      "2023": 154143,
+      "2024": 159347,
+      "2025": 155407
+    }
+  },
+  {
+    "entity": "Beaverdale",
+    "type": "Neighborhood",
+    "date": "2025-12-08",
+    "currentTrend": "Beaverdale BGF lorem ipsum dolor sit amet. Vestibuoum amicus curae para ti.",
+    "currentValue": 252446,
+    "change": 0.029,
+    "historicalData": {
+      "2020": 189164,
+      "2021": 207910,
+      "2022": 226455,
+      "2023": 237604,
+      "2024": 247306,
+      "2025": 252446
+    }
+  },
+  {
+    "entity": "Waukee",
+    "type": "City",
+    "date": "12/8/2025`",
+    "currentTrend": "Waukee wervdremonins nunca nada para nosotrtos voma drosca qen.",
+    "currentValue": 341519,
+    "change": -0.011,
+    "historicalData": {
+      "2020": 298165,
+      "2021": 324099,
+      "2022": 345199,
+      "2023": 345260,
+      "2024": 346418,
+      "2025": 341519
+    }
+  },
+  {
+    "entity": "Winterset",
+    "type": "City",
+    "date": "1210/2025",
+    "currentTrend": "Winterset, IA's real estate market shows increasing prices but longer selling times, indicating a shift towards a buyer's market with more inventory than demand, though it's still competitive, featuring a mix of affordable starter homes and higher-end properties",
+    "currentValue": 283658,
+    "change": 0.01,
+    "historicalData": {
+      "2020": 217883,
+      "2021": 238299,
+      "2022": 261452,
+      "2023": 268862,
+      "2024": 284656,
+      "2025": 283658
+    }
+  }
+]
