@@ -40,14 +40,14 @@ function formatChange(changeValue) {
 
   // Determine arrow direction and color based on value
   let arrow = "";
-  let color = "#0000FF"; // Default blue for 0
+  let color = "#07437D"; // Default blue for 0
 
   if (numValue < 0) {
     arrow = '<i class="fa fa-arrow-down fa-fw"></i>';
     color = "#FF0000"; // Red for negative
   } else if (numValue > 0) {
     arrow = '<i class="fa fa-arrow-up fa-fw"></i>';
-    color = "#00FF00"; // Green for positive
+    color = "#006400"; // Green for positive
   }
 
   // Format the number to always show 2 decimal places
