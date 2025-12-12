@@ -44,15 +44,17 @@ function formatChange(changeValue) {
   let color = "#0000FF";
 
   if (numValue < 0) {
-    arrow = '<i class="fa fa-arrow-down fa-fw"></i>';
-    color = "#FF0000";
+    //arrow = '<i class="fa fa-arrow-down fa-fw"></i>';
+    arrow = 'down ';
+    color = "#a70000";
   } else if (numValue > 0) {
-    arrow = '<i class="fa fa-arrow-up fa-fw"></i>';
-    color = "#00FF00";
+    // arrow = '<i class="fa fa-arrow-up fa-fw"></i>';
+    arrow = 'up ';
+    color = "#0b6623";
   }
 
   const formattedValue = Math.abs(numValue).toFixed(2);
-  const html = `<span style="color: ${color};">${arrow}${formattedValue}% 1-yr</span>`;
+  const html = `<span style="color: ${color};">${arrow}${formattedValue}%</span>`;
   return html;
 }
 
