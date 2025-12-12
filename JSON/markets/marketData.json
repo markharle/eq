@@ -116,15 +116,15 @@
     "type": "City",
     "date": "Q4 2025",
     "currentTrend": "Driven by the expansion of luxury golf course communities and aggressive tax abatements, Norwalk has rapidly shifted into a premium destination for buyers seeking high-end amenities on the south side. Call me to explore the specific developments driving this surge in value.",
-    "currentValue": 0,
-    "change": 0,
+    "currentValue": 327863,
+    "change": 0.025,
     "historicalData": {
-      "2020": 0,
-      "2021": 0,
-      "2022": 0,
-      "2023": 0,
-      "2024": 0,
-      "2025": 0
+      "2020": 261055,
+      "2021": 291627,
+      "2022": 316167,
+      "2023": 315920,
+      "2024": 321102,
+      "2025": 327863
     }
   },
   {
