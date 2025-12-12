@@ -1,6 +1,6 @@
 // ============================================================================
 // MARKET HISTORY CHART RENDERER (using Chart.js)
-// Renders a 5-year historical line chart (render-chart.js)
+// Renders a historical line chart (render-chart.js)
 // ============================================================================
 
 // NOTE: We use CHART_CONFIG to avoid conflicts with other scripts on the page
@@ -30,14 +30,20 @@ function renderHistoryChart() {
       // 3. Find the specific Entity
       const entityData = data.find(item => item.entity === CHART_CONFIG.ENTITY);
 
-      if (!entityData || !entityData.history) {
-        console.error(`History data for "${CHART_CONFIG.ENTITY}" not found.`);
+      // CHANGED: We now look for 'historicalData' instead of 'history'
+      if (!entityData || !entityData.historicalData) {
+        console.error(`History data (historicalData) for "${CHART_CONFIG.ENTITY}" not found.`);
         return;
       }
 
       // 4. Parse History Data for Chart.js
-      const labels = entityData.history.map(h => h.year);
-      const values = entityData.history.map(h => h.value);
+      // The JSON structure is an object: { "2020": 298165, "2021": 324099, ... }
+      
+      // We extract the keys (years) and sort them to ensure chronological order
+      const labels = Object.keys(entityData.historicalData).sort();
+      
+      // We map those sorted years to their corresponding values
+      const values = labels.map(year => entityData.historicalData[year]);
 
       // 5. Initialize Chart
       new Chart(ctx, {
