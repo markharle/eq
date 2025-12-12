@@ -1,5 +1,5 @@
 // ============================================================================
-// CURRENT RENDERER (render-values-current.js)
+// CURRENT RENDERER (Simplified Date Handling) render-values-current.js
 // Renders currentValue, change, and date fields from JSON
 // Supports multiple occurrences using CLASSES (js-currentValue, js-change, js-date)
 // ============================================================================
@@ -9,42 +9,6 @@
 // ============================================================================
 // UTILITY FUNCTIONS
 // ============================================================================
-
-/**
- * Formats a YYYY-MM-DD date string based on the provided format pattern
- * Supported tokens: YYYY, MMMM, MMM, MM, DD
- */
-function formatDate(dateString, formatPattern) {
-  if (!dateString) return "N/A";
-
-  // Parse YYYY-MM-DD carefully to avoid timezone issues
-  // We split the string rather than using new Date() directly to ensure we stay on the correct day
-  const parts = dateString.split('-');
-  if (parts.length !== 3) return dateString; // Return original if not in YYYY-MM-DD format
-
-  const year = parts[0];
-  const monthIndex = parseInt(parts[1]) - 1; // JS months are 0-11
-  const day = parts[2];
-
-  // Create date object for extracting names
-  const dateObj = new Date(year, monthIndex, day);
-  
-  // Define month names
-  const monthsShort = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-  const monthsLong = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
-  // Default to YYYY-MM-DD if no format provided
-  let output = formatPattern || "YYYY-MM-DD";
-
-  // Replace tokens with actual values
-  output = output.replace("YYYY", year);
-  output = output.replace("MMMM", monthsLong[monthIndex]);
-  output = output.replace("MMM", monthsShort[monthIndex]);
-  output = output.replace("MM", parts[1]); // Use original 0-padded string
-  output = output.replace("DD", day);      // Use original 0-padded string
-
-  return output;
-}
 
 /**
  * Formats currentValue based on ROUND_CURRENTVALUE setting
@@ -99,7 +63,6 @@ function updateAllElements(className, content, isHTML = false) {
   const elements = document.querySelectorAll(`.${className}`);
   
   if (elements.length === 0) {
-    // Optional: console.warn(`No elements found with class "${className}"`);
     return;
   }
 
@@ -142,13 +105,12 @@ function renderCurrent() {
       const formattedChange = formatChange(entityData.change);
       updateAllElements("js-change", formattedChange, true);
 
-      // 3. Process Date
-      // Use configured format or default to YYYY-MM-DD
-      const dateFormat = CONFIG.DATE_FORMAT || "YYYY-MM-DD";
-      const formattedDate = formatDate(entityData.date, dateFormat);
-      updateAllElements("js-date", formattedDate);
+      // 3. Process Date (Plain Text)
+      // Pass the raw string from JSON directly to the HTML.
+      const rawDate = entityData.date || ""; 
+      updateAllElements("js-date", rawDate);
 
-      console.log(`Rendered ${CONFIG.ENTITY}: Value=${formattedCurrentValue}, Date=${formattedDate}`);
+      console.log(`Rendered ${CONFIG.ENTITY}: Value=${formattedCurrentValue}, Date=${rawDate}`);
     })
     .catch(error => {
       console.error("Error fetching or rendering data:", error);
