@@ -70,10 +70,17 @@
     const targetDivs = document.querySelectorAll('div.js-modal-link');
     
     if (targetDivs.length > 0) {
+      let processedCount = 0;
       targetDivs.forEach(div => {
-        wrapTextWithLink(div, linkConfig.textStrings, linkConfig.href);
+        // Only process if div has text content
+        if (div.textContent.trim().length > 0) {
+          wrapTextWithLink(div, linkConfig.textStrings, linkConfig.href);
+          processedCount++;
+        }
       });
-      console.log(`✓ Auto-Link script processed ${targetDivs.length} div(s) with class "js-modal-link"`);
+      console.log(`✓ Auto-Link script processed ${processedCount} div(s) with class "js-modal-link"`);
+    } else {
+      console.warn('⚠ No divs found with class "js-modal-link"');
     }
   }
 
@@ -84,6 +91,11 @@
     } else {
       processModalLinkDivs();
     }
+
+    // IMPORTANT: Also run after a delay to catch dynamically loaded content
+    // Adjust the delay (in milliseconds) if needed
+    setTimeout(processModalLinkDivs, 1500);
+    setTimeout(processModalLinkDivs, 3000);
   }
 
   // Initialize the script
