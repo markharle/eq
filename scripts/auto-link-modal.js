@@ -1,19 +1,34 @@
 /**
- * Auto-Link Text Strings in Modal Link Divs
- * Hosted on GitHub and injected via Squarespace Code Injection
- * 
- * This script automatically wraps predefined text strings with anchor tags
- * in divs with the class "js-modal-link"
+ * Auto-Link Text Strings in Modal Link Divs (auto-link-modal.js)
+ This script converts selected text strings into clickable 'contact us' links. We use this to enable these links on raw text injected to our pages.
  */
 
 (function() {
   'use strict';
 
-  // Define the text strings to find and the link URL
-  const linkConfig = {
+  // ============================================
+  // CONFIGURATION SECTION - EDIT THESE VALUES
+  // ============================================
+  const AUTO_LINK_CONFIG = {
+    // CSS class to target
+    targetClass: 'js-modal-link',
+    
+    // Text strings to find and wrap (case-insensitive)
     textStrings: ['Contact me', 'Call me', 'Reach out', "Let's discuss"],
-    href: '#wm-popup=/contact-us-popup'
+    
+    // URL/anchor for the links
+    href: '#wm-popup=/contact-us-popup',
+    
+    // Retry delays (in milliseconds) for dynamically loaded content
+    retryDelays: [1500, 3000],
+    
+    // Enable console logging
+    enableLogging: true
   };
+
+  // ============================================
+  // CORE SCRIPT - Uses config values above
+  // ============================================
 
   // Function to wrap text strings with anchor tags
   function wrapTextWithLink(node, textStrings, href) {
@@ -67,20 +82,32 @@
 
   // Main function to process all divs with the target class
   function processModalLinkDivs() {
-    const targetDivs = document.querySelectorAll('div.js-modal-link');
+    // Use config value for target class selector
+    const targetDivs = document.querySelectorAll(`div.${AUTO_LINK_CONFIG.targetClass}`);
     
     if (targetDivs.length > 0) {
       let processedCount = 0;
       targetDivs.forEach(div => {
         // Only process if div has text content
         if (div.textContent.trim().length > 0) {
-          wrapTextWithLink(div, linkConfig.textStrings, linkConfig.href);
+          // Pass config values to the wrapping function
+          wrapTextWithLink(div, AUTO_LINK_CONFIG.textStrings, AUTO_LINK_CONFIG.href);
           processedCount++;
         }
       });
-      console.log(`✓ Auto-Link script processed ${processedCount} div(s) with class "js-modal-link"`);
+      
+      // Use config value for logging preference
+      if (AUTO_LINK_CONFIG.enableLogging) {
+        if (processedCount === 0) {
+          console.warn('⚠ Auto-Link script: No divs with text content found');
+        } else {
+          console.log(`✓ Auto-Link script processed ${processedCount} div(s) with class "${AUTO_LINK_CONFIG.targetClass}"`);
+        }
+      }
     } else {
-      console.warn('⚠ No divs found with class "js-modal-link"');
+      if (AUTO_LINK_CONFIG.enableLogging) {
+        console.warn(`⚠ No divs found with class "${AUTO_LINK_CONFIG.targetClass}"`);
+      }
     }
   }
 
@@ -92,10 +119,11 @@
       processModalLinkDivs();
     }
 
-    // IMPORTANT: Also run after a delay to catch dynamically loaded content
-    // Adjust the delay (in milliseconds) if needed
-    setTimeout(processModalLinkDivs, 1500);
-    setTimeout(processModalLinkDivs, 3000);
+    // Run after delays to catch dynamically loaded content
+    // Use config values for retry delays
+    AUTO_LINK_CONFIG.retryDelays.forEach(delay => {
+      setTimeout(processModalLinkDivs, delay);
+    });
   }
 
   // Initialize the script
