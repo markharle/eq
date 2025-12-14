@@ -14,7 +14,7 @@
     targetClass: 'js-modal-link',
     
     // Text strings to find and wrap (case-insensitive)
-    textStrings: ['Contact me', 'Call me', 'Reach out', "Let's discuss"],
+    textStrings: ['Contact me', 'Call me', 'Reach out',  "Let's talk","Let's discuss","Let's connect"],
     
     // URL/anchor for the links
     href: '#wm-popup=/contact-us-popup',
