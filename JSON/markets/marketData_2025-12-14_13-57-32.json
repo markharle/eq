@@ -1,0 +1,1058 @@
+[
+  {
+    "entity": "Des Moines",
+    "type": "City",
+    "date": "Q4 2025",
+    "currentTrend": "Market activity here is highly localized, with intense demand for updated historic homes in established neighborhoods like Beaverdale and Waterbury, alongside a steady flow of downtown condo inventory. Contact me to pinpoint the specific pockets of the city that align with your lifestyle and investment goals.",
+    "currentValue": 205977,
+    "change": 0.012,
+    "historicalData": {
+      "2020": 157110,
+      "2021": 171313,
+      "2022": 186661,
+      "2023": 195991,
+      "2024": 204684,
+      "2025": 205977
+    }
+  },
+  {
+    "entity": "Ankeny",
+    "type": "City",
+    "date": "Q4 2025",
+    "currentTrend": "With the highest transaction volume in the metro, Ankeny offers a fast-moving mix of inventory ranging from entry-level townhomes to high-end custom builds in districts like Prairie Trail. Reach out to me to help you navigate the rapid pace and diverse price points of this northern hub.",
+    "currentValue": 336974,
+    "change": 0.023,
+    "historicalData": {
+      "2020": 264420,
+      "2021": 296779,
+      "2022": 318758,
+      "2023": 323431,
+      "2024": 330899,
+      "2025": 336974
+    }
+  },
+  {
+    "entity": "Columbus Park",
+    "type": "Neighborhood",
+    "date": "Q4 2025",
+    "currentTrend": "This historic south-side neighborhood remains a strong value-driven market, attracting buyers looking for affordable character homes and proximity to downtown without the western suburb price tag. Contact me to uncover the hidden gems and renovation opportunities that are quietly gaining attention here.",
+    "currentValue": 155407,
+    "change": -0.028,
+    "historicalData": {
+      "2020": 126461,
+      "2021": 133526,
+      "2022": 145513,
+      "2023": 154143,
+      "2024": 159347,
+      "2025": 155407
+    }
+  },
+  {
+    "entity": "Beaverdale",
+    "type": "Neighborhood",
+    "date": "Q4 2025",
+    "currentTrend": "This is arguably the metro's most distinctive resale market, where demand for the iconic \"Beaverdale Brick\" creates a consistently competitive environment for well-maintained properties. Let?s connect so I can help you act quickly when a classic home hits the market in this charming, walkable community.",
+    "currentValue": 252446,
+    "change": 0.029,
+    "historicalData": {
+      "2020": 189164,
+      "2021": 207910,
+      "2022": 226455,
+      "2023": 237604,
+      "2024": 247306,
+      "2025": 252446
+    }
+  },
+  {
+    "entity": "Waukee",
+    "type": "City",
+    "date": "Q4 2025",
+    "currentTrend": "Driven by a surge in luxury new construction and rapid commercial development, Waukee remains a competitive market where turnkey properties command top dollar. Contact me to get the inside track on the latest building phases and incentives in this premium community.",
+    "currentValue": 341519,
+    "change": -0.011,
+    "historicalData": {
+      "2020": 298165,
+      "2021": 324099,
+      "2022": 345199,
+      "2023": 345260,
+      "2024": 346418,
+      "2025": 341519
+    }
+  },
+  {
+    "entity": "Winterset",
+    "type": "City",
+    "date": "Q4 2025",
+    "currentTrend": "Demand here is specifically focused on hard-to-find acreages and historic properties, creating a tight niche market with limited inventory turnover compared to the metro core. Contact me to uncover these unique land and lifestyle listings as soon as they hit the market.",
+    "currentValue": 283658,
+    "change": 0.01,
+    "historicalData": {
+      "2020": 217883,
+      "2021": 238299,
+      "2022": 261452,
+      "2023": 268862,
+      "2024": 284656,
+      "2025": 283658
+    }
+  },
+  {
+    "entity": "Altoona",
+    "type": "CIty",
+    "date": "Q4 2025",
+    "currentTrend": "Altoona consistently offers some of the best price-per-square-foot value in the metro, balancing a healthy supply of new construction near the entertainment hub with a strong resale market. Reach out to me so we can compare the latest builder incentives against existing home inventory.",
+    "currentValue": 318194,
+    "change": 0.011,
+    "historicalData": {
+      "2020": 253129,
+      "2021": 279390,
+      "2022": 298868,
+      "2023": 306638,
+      "2024": 315865,
+      "2025": 318194
+    }
+  },
+  {
+    "entity": "Norwalk",
+    "type": "City",
+    "date": "Q4 2025",
+    "currentTrend": "Driven by the expansion of luxury golf course communities and aggressive tax abatements, Norwalk has rapidly shifted into a premium destination for buyers seeking high-end amenities on the south side. Contactme to explore the specific developments driving this surge in value.",
+    "currentValue": 327863,
+    "change": 0.025,
+    "historicalData": {
+      "2020": 261055,
+      "2021": 291627,
+      "2022": 316167,
+      "2023": 315920,
+      "2024": 321102,
+      "2025": 327863
+    }
+  },
+  {
+    "entity": "Pleasant Hill",
+    "type": "City",
+    "date": "Q4 2025",
+    "currentTrend": "With a lower turnover rate than the western suburbs, Pleasant Hill is a remarkably stable market characterized by larger lots and scenic, established neighborhoods. Contact me today, and I will keep a close watch for the rare opportunities that arise in this tight eastern community.",
+    "currentValue": 298580,
+    "change": 0.008,
+    "historicalData": {
+      "2020": 233843,
+      "2021": 261618,
+      "2022": 280966,
+      "2023": 288704,
+      "2024": 297196,
+      "2025": 298580
+    }
+  },
+  {
+    "entity": "Adel",
+    "type": "City",
+    "date": "Q4 2025",
+    "currentTrend": "The secret is out on Adel, where buyers are increasingly trading shorter commutes for significant tax abatements and larger lot sizes that are impossible to find closer to the Des Moines core. Contact me to compare the long-term cost savings of buying in this expanding western community.",
+    "currentValue": 391607,
+    "change": 0.022,
+    "historicalData": {
+      "2020": 302922,
+      "2021": 340934,
+      "2022": 373473,
+      "2023": 375891,
+      "2024": 384754,
+      "2025": 391607
+    }
+  },
+  {
+    "entity": "Bondurant",
+    "type": "City",
+    "date": "Q4 2025",
+    "currentTrend": "While prices climb in Des Moines' western suburbs, Bondurant remains a stronghold for value, offering newer inventory at a price point that is becoming rare in the metro area. Reach out to me so we can find a home that maximizes your budget in this rapidly growing northeast corridor.",
+    "currentValue": 332964,
+    "change": 0.013,
+    "historicalData": {
+      "2020": 270638,
+      "2021": 304507,
+      "2022": 323045,
+      "2023": 323466,
+      "2024": 330105,
+      "2025": 332964
+    }
+  },
+  {
+    "entity": "Clive",
+    "type": "City",
+    "date": "Q4 2025",
+    "currentTrend": "Clive is essentially a tale of two markets, ranging from the established, wooded estates along the Greenbelt to the luxury new construction pushing west into Dallas County. Let's connect to determine which side of this prestigious enclave fits your specific housing needs",
+    "currentValue": 421332,
+    "change": 0.008,
+    "historicalData": {
+      "2020": 327678,
+      "2021": 363600,
+      "2022": 396939,
+      "2023": 406992,
+      "2024": 419136,
+      "2025": 421332
+    }
+  },
+  {
+    "entity": "Cumming",
+    "type": "City",
+    "date": "Q4 2025",
+    "currentTrend": "This is arguably the most unique transition market in the area, shifting rapidly from rural, south of Des Moines acreage to high-end \"agri-hood\" developments like Middlebrook. Contact me to get the details on this emerging lifestyle trend before prices climb further.",
+    "currentValue": 525061,
+    "change": 0.019,
+    "historicalData": {
+      "2020": 399296,
+      "2021": 456157,
+      "2022": 501895,
+      "2023": 500270,
+      "2024": 516446,
+      "2025": 525061
+    }
+  },
+  {
+    "entity": "Dallas Center",
+    "type": "City",
+    "date": "Q4 2025",
+    "currentTrend": "For buyers prioritizing a tight-knit school district and a slower pace, Dallas Center offers a very stable market with low inventory turnover, meaning competition can be surprisingly stiff for good homes. Reach out to me to keep a watchful eye for listings in this highly desirable small-town loop.",
+    "currentValue": 299909,
+    "change": 0.03,
+    "historicalData": {
+      "2020": 245513,
+      "2021": 267072,
+      "2022": 288776,
+      "2023": 283198,
+      "2024": 293897,
+      "2025": 299909
+    }
+  },
+  {
+    "entity": "Grimes",
+    "type": "City",
+    "date": "Q4 2025",
+    "currentTrend": "Inventory moves incredibly fast here due to the explosion of amenities along the Highway 141 corridor, making it a top choice for buyers who want convenience and modern open layouts. Contact me so we can structure a competitive offer strategy for this high-velocity market.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "Johnston",
+    "type": "City",
+    "date": "Q4 2025",
+    "currentTrend": "Johnston consistently holds its value due to its unique landscape of mature timber and ravines, attracting executive-level buyers looking for privacy and top-tier schools. Let's talk about finding you a home that balances nature with easy access to Interstate 35 / 80.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "Urbandale",
+    "type": "City",
+    "date": "Q4 2025",
+    "currentTrend": "Known for having some of the lowest property tax rates in the metro, Urbandale attracts savvy buyers looking for long-term stability in both its established eastern neighborhoods and spreading western developments. Reach out to me to calculate how much further your monthly payment can go in this efficient market.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "West Des Moines",
+    "type": "City",
+    "date": "Q4 2025",
+    "currentTrend": "As the retail and employment anchor of the suburbs, West Des Moines sees the most diverse buyer activity; ranging from luxury condos near Jordan Creek to sprawling estates in Glen Oaks, through traditional bungalows in the Valley Junction neighborhood. Contact me to navigate the sheer volume of options and zero in on the right district for you.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "Windsor Heights",
+    "type": "City",
+    "date": "Q4 2025",
+    "currentTrend": "This is a niche market for mid-century enthusiasts who value accessibility above all else; homes here are solid, well-built, and centrally located between downtown Des Moines and the suburbs. Contact me to tour the best-preserved architectural gems currently available in this convenient pocket.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "Lacona",
+    "type": "City",
+    "date": "Q4 2025",
+    "currentTrend": "For buyers priced out of the immediate Des Moines metro suburbs, Lacona offers a distinct shift toward rural affordability and larger land parcels. The market here is less about neighborhood turnover and more about acreage and lifestyle, so contact me if you are looking for significant space and quiet away from the city core.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "Mitchellville",
+    "type": "City",
+    "date": "Q4 2025",
+    "currentTrend": "Often overlooked, Mitchellville presents a massive value opportunity for buyers willing to drive just ten minutes east of Altoona. You get the same access to eastern Polk County amenities without the Altoona price tag, so reach out to me to see just how much house you can get for your money here.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "Madrid",
+    "type": "City",
+    "date": "Q4 2025",
+    "currentTrend": "Real estate here has been energized by the High Trestle Trail, turning a quiet commuter town into a desirable recreational hub equidistant from Des Moines and Ames. Prices have risen as popularity grows, so let's connect to find a home that puts you close to the trail and the highway.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "Newton",
+    "type": "City",
+    "date": "Q4 2025",
+    "currentTrend": "Newton is currently offering some of the best price-per-square-foot value in Central Iowa, combined with aggressive housing initiatives to spark new growth. Whether you want a historic renovation project or a new build incentive, contact me to explore the financial upside of buying in this revitalizing market.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "Polk City",
+    "type": "City",
+    "date": "Q4 2025",
+    "currentTrend": "This is a \"lifestyle premium\" market where inventory is perpetually tight due to the high demand for access to Saylorville Lake and Big Creek. Homes here hold value incredibly well because the location cannot be replicated; reach out to me so we can jump immediately when a property lists in this exclusive lake area.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "St. Charles",
+    "type": "City",
+    "date": "Q4 2025",
+    "currentTrend": "Situated in the scenic hills of Madison County, St. Charles is the target market for those seeking picturesque topography and small-town solitude south of the metro. Inventory is sparse and leans toward older character homes or hard-to-find land, so contact me to keep a specific watch for acreages in this area.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "Slater",
+    "type": "City",
+    "date": "Q4 2025",
+    "currentTrend": "Sitting in the strategic \"sweet spot\" between Des Moines and Ames, Slater is a highly competitive market driven by the Ballard School District and trail access. Because it draws commuters from both directions, homes move quickly; let's talk about how to position your offer in this dual-metro corridor.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "Stratford",
+    "type": "City",
+    "date": "Q4 2025",
+    "currentTrend": "This is a true rural market well north of the metro, attracting buyers looking for quiet, small-town living at a very accessible entry price. The pace of sales here is much more relaxed than the city, so contact me if you are looking to escape the hustle for a more laid-back community.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "Sheldahl",
+    "type": "City",
+    "date": "Q4 2025",
+    "currentTrend": "With a tiny footprint, Sheldahl is a blink-and-you-miss-it market where listings are rare and turnover is exceptionally low. It offers a quiet, affordable alternative to its larger neighbors like Slater, so reach out to me if you want to be notified the moment a home becomes available here.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "Ames",
+    "type": "City",
+    "date": "Q4 2025",
+    "currentTrend": "Ames operates as its own robust economic ecosystem, meaning market trends here don't always mirror Des Moines. The inventory is distinctly bifurcated between high-demand investment properties near the Iowa State University campus and steady, owner-occupied neighborhoods like Somerset. So contact me to discuss which side of this unique university market aligns with your goals.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "Boone",
+    "type": "City",
+    "date": "Q4 2025",
+    "currentTrend": "For buyers priced out of Ames or the western suburbs, Boone offers a high-value alternative with a rich stock of affordable, historic architecture. You can simply get more home for your money here, so reach out to me to compare the price-per-square-foot advantage of living in this established hub.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "Indianola",
+    "type": "City",
+    "date": "Q4 2025",
+    "currentTrend": "Anchored by Simpson College and a historic town square, Indianola offers a \"hometown\" stability that many sprawling suburbs lack. It is a steady market that appeals to those who want a strong community identity with a manageable commute to Des Moines, so let's connect to find the right neighborhood for you in this growing southern seat.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "Accent",
+    "type": "Neighborhood",
+    "date": "Q4 2025",
+    "currentTrend": "Tucked away on the northeast side, Accent offers some of the most accessible entry-level pricing in the city, making it a target for first-time buyers who want to own rather than rent. The housing stock here is modest but solid, so contact me if you are looking for a budget-friendly foothold in the market.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "Capital East",
+    "type": "Neighborhood",
+    "date": "Q4 2025",
+    "currentTrend": "This area is quickly benefiting from the energy spilling over from the East Village, attracting buyers who want proximity to the Capitol and downtown without the premium price tag of the riverfront. It is an up-and-coming district with a mix of industrial history and revitalization, so reach out to me to spot the growth potential here before prices catch up.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "Drake",
+    "type": "Neighborhood",
+    "date": "Q4 2025",
+    "currentTrend": "The Drake neighborhood is a high-character market defined by a mix of significant investment properties and grand, historic owner-occupied homes. Navigating this area requires distinguishing between student-heavy blocks and the quiet, tree-lined architectural gems, so contact me to identify the specific streets that match your lifestyle.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "Downtown Des Moines",
+    "type": "Neighborhood",
+    "date": "Q4 2025",
+    "currentTrend": "The downtown market is entirely distinct from the suburbs, driven by condo fees, tax abatement schedules, and specific building amenities rather than lot sizes. Whether you are looking for a Court Avenue loft or a high-rise in the core, reach out to me so we can evaluate the true monthly costs and resale value of vertical living.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "East Village",
+    "type": "Neighborhood",
+    "date": "Q4 2025",
+    "currentTrend": "This is the premier district for true urban walkability, where the market is defined almost exclusively by condos and lofts rather than single-family homes. You are paying for the lifestyle?proximity to the Capitol, restaurants, and retail?so contact me to navigate the specific HOA amenities and tax abatement schedules of these downtown buildings.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "Easter Lake Area",
+    "type": "Neighborhood",
+    "date": "Q4 2025",
+    "currentTrend": "This southeast pocket offers a rare \"city-meets-nature\" dynamic, featuring newer construction and walkout lots that are hard to find elsewhere within Des Moines city limits. It is ideal for buyers who want the convenience of the city with the recreation of the lake, so contact me to explore the inventory currently available near the water.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "Fairground",
+    "type": "Neighborhood",
+    "date": "Q4 2025",
+    "currentTrend": "Real estate here is heavily influenced by the Iowa State Fairgrounds; while some buyers love the energy and short-term rental potential, others prefer a buffer from the seasonal traffic. It takes a local eye to know which streets offer the right balance, so let's talk about finding a home here that fits your tolerance for activity.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "Fairmont Park",
+    "type": "Neighborhood",
+    "date": "Q4 2025",
+    "currentTrend": "Fairmont Park is a stable, quiet anchor of the East Side, known for well-maintained mid-century ranches that offer significantly more square footage for the money than similar homes out west. If you are looking for solid construction and established value, contact me to tour the best options in this reliable neighborhood.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "Greenwood Historic",
+    "type": "Neighborhood",
+    "date": "Q4 2025",
+    "currentTrend": "Greenwood offers some of the most prestigious and architecturally significant homes in Des Moines, situated among rolling hills and the Art Center. Properties here are \"legacy\" purchases that rarely hit the open market without fanfare, so reach out to me if you are looking for a unique, character-rich estate that holds its value.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "HIghland Park / Oak Park",
+    "type": "Neighborhood",
+    "date": "Q4 2025",
+    "currentTrend": "Powered by Invest DSM, these sister neighborhoods are currently seeing the most energetic revitalization in the city. The area enjoys a booming commercial node of trendy bakeries, coffee shops, restaurants, and specialty stores. Prices are rising as buyers rush to get into this \"cool\" north-side pocket, so let's connect to find you a home here before the market appreciates further.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "Indianola Hills",
+    "type": "Neighborhood",
+    "date": "Q4 2025",
+    "currentTrend": "Sitting just south of the river, this neighborhood offers topography that is rare in Des Moines, providing some of the best skyline views in the city at a fraction of the cost of the western suburbs. It is an eclectic, hidden-gem market, so contact me to find a property that takes full advantage of these unique elevation changes.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "Ingersoll Park",
+    "type": "Neighborhood",
+    "date": "Q4 2025",
+    "currentTrend": "The draw here is the \"leave the car at home\" lifestyle, as residents can easily walk to the restaurants and nightlife along The Avenues. Competition for these well-maintained Craftsman and Tudor homes is consistently high due to that walkability, so reach out to me to structure a winning offer when a listing hits this corridor.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "King Irving",
+    "type": "Neighborhood",
+    "date": "Q4 2025",
+    "currentTrend": "Located just east of Drake University, King Irving is a neighborhood with deep historic roots that is seeing renewed interest from buyers who appreciate early 20th-century architecture. It is a market where sweat equity can still go a long way, so contact me if you are interested in restoration opportunities or renovated vintage homes.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "Lower Beaver",
+    "type": "Neighborhood",
+    "date": "Q4 2025",
+    "currentTrend": "This is arguably the most \"solid\" neighborhood in the city, famous for its abundance of all-brick mid-century ranches and quiet, winding streets. It is a low-turnover area because residents tend to stay for decades, but let's connect so I can flag the next well-built home that becomes available in this northwest enclave.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "Martin Luther King Jr. Park",
+    "type": "Neighborhood",
+    "date": "Q4 2025",
+    "currentTrend": "This historic neighborhood is experiencing a surge of momentum, offering proximity to downtown with a strong sense of community heritage. As investment continues to flow into the near-downtown neighborhoods, contact me to discuss the value potential of buying in this accessible central location.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "Merle Hay",
+    "type": "Neighborhood",
+    "date": "Q4 2025",
+    "currentTrend": "Anchored by the commercial corridor, the residential streets here offer high convenience and affordable price points, making it a favorite for first-time homebuyers. The market moves fast here simply due to the volume of buyers looking in this price range, so reach out to me to get early access to these starter-home opportunities.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "Mondamin Presidential",
+    "type": "Neighborhood",
+    "date": "Q4 2025",
+    "currentTrend": "Located just north of University Avenue, this neighborhood is increasingly recognized for offering substantial square footage at a price point that is hard to beat within the city limits. It is a market driven by pragmatic buyers looking for solid construction near major amenities like the revitalized library and Broadlawns Hospital, so contact me if you are looking for a high-value home with easy access to the urban core.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "North of Grand",
+    "type": "Neighborhood",
+    "date": "Q4 2025",
+    "currentTrend": "Offering the architectural character of the \"Grand\" area without the estate-level price tags, this neighborhood attracts a diverse mix of professionals and creatives who want walkability to the shops and dining on Ingersoll Avenue. It is a high-demand pocket for those who value historic woodwork and urban energy, so let's connect to tour the unique inventory in this vibrant corridor.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "Prospect Park",
+    "type": "Neighborhood",
+    "date": "Q4 2025",
+    "currentTrend": "This north-side pocket is often overlooked, but it offers incredible access to the Des Moines River and the extensive trail system, making it a hidden favorite for outdoor enthusiasts. The inventory here is tight because residents tend to hold onto these river-adjacent properties, so reach out to me to get notified the moment a home hits the market in this quiet, recreation-friendly area.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "River Bend",
+    "type": "Neighborhood",
+    "date": "Q4 2025",
+    "currentTrend": "River Bend is the epicenter of historic preservation in Des Moines, attracting buyers who are passionate about restoring grand Victorian and Queen Anne architecture. This is a specific lifestyle choice that involves navigating historic renovation credits and \"sweat equity,\" so let's connect to discuss if taking on a stewardship role in this rapidly revitalizing district is the right move for you.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "Franklin Area",
+    "type": "Neighborhood",
+    "date": "Q4 2025",
+    "currentTrend": "Anchored by the Franklin Avenue Library, this neighborhood boasts a market that rivals Beaverdale in desirability, featuring tree-lined streets and sturdy brick Tudors. Competition here is fierce because the location offers the perfect balance of central convenience and classic aesthetics, so contact me to craft a competitive offer that stands out to sellers in this high-demand corridor.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "Salisbury Oaks",
+    "type": "Neighborhood",
+    "date": "Q4 2025",
+    "currentTrend": "Surrounding the historic Salisbury House, this neighborhood is defined by wooded lots, winding roads, and a mix of high-end traditional and mid-century modern architecture. It is a prestige market where privacy is the primary commodity, so reach out to me for a private consultation on securing a home in this exclusive, nature-rich enclave south of Grand.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "Sheridan Gardens",
+    "type": "Neighborhood",
+    "date": "Q4 2025",
+    "currentTrend": "Located on the East Side, Sheridan Gardens is a bedrock of stability, offering well-maintained bungalows and ranch homes that serve as excellent alternatives to higher-priced western suburbs. It is an ideal market for buyers seeking a quiet, residential atmosphere without a massive mortgage, so let's talk about finding you the best value for your money here.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "Sherman Hill",
+    "type": "Neighborhood",
+    "date": "Q4 2025",
+    "currentTrend": "As the city?s oldest residential neighborhood, Sherman Hill offers a dense, urban-historic vibe that feels entirely distinct from the rest of Des Moines. The market here consists of restored single-family homes and converted condos that appeal to those who want extreme walkability to downtown and Ingersoll, so contact me to navigate the unique aspects of buying within a designated historic district.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "South Central DSM",
+    "type": "Neighborhood",
+    "date": "Q4 2025",
+    "currentTrend": "This area is one of the most active markets for investors and first-time buyers driven by pure affordability. It offers proximity to downtown at price points that are nearly impossible to find elsewhere, making it a stepping stone for building equity. Because the condition of homes varies block by block, contact me so we can identify the pockets here that offer the best long-term potential.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "South of Grand",
+    "type": "Neighborhood",
+    "date": "Q4 2025",
+    "currentTrend": "This is unequivocally the most prestigious address in Des Moines, characterized by stately mansions, winding topography, and the Governor?s residence. The market here operates differently, often involving private sales and high-stakes legacy properties that require discreet navigation, so reach out to me for the professional guidance needed to acquire a home in this elite enclave.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "Southwestern Hills",
+    "type": "Neighborhood",
+    "date": "Q4 2025",
+    "currentTrend": "Often overlooked by buyers focused solely on the west side, this neighborhood offers surprising topography, winding streets, and unique mid-century homes near the Wakonda Club. It is a \"sleeper\" market where you can find substantial lots and occasional downtown views, so reach out to me to explore this quiet enclave that sits conveniently between the airport and the urban core.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "Union Park",
+    "type": "Neighborhood",
+    "date": "Q4 2025",
+    "currentTrend": "Anchored by its famous namesake park and the Heritage Carousel, this neighborhood offers some of the best \"charm-per-dollar\" value on the north side, featuring classic bungalows and front-porch living. It is a perennial favorite for first-time buyers seeking a strong community feel rather than sprawling square footage, so contact me to find a home here that perfectly balances character with affordability.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "Waterbury",
+    "type": "Neighborhood",
+    "date": "Q4 2025",
+    "currentTrend": "Waterbury is synonymous with west-side elegance, featuring a stunning collection of Tudors and Colonials that rival South of Grand in prestige but often offer more usable, level lots. Homes here are generally viewed as \"forever homes\" rather than stepping stones, which limits inventory, so let's connect to keep a close watch for the rare moment one of these architectural treasures becomes available.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "Watrous Heights",
+    "type": "Neighborhood",
+    "date": "Q4 2025",
+    "currentTrend": "Located on the south side, this neighborhood is a stronghold of stability, filled with well-built mid-century ranches and split-levels that have stood the test of time. It appeals to buyers who prioritize solid construction and easy access to the bypass over trendy aesthetics, so contact me if you are looking for a practical, high-value home in an established community.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "Watrous South",
+    "type": "Neighborhood",
+    "date": "Q4 2025",
+    "currentTrend": "Similar to its northern neighbor, Watrous South offers a quiet, residential atmosphere with a market defined by low turnover?people move here and tend to stay. It is an excellent spot for finding more square footage for your money compared to the western suburbs, so reach out to me to see how far your budget can stretch in this reliable south-side pocket.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "Waveland Park",
+    "type": "Neighborhood",
+    "date": "Q4 2025",
+    "currentTrend": "This is the quintessential Des Moines neighborhood, famous for its charm-filled brick Tudors and proximity to the Waveland Public Golf Course and Roosevelt High School. It is a highly competitive seller?s market where homes often sell within days due to the character and walkability, so let's talk about crafting a strategy to win multiple-offer situations in this beloved area.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "Waveland Woods",
+    "type": "Neighborhood",
+    "date": "Q4 2025",
+    "currentTrend": "Sitting just west of the Waveland Public Golf Course, this neighborhood feels slightly more secluded and wooded than Waveland Park, transitioning into mid-century architecture with larger setbacks. It attracts buyers who want the Waveland prestige but crave a bit more privacy and nature, so contact me to tour the unique properties tucked away in this leafy district.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "Westwood",
+    "type": "Neighborhood",
+    "date": "Q4 2025",
+    "currentTrend": "Positioned on the far west edge of the city, Westwood offers a suburban feel with large, mature trees and sprawling ranch-style homes that blur the line between Des Moines and West Des Moines. It is a favorite for those who want a \"big yard\" lifestyle without the cookie-cutter feel of new construction, so reach out to me to find a home here with good bones and plenty of space.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  },
+  {
+    "entity": "Woodland Heights",
+    "type": "Neighborhood",
+    "date": "Q4 2025",
+    "currentTrend": "This historic neighborhood is the perfect alternative for buyers who love the architecture of Sherman Hill but want a dedicated yard and a slightly quieter streetscape. It is currently seeing a wave of high-quality renovations, supported by financing provided by Invest DSM. All in, Woodland Heights is a prime spot for appreciation near the Ingersoll corridor, so let's connect to find a Victorian or Craftsman here that matches your vision.",
+    "currentValue": 0,
+    "change": 0,
+    "historicalData": {
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
+    }
+  }
+]
