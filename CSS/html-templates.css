@@ -85,6 +85,7 @@
   color: #0056b3;
 }
 
+
 /* Responsive behavior */
 @media (max-width: 768px) {
   .cta-card-01-element {
@@ -979,6 +980,11 @@
     line-height: 1.5rem;
     text-wrap: balance;
  }
+ .chart-container {
+    position: relative; 
+    height: 300px; 
+    width: 100%;
+}
 
  .attribution {
     font-size:.8rem; 
