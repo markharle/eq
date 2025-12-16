@@ -954,3 +954,55 @@
 }
 
 /* End btn-cta-contact-3 */
+
+/* Start Market Trends Section */
+.feature h3 {
+    font-family: "PT Sans Narrow", Arial, sans-serif !important;
+    line-height: 54px;
+    font-size: 48px;
+    font-weight: 300!important;
+    text-transform:capitalize
+}
+.feature p {
+    font-weight: 400;
+    font-family: Karla, arial, helvetica, sans-serif;
+    font-size: 1rem;
+}
+ .feature a {font-weight:700;}
+ .narrow-10 {
+    margin-left:10%;
+    margin-right:10%;
+ }
+ .trend-text p{
+    font-family: Karla, arial, helvetica, sans-serif;
+    font-size: 1.15rem;
+    line-height: 1.5rem;
+    text-wrap: balance;
+ }
+
+ .attribution {
+    font-size:.8rem; 
+    text-transform:uppercase;
+    border:1px solid #c1c1c1;
+    font-weight:500;
+    width:310px;
+    margin:0 auto;
+    border-radius:4px;
+    padding:.25rem 1rem;
+    letter-spacing:1px;
+    font-family:karla, arial, helvetica,sans-serif;  
+ }
+ 
+@media screen and (max-width: 767px) 
+{
+.feature h3 {
+    line-height:48px;
+    font-size: 40px;
+}
+ .narrow-10 {
+    margin-left:0;
+    margin-right:0;
+ }
+}
+
+/* End Market Trends Section */
