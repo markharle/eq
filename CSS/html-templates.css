@@ -998,7 +998,16 @@
     letter-spacing:1px;
     font-family:karla, arial, helvetica,sans-serif;  
  }
- 
+.disclaimer {
+	font-size: 12px;
+    line-height: 1.2rem;
+    color: #404040;
+    padding: 12px;
+    font-weight:400;
+    border: 1px solid #c1c1c1;
+    border-radius: 4px;
+    background: #fff;
+ } 
 @media screen and (max-width: 767px) 
 {
 .feature h3 {
