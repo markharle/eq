@@ -1021,3 +1021,117 @@
 }
 
 /* End Market Trends Section */
+
+
+/* Start dynamic breadcrumb styles */
+
+ #dynamic-breadcrumb nav {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  padding:0;
+  height:30px;
+  max-height: 30px;
+  overflow: hidden;
+  background:transparent;
+  background-color:transparent;
+}
+#dynamic-breadcrumb {
+  padding: 0;
+  background:transparent;
+}
+.breadcrumb-label {
+  font-size: 13px;
+  color: #495057;
+  font-weight: 400;
+  margin-right: 8px;
+  white-space: nowrap;
+}
+
+.breadcrumb-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+/*   font-size: 13px; */
+  font-size: .75rem;
+  font-family: Karla, Arial, Helvetica, sans-serif !important;
+}
+
+.breadcrumb-item {
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumb-item:not(:last-child)::after {
+  content: '›';
+  margin: 0 8px;
+  color: #6c757d;
+  font-weight: bold;
+}
+
+.breadcrumb-link {
+  color: #007bff;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  font-weight:400;
+}
+
+.breadcrumb-link:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
+.breadcrumb-current {
+  color: #6c757d;
+  font-weight: 500;
+}
+.breadcrumb-list-manual {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+/*   font-size: 13px; */
+  font-size: .75rem;
+  font-family: Karla, Arial, Helvetica, sans-serif !important;
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 767px) {
+/*   #dynamic-breadcrumb {
+    padding: .5rem 0;
+  } */
+  
+/*   #dynamic-breadcrumb nav {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  } */
+  
+  .breadcrumb-label {
+    font-size: 12px;
+    margin-right: 0;
+    margin-bottom: 2px;
+  }
+  
+  .breadcrumb-list {
+    font-size: .70rem;
+  }
+  
+  .breadcrumb-list-manual {
+    font-size: .70rem;
+  }
+  
+  .breadcrumb-item:not(:last-child)::after {
+    margin: 0 6px;
+  }
+}
+
+
+/* End dynamic breadcrumb styles */
+
