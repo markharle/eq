@@ -1,4 +1,4 @@
-// ============================================================================
+o// ============================================================================
 // HERO TEXT RENDERER
 // Renders the heroText field from JSON data into the hero markup
 // ============================================================================
@@ -9,7 +9,7 @@
 // MAIN RENDER FUNCTION
 // ============================================================================
 
-function renderTrendText() {
+function renderHeroText() {
   // Step 1: Fetch the JSON data from GitHub
   fetch(CONFIG.JSON_URL)
     .then(response => {
