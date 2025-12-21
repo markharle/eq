@@ -25,15 +25,15 @@ function renderHeroText() {
       // Step 3: Check if entity was found
       if (!entityData) {
         console.error(`Entity "${CONFIG.ENTITY}" not found in JSON data.`);
-        document.getElementById("currentTrend").textContent = "Data not available";
+        document.getElementById("heroText").textContent = "Data not available";
         return;
       }
 
       // Step 4: Extract the heroText text
-      const heroText = entityData.heroText;
+      const heroTextString = entityData.heroText;
 
       // Step 5: Render the value into the DOM
-      document.getElementById("heroText").textContent = heroText;
+      document.getElementById("heroText").textContent = heroTextString;
 
       console.log(`Successfully rendered hero text for ${CONFIG.ENTITY}: ${heroText}`);
     })
