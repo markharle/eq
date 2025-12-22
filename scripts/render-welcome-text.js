@@ -35,7 +35,7 @@ function renderWelcomeText() {
       // Step 5: Render the value into the DOM
       document.getElementById("welcomeText").textContent = welcomeTextString;
 
-      console.log(`Successfully rendered welcome text for ${CONFIG.ENTITY}: ${welcomeText}`);
+      console.log(`Successfully rendered welcome text for ${CONFIG.ENTITY}: ${welcomeTextString}`);
     })
     .catch(error => {
       console.error("Error fetching or rendering welcome text:", error);
