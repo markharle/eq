@@ -1,6 +1,6 @@
 // ============================================================================
 // WELCOME TEXT RENDERER
-// Renders the welcomeText field from JSON data into the Welcome markup
+// Renders the hookText field from JSON data into the Hook markup
 // ============================================================================
 
 // NOTE: CONFIG is defined in the Squarespace code block before this script loads
@@ -9,7 +9,7 @@
 // MAIN RENDER FUNCTION
 // ============================================================================
 
-function renderWelcomeText() {
+function renderHookText() {
   // Step 1: Fetch the JSON data from GitHub
   fetch(CONFIG.JSON_URL)
     .then(response => {
@@ -25,21 +25,21 @@ function renderWelcomeText() {
       // Step 3: Check if entity was found
       if (!entityData) {
         console.error(`Entity "${CONFIG.ENTITY}" not found in JSON data.`);
-        document.getElementById("welcomeText").textContent = "Data not available";
+        document.getElementById("hookText").textContent = "Data not available";
         return;
       }
 
-      // Step 4: Extract the welcomeText text
-      const welcomeTextString = entityData.welcomeText;
+      // Step 4: Extract the hookText text
+      const hookTextString = entityData.hookText;
 
       // Step 5: Render the value into the DOM
-      document.getElementById("welcomeText").textContent = welcomeTextString;
+      document.getElementById("hookText").textContent = hookTextString;
 
-      console.log(`Successfully rendered welcome text for ${CONFIG.ENTITY}: ${welcomeTextString}`);
+      console.log(`Successfully rendered hook text for ${CONFIG.ENTITY}: ${hookTextString}`);
     })
     .catch(error => {
-      console.error("Error fetching or rendering welcome text:", error);
-      document.getElementById("welcomeText").textContent = "Error loading data";
+      console.error("Error fetching or rendering hook text:", error);
+      document.getElementById("hookText").textContent = "Error loading data";
     });
 }
 
@@ -49,8 +49,8 @@ function renderWelcomeText() {
 
 // Run the render function when the DOM is ready
 if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", renderWelcomeText);
+  document.addEventListener("DOMContentLoaded", renderHookText);
 } else {
   // DOM is already loaded
-  renderWelcomeText();
+  renderHookText();
 }
