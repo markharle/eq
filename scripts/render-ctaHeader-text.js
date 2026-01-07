@@ -1,6 +1,6 @@
 // ============================================================================
 // WELCOME TEXT RENDERER
-// Renders the hookText field from JSON data into the Hook markup
+// Renders the ctaHeader field from JSON data into the Hook markup
 // ============================================================================
 
 // NOTE: CONFIG is defined in the Squarespace code block before this script loads
@@ -9,7 +9,7 @@
 // MAIN RENDER FUNCTION
 // ============================================================================
 
-function renderHookText() {
+function renderctaHeader() {
   // Step 1: Fetch the JSON data from GitHub
   fetch(CONFIG.JSON_URL)
     .then(response => {
@@ -25,21 +25,21 @@ function renderHookText() {
       // Step 3: Check if entity was found
       if (!entityData) {
         console.error(`Entity "${CONFIG.ENTITY}" not found in JSON data.`);
-        document.getElementById("hookText").textContent = "Data not available";
+        document.getElementById("ctaHeader").textContent = "Data not available";
         return;
       }
 
-      // Step 4: Extract the hookText text
-      const hookTextString = entityData.hookText;
+      // Step 4: Extract the ctaHeader text
+      const ctaHeaderString = entityData.ctaHeader;
 
       // Step 5: Render the value into the DOM
-      document.getElementById("hookText").textContent = hookTextString;
+      document.getElementById("ctaHeader").textContent = ctaHeaderString;
 
-      console.log(`Successfully rendered hook text for ${CONFIG.ENTITY}: ${hookTextString}`);
+      console.log(`Successfully rendered cta Header for ${CONFIG.ENTITY}: ${ctaHeaderString}`);
     })
     .catch(error => {
-      console.error("Error fetching or rendering hook text:", error);
-      document.getElementById("hookText").textContent = "Error loading data";
+      console.error("Error fetching or rendering cta Header:", error);
+      document.getElementById("ctaHeader").textContent = "Error loading data";
     });
 }
 
@@ -49,8 +49,8 @@ function renderHookText() {
 
 // Run the render function when the DOM is ready
 if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", renderHookText);
+  document.addEventListener("DOMContentLoaded", renderctaHeader);
 } else {
   // DOM is already loaded
-  renderHookText();
+  renderctaHeader();
 }
