@@ -1,10 +1,10 @@
 [
   {
     "item": "Zillow_Attribution",
-    "content": "House value provided by Zillow Group."
+    "content": "Current and historical home values provided by Zillow Group."
   },
   {
     "item": "Market_Disclaimer",
-    "content": "Our projections are based on professional opinion and analysis of current data patterns. They are not guarantees and are for reference only. They should not be the sole basis for real estate decisions."
+    "content": "Projections are based on our opinion and analysis of current data patterns. They are not guarantees and are for reference only. They should not be the sole basis for real estate decisions."
   }
 ]
