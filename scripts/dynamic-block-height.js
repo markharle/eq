@@ -1,5 +1,5 @@
 /**
- * Dynamic Block Height Synchronizer
+ * Dynamic Block Height Synchronizer (Updated for Combined Container)
  * Synchronizes the height of Code Block 2 to be 100px taller than Code Block 1
  * Monitors for resize events and content changes
  * 
@@ -15,10 +15,18 @@
     block2Selector: '[data-block="code-block-2"]',
     heightOffset: 100, // Code Block 2 should be 100px taller
     defaultHeight: 600, // Default height for Code Block 2 before page loads
-    debounceDelay: 150 // Debounce resize events (ms)
+    debounceDelay: 150, // Debounce resize events (ms)
+    mobileBreakpoint: 768 // Mobile breakpoint in pixels
   };
 
   let resizeTimeout;
+
+  /**
+   * Check if we're on mobile
+   */
+  function isMobile() {
+    return window.innerWidth < CONFIG.mobileBreakpoint;
+  }
 
   /**
    * Initialize the height synchronization
@@ -33,8 +41,10 @@
       return;
     }
 
-    // Set default height on Code Block 2
-    setBlockHeight(block2, CONFIG.defaultHeight);
+    // Set default height on Code Block 2 (desktop/tablet only)
+    if (!isMobile()) {
+      setBlockHeight(block2, CONFIG.defaultHeight);
+    }
 
     // Initial height sync after a brief delay to allow content to render
     setTimeout(() => {
@@ -43,7 +53,6 @@
 
     // Create ResizeObserver to monitor Code Block 1 for height changes
     const resizeObserver = new ResizeObserver(() => {
-      // Debounce the resize handler to avoid excessive updates
       clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(() => {
         syncHeights(block1, block2);
@@ -53,7 +62,7 @@
     // Start observing Code Block 1
     resizeObserver.observe(block1);
 
-    // Also listen for window resize events as a fallback
+    // Listen for window resize events (handles breakpoint changes)
     window.addEventListener('resize', () => {
       clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(() => {
@@ -68,6 +77,14 @@
    * @param {HTMLElement} block2 - The target block (Code Block 2)
    */
   function syncHeights(block1, block2) {
+    // On mobile, Code Block 2 height is controlled by CSS (100px)
+    if (isMobile()) {
+      // Remove inline height style to let CSS control it
+      block2.style.height = '';
+      return;
+    }
+
+    // On desktop/tablet, sync heights
     const block1Height = block1.offsetHeight;
     const block2Height = block1Height + CONFIG.heightOffset;
 
