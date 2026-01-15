@@ -1,9 +1,11 @@
 /**
- * Dynamic Block Height Synchronizer (Updated for Combined Container)
+ * Dynamic Block Height Synchronizer (Multiple Instances)
  * Synchronizes the height of Code Block 2 to be 100px taller than Code Block 1
+ * Supports multiple Code Block 1 + Code Block 2 pairs on the same page
  * Monitors for resize events and content changes
  * 
  * Usage: Add data-block="code-block-1" and data-block="code-block-2" to target elements
+ *        within separate .combined-market-block-container divs
  */
 
 (function() {
@@ -11,6 +13,7 @@
 
   // Configuration
   const CONFIG = {
+    containerSelector: '.combined-market-block-container',
     block1Selector: '[data-block="code-block-1"]',
     block2Selector: '[data-block="code-block-2"]',
     heightOffset: 100, // Code Block 2 should be 100px taller
@@ -20,6 +23,7 @@
   };
 
   let resizeTimeout;
+  const resizeObservers = []; // Track all ResizeObservers
 
   /**
    * Check if we're on mobile
@@ -29,15 +33,16 @@
   }
 
   /**
-   * Initialize the height synchronization
+   * Initialize height synchronization for a single container pair
+   * @param {HTMLElement} container - The .combined-market-block-container element
    */
-  function init() {
-    const block1 = document.querySelector(CONFIG.block1Selector);
-    const block2 = document.querySelector(CONFIG.block2Selector);
+  function initContainer(container) {
+    const block1 = container.querySelector(CONFIG.block1Selector);
+    const block2 = container.querySelector(CONFIG.block2Selector);
 
-    // Validate that both blocks exist
+    // Validate that both blocks exist within this container
     if (!block1 || !block2) {
-      console.warn('Dynamic Block Height: One or both target blocks not found in DOM');
+      console.warn('Dynamic Block Height: One or both target blocks not found in container');
       return;
     }
 
@@ -62,11 +67,41 @@
     // Start observing Code Block 1
     resizeObserver.observe(block1);
 
-    // Listen for window resize events (handles breakpoint changes)
+    // Store reference to observer for cleanup if needed
+    resizeObservers.push(resizeObserver);
+  }
+
+  /**
+   * Initialize all container pairs on the page
+   */
+  function initAllContainers() {
+    const containers = document.querySelectorAll(CONFIG.containerSelector);
+
+    if (containers.length === 0) {
+      console.warn('Dynamic Block Height: No containers found with selector:', CONFIG.containerSelector);
+      return;
+    }
+
+    console.log(`Dynamic Block Height: Found ${containers.length} container(s). Initializing...`);
+
+    // Initialize each container independently
+    containers.forEach((container, index) => {
+      initContainer(container);
+      console.log(`Dynamic Block Height: Container ${index + 1} initialized`);
+    });
+
+    // Listen for window resize events (handles breakpoint changes and all containers)
     window.addEventListener('resize', () => {
       clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(() => {
-        syncHeights(block1, block2);
+        // Re-sync all containers on resize
+        containers.forEach((container) => {
+          const block1 = container.querySelector(CONFIG.block1Selector);
+          const block2 = container.querySelector(CONFIG.block2Selector);
+          if (block1 && block2) {
+            syncHeights(block1, block2);
+          }
+        });
       }, CONFIG.debounceDelay);
     });
   }
@@ -104,12 +139,12 @@
   }
 
   /**
-   * Wait for DOM to be ready, then initialize
+   * Wait for DOM to be ready, then initialize all containers
    */
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
+    document.addEventListener('DOMContentLoaded', initAllContainers);
   } else {
     // DOM is already ready
-    init();
+    initAllContainers();
   }
 })();
