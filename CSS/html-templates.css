@@ -977,7 +977,7 @@
  .trend-text p{
     font-family: Karla, arial, helvetica, sans-serif;
     font-size: 1.15rem;
-    line-height: 1.5rem;
+    line-height: 1.65rem;
     text-wrap: balance;
  }
  .chart-container {
@@ -1430,8 +1430,8 @@ margin: 0 .5rem;
     width: 240px;
     background-size: cover;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: start;
+    justify-content: start;
   }
 }
 
@@ -1461,12 +1461,12 @@ margin: 0 .5rem;
     width: 100%;
     height: 100px !important;
     /* Hide background image on mobile */
-    background-image: none !important;
+    /* background-image: none !important; */
     background-color: transparent;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    border-bottom: 1px solid #e0e0e0; /* Optional: subtle separator */
+    align-items: start;
+    justify-content: start;
+    /* border-bottom: 1px solid #e0e0e0; Optional: subtle separator */
   }
 }
 
@@ -1485,4 +1485,3 @@ margin: 0 .5rem;
 }
 
 /* End of CSS to style the Current Trends and Projections content on city and neighborhood pages */
-
