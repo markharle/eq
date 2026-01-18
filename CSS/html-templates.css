@@ -1252,7 +1252,7 @@
 }
 
 .kpi-caption-header {
-    font-family: Karla, Arial, sans-serif;
+    font-family: 'PT Sans Narrow', Karla, Arial, sans-serif;
     font-size: 13pt;
     line-height: 18px;
     font-weight: 600;
@@ -1260,6 +1260,7 @@
     text-align: center;
     margin: 0;
     color: #404040;
+    letter-spacing: 1px;
 }
 .kpi-caption-text {
     font-family: Karla, Arial, sans-serif;
@@ -1307,8 +1308,6 @@ min-width:180px;
   font-weight: 700;
   font-style: normal;
 }
-/*End 2x2 KPI Card Deck */
-
 
 /* Start of CSS to style the Current Trends and Projections content on city and neighborhood pages */
 
@@ -1319,6 +1318,8 @@ min-width:180px;
  */
 /* Start of CSS to style the Current Trends and Projections content on city and neighborhood pages */
 
+
+#ctaHeader {text-wrap:balance;}
 
 .market-trend-box-wrapper {
 background:#D2E5F4;
@@ -1487,3 +1488,4 @@ margin: 0 .5rem;
 }
 
 /* End of CSS to style the Current Trends and Projections content on city and neighborhood pages */
+
