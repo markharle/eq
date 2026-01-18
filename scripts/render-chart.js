@@ -1,9 +1,12 @@
+<script>
+
 // ============================================================================
 // MARKET HISTORY CHART RENDERER (using Chart.js)
 // Renders a historical line chart (render-chart.js)
 // ============================================================================
 
 // NOTE: We use CHART_CONFIG to avoid conflicts with other scripts on the page
+
 
 function renderHistoryChart() {
   
@@ -53,15 +56,21 @@ function renderHistoryChart() {
           datasets: [{
             label: 'Market Value',
             data: values,
-            borderColor: '#333333',
-            backgroundColor: 'rgba(51, 51, 51, 0.1)',
-            borderWidth: 2,
-            pointBackgroundColor: '#ffffff',
-            pointBorderColor: '#333333',
-            pointRadius: 5,
-            pointHoverRadius: 7,
+            borderColor: '#3181FF',
+            //backgroundColor: '#F0F8FF',
+            backgroundColor: 'transparent',  
+            //backgroundColor: '#E5F3FD',
+            //ackgroundColor: '#f9f9f9',  
+            borderWidth: 1,
+            pointStyle: 'circle',
+            //pointBackgroundColor: '#f48132',
+            pointBackgroundColor: '#3181FF',
+            //pointBorderColor: '#BCC2CF',
+            pointBorderColor: '#3181FF',
+            pointRadius: 2,
+            pointHoverRadius: 6,
             fill: true,
-            tension: 0.3
+            tension: 0.1
           }]
         },
         options: {
@@ -124,3 +133,10 @@ if (document.readyState === "loading") {
 } else {
   renderHistoryChart();
 }
+</script>
+
+
+
+<div class="center text-white mb-3 mt-3" style="background:#404040;">
+Chart JS
+</div>
