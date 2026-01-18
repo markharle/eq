@@ -1309,10 +1309,189 @@ min-width:180px;
   font-style: normal;
 }
 
-
-
 /* Start of CSS to style the Current Trends and Projections content on city and neighborhood pages */
+
+/**
+ * Combined Market Block Container
+ * Manages layout of Code Block 1 (text) and Code Block 2 (image)
+ * with responsive behavior for desktop, tablet, and mobile
+ */
+/* Start of CSS to style the Current Trends and Projections content on city and neighborhood pages */
+
+
 #ctaHeader {text-wrap:balance;}
+
+.market-trend-box-wrapper {
+background:#D2E5F4;
+padding-left: 340px;
+}
+
+
+/* @media only screen and (max-width: 1024px){
+.market-trend-box-wrapper {
+padding-left: 250px;
+}
+} */
+
+@media only screen and (max-width: 767px){
+.market-trend-box-wrapper {
+padding-left: 1rem;
+}
+}
+
+.market-trend-box {
+/* Reset to standard display so text flows naturally */
+display: block; 
+font-family: Poppins, arial, helvetica, sans-serif;
+font-size: 1rem;
+margin: 0 0 -1.5rem -2rem;
+padding: 0 1rem 0 .5rem;
+border: 16px solid #D2E5F4;
+}
+
+.market-trend-box::before {
+content: "“ "; 
+margin-left: -10px;
+font-weight: bold;
+}
+
+.market-trend-box::after {
+content: " ”"; 
+font-weight: bold;
+}
+
+/* 
+CRITICAL FIX: 
+If the JSON injects a <p> or <div> tag, the following forces it 
+to behave like a sentence rather than a block. 
+This prevents the quote marks from breaking onto new lines.
+*/
+.market-trend-box > * {
+display: inline;
+margin: 0;
+padding: 0;
+}
+
+.market-trend-box-footer {
+text-align:right;
+margin: 1rem 1rem -1rem 0;
+}
+.signature-line-1 {
+margin-bottom:-.5rem;
+font-size: 14px;
+font-weight: 500;
+}
+.signature-line-2 {
+font-size: 14px;
+font-weight: 500;
+}
+.signature-line-3 {
+margin-bottom:-.5rem;
+line-height:22px;
+}   
+.sidebar-text{
+position:relative;
+top:1.3rem;
+margin: 0 .5rem;
+}
+
+/* End of CSS to style the Current Trends and Projections content on city and neighborhood pages */
+.combined-market-block-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto auto;
+  gap: 0;
+  position: relative;
+  width: 100%;
+}
+
+/* ===== DESKTOP & TABLET (768px and above) ===== */
+@media (min-width: 768px) {
+  .combined-market-block-container {
+    /* Create a grid with 2 columns to allow overlap */
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto;
+    align-items: start;
+  }
+
+  /* Code Block 1: Market Trend Box */
+  .combined-market-block-container [data-block="code-block-1"] {
+    grid-column: 1;
+    grid-row: 1;
+    z-index: 1;
+  }
+
+  /* Code Block 2: Sidebar Image */
+  .combined-market-block-container [data-block="code-block-2"] {
+    grid-column: 1;
+    grid-row: 1;
+    z-index: 2;
+    margin-left: 50px;
+    margin-top: -50px;
+    width: 240px;
+    background-size: cover;
+    display: flex;
+    align-items: start;
+    justify-content: start;
+    background-image: url('https://images.squarespace-cdn.com/content/5db1a8c2af0b1a1c3004a035/8e645f5e-e4a6-4f54-8518-cdcd295e010e/sideBarImage074.png?content-type=image%2Fpng');
+  }
+}
+
+/* ===== MOBILE (below 768px) ===== */
+@media (max-width: 767px) {
+  .combined-market-block-container {
+    /* Stack vertically: Code Block 2 on top, Code Block 1 below */
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    gap: 0;
+  }
+
+  /* Code Block 1: Market Trend Box */
+  .combined-market-block-container [data-block="code-block-1"] {
+    grid-column: 1;
+    grid-row: 2;
+    z-index: 1;
+  }
+
+  /* Code Block 2: Sidebar Image */
+  .combined-market-block-container [data-block="code-block-2"] {
+    grid-column: 1;
+    grid-row: 1;
+    z-index: 1;
+    margin-left: 0;
+    margin-top: 0;
+    width: 100%;
+    height: 100px !important;
+    background-color: transparent;
+    background-size: cover;
+    display: flex;
+    align-items: start;
+    justify-content: start;
+    /* border-bottom: 1px solid #e0e0e0; Optional: subtle separator */
+    background-image: url('https://images.squarespace-cdn.com/content/5db1a8c2af0b1a1c3004a035/8e645f5e-e4a6-4f54-8518-cdcd295e010e/sideBarImage074.png?content-type=image%2Fpng');
+  }
+}
+
+/* ===== Sidebar Image Styling (All Breakpoints) ===== */
+.sidebar-image {
+  position: relative;
+  overflow: hidden;
+}
+
+.sidebar-image .sidebar-text {
+  position: relative;
+  z-index: 10;
+  margin: 0;
+  padding: 20px;
+  text-align: center;
+  line-height:28px;
+}
+
+/* End of CSS to style the Current Trends and Projections content on city and neighborhood pages */
+
+
+
+/* Start of inline styles for market trends. This was copied from where-we-work/windsor-heights. Next step is to remove the redundat styles (18-JSN-2026). */
 .market-trend-chart-legend {
     text-transform: uppercase;
     font-family: 'Poppins', arial, helvetica, sans-serif;
