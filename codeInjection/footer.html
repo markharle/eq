@@ -2,9 +2,8 @@
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <!-- <script src="https://unpkg.com/leaflet-sidebar-v2@3.2.3/js/leaflet-sidebar.min.js"></script> -->
 <!-- https://cdn.jsdelivr.net/gh/markharle/eq@3474ff4bd893780dd31ac49c4e5dfc0a94d34f61/JS/leaflet-sidebar.js -->
-<script src="https://cdn.jsdelivr.net/gh/markharle/eq@aa261fa871f04f83282fab7cf143b7b03acef777/JS/leaflet-sidebar.js"></script>
+<!-- <script src="https://cdn.jsdelivr.net/gh/markharle/eq@aa261fa871f04f83282fab7cf143b7b03acef777/JS/leaflet-sidebar.js"></script> -->
 <!--<script src="https://cdn.jsdelivr.net/gh/markharle/eq@refs/heads/main/JS/sold-listings-map-eqr.js"></script> -->
-<script src="https://cdn.jsdelivr.net/gh/markharle/eq@v1.0.0/JS/sold-listings-map-eqr.js"></script>
 <!-- <script src="https://raw.githubusercontent.com/markharle/eq/refs/heads/main/JS/listings-map-eqr.js"></script> -->
 <!-- <script src="https://cdn.jsdelivr.net/gh/markharle/eq@19cf9a2ca79a16ed161abe923324cb572ecc74ce/JS/listings-map-eqr.js"></script> -->
 <!-- <script src="https://cdn.jsdelivr.net/gh/markharle/eq@7206869514eda0fd87fea7aa35cb95944adf125d/JS/listings-map-eqr.js"></script> -->
@@ -14,10 +13,36 @@
 <script src="https://kit.fontawesome.com/05f7d7f4d0.js" crossorigin="anonymous"></script>
 
 
-<!-- KPI Tokenizer -->
-<!--<script src="https://cdn.jsdelivr.net/gh/markharle/eq@master/JS/kpiTokenizer2.js"></script> -->
-<script src="https://cdn.jsdelivr.net/gh/markharle/eq@v1.0.0-kpitokenizer/JS/kpiTokenizer.js</script>
-             
+<!--  START GH SCRIPTS  -->
+<!--<script src="https://cdn.jsdelivr.net/gh/markharle/eq@v1.6.3/scripts/gDrive-integration-client.js"></script>-->
+<script src="https://cdn.jsdelivr.net/gh/markharle/eq@v1.7.19/scripts/gDrive-integration-client.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/markharle/eq@v1.1.0/scripts/leaflet-sidebar.js"></script>
+<!--<script src="https://cdn.jsdelivr.net/gh/markharle/eq@v1.1.0/scripts/current-listing-cards.js"></script>-->
+<script src="https://cdn.jsdelivr.net/gh/markharle/eq@main/scripts/current-listing-cards-sidebar.js"></script>
+<!-- <script src="https://cdn.jsdelivr.net/gh/markharle/eq@v1.1.0/scripts/sold-listings-map-eqr.js"></script> -->
+<!--<script src="https://cdn.jsdelivr.net/gh/markharle/eq@v1.6.5/scripts/sold-listings-map-eqr.js"></script>-->
+<script src="https://cdn.jsdelivr.net/gh/markharle/eq@v1.7.32/scripts/eqr-listings-map.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/markharle/eq@v1.7.17/scripts/kpiTokenizer.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/markharle/eq@v1.6.4/scripts/breadcrumb.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/markharle/eq@main/scripts/svg-loader.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/markharle/eq@v1.7.53/scripts/auto-link-modal.js" defer></script>
+<script src="https://cdn.jsdelivr.net/gh/markharle/eq@main/scripts/dynamic-block-height.js"></script>
+
+
+<!--  END GH SCRIPTS  -->
+<!-- Start Market Trends Scripts -->
+ <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/markharle/eq@v1.7.47/scripts/render-trend-text.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/markharle/eq@v1.7.50/scripts/render-values-current.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/markharle/eq@v1.7.49/scripts/render-chart.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/markharle/eq@v1.7.57/scripts/render-boilerplate-text.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/markharle/eq@v1.7.59/scripts/render-projection-text.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/markharle/eq@v1.7.67/scripts/render-ctaHeader-text.js"></script> 
+<script src="https://cdn.jsdelivr.net/gh/markharle/eq@v1.7.64/scripts/render-hero-text.js"></script>
+ <script src="https://cdn.jsdelivr.net/gh/markharle/eq@v1.7.66/scripts/render-welcome-text.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/markharle/eq@main/scripts/render-hook-text.js"></script> 
+<!-- End Market Trends Scripts -->
+
 
 <!-- Current Listings (original) eric-quiner-realtor/current-listings   -->
 <script src="https://cdn.jsdelivr.net/gh/markharle/eq@main/currentListings.js"></script>
@@ -86,3 +111,67 @@
 
 <!-- sqs:beyondspace--classic-gallery -->
 <script src="https://cdn.jsdelivr.net/gh/markharle/eq@main/classicImageGalleryBlock.js"></script>
+
+<!-- Scroll To Top Button HTML -->
+<button id="wm-back-to-top">
+  <div class="btt-background"></div>
+  <div class="icon">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" aria-labelledby="title" role="img" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <title>Arrow Up</title>
+      <path data-name="layer2" fill="none" stroke="#202020" stroke-miterlimit="10" stroke-width="2" d="M32 10v46" stroke-linejoin="round" stroke-linecap="round"></path>
+      <path data-name="layer1" fill="none" stroke="#202020" stroke-miterlimit="10" stroke-width="2" d="M50 20 L32 4 14 20" stroke-linejoin="round" stroke-linecap="round"></path>
+    </svg>
+  </div>
+
+</button>
+
+<!-- Scroll To Top Button Javascript -->
+
+<script>
+(function() {
+  let throttlePause;
+
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('#wm-back-to-top')) return;
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    })
+  })
+
+  document.addEventListener('DOMContentLoaded', function(){
+    let btt = document.querySelector('#wm-back-to-top');
+    let body = document.body;
+    body.append(btt);
+    if (btt?.closest('.sqs-block-content')){
+      btt.closest('.sqs-block-content').style.display = 'inline';
+    }
+  });
+
+  const throttle = (callback, time) => {
+    if (throttlePause) return;
+
+    throttlePause = true;
+    setTimeout(() => {
+      callback();
+      throttlePause = false;
+    }, time);
+  };
+
+  const checkPos = () => {
+    let pos = document.documentElement.scrollTop,
+        revealHeight = window.innerHeight * 0.15,
+        bttButton = document.querySelector('#wm-back-to-top');
+    if (pos >= revealHeight) {
+      bttButton.classList.add('show');
+    } else {
+      bttButton.classList.remove('show');
+    }
+  }
+
+  window.addEventListener("scroll", () => {
+    throttle(checkPos, 150);
+  });
+  window.addEventListener('DOMContentLoaded', checkPos)
+}());
+</script>
