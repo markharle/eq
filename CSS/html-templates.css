@@ -978,7 +978,6 @@
     font-family: Karla, arial, helvetica, sans-serif;
     font-size: 1.15rem;
     line-height: 1.65rem;
-    text-wrap: balance;
  }
  .chart-container {
     position: relative; 
