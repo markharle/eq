@@ -725,7 +725,7 @@
 
 .wrap-image-block {
   width: 100%;                 /* Full width of the page content column */
-  margin: 0 0 3rem 0;          /* Space below each component instance */
+  margin: 0 0 -3rem 0;          /* Space below each component instance */
 }
 
 /* Title row */
