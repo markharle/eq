@@ -492,15 +492,15 @@
     "ctaHeader": "Ready for a home in the city's most exciting comeback story? Whether you are looking for a restored classic near the river or a bungalow steps from the bakery, let?s find your spot in Highland Park and Oak Park.",
     "currentTrend": "Highland Park and Oak Park are currently experiencing the most dynamic \"identity shift\" in the entire Des Moines metro. This market is no longer defined just by affordability; it is driven by a tangible \"Main Street energy.\" The explosion of local businesses along the Euclid Avenue corridor?from hipster bakeries and vinyl shops to coffee roasters?has created a walkable, hyper-local village vibe that rivals the East Village but at a single-family price point. Buyers here are purchasing \"proximity to the vibe.\" However, this rapid heat-up has attracted a wave of quick flips. Contact me before you fall in love with the staging; we need to carefully distinguish between a home that has been thoughtfully restored to last another century and one that has merely been cosmetically updated to catch the current wave of appreciation.",
     "projection": "I project that Highland Park and Oak Park will cement themselves as the \"Creative Incubator\" of Des Moines real estate. While other neighborhoods rest on established reputations, this district is growing its value in real-time through commercial revitalization. We are witnessing the \"Ingersoll Effect\" taking place here, where strong commercial anchors drive rapid residential equity growth in the surrounding blocks. As this commercial node expands and potentially connects more fluidly with the riverfront parks, the \"discount\" relative to Beaverdale or Waterbury will evaporate. Buying here now is a bet on the continued entrepreneurship of the neighborhood, and historically in Des Moines, betting on vibrant, walkable commercial pockets is the safest wager you can make.",
-    "currentValue": 0,
-    "change": 0,
+    "currentValue": 173729,
+    "change": 0.033,
     "historicalData": {
-      "2020": 0,
-      "2021": 0,
-      "2022": 0,
-      "2023": 0,
-      "2024": 0,
-      "2025": 0
+      "2020": 124943,
+      "2021": 137593,
+      "2022": 148207,
+      "2023": 158476,
+      "2024": 168194,
+      "2025": 173729
     }
   },
   {
