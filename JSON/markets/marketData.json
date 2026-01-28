@@ -780,21 +780,21 @@
     "entity": "North of Grand",
     "type": "Neighborhood",
     "date": "Q4 2025",
-    "heroText": "TBD",
-    "welcomeText": "Welcome text placeholder",
-    "hookText": "Hook text placeholder",
-    "ctaHeader": "CTA Header Placeholder",
-    "currentTrend": "Offering the architectural character of the \"Grand\" area without the estate-level price tags, this neighborhood attracts a diverse mix of professionals and creatives who want walkability to the shops and dining on Ingersoll Avenue. It is a high-demand pocket for those who value historic woodwork and urban energy, so let's connect to tour the unique inventory in this vibrant corridor.",
-    "projection": "riryuityui",
-    "currentValue": 0,
-    "change": 0,
+    "heroText": "Where historic elegance meets the vibrant culture of Ingersoll Avenue.",
+    "welcomeText": "North of Grand is the sweet spot for people who love the architecture of South of Grand but want a little more of an affordable urban eclectic vibe. The housing stock is phenomenal; you find these incredible 1920s homes with original woodwork and leaded glass that have been meticulously maintained. But the lifestyle is what sells it. You can walk to Eatery A for pizza, grab a drink at The Bartender?s Handshake, or hit up the grocery store, all without really needing a car. It?s historic, but it feels very connected and alive.",
+    "hookText": "Experience the perfect blend of architectural grandeur and urban walkability just steps from The Avenues.",
+    "ctaHeader": "Ready for a home with character and a premier location? Whether you are looking for a historic renovation or a move-in ready classic near the restaurants, let?s find your gem in this vibrant Des Moines neighborhood.",
+    "currentTrend": "North of Grand currently operates as the Bohemian Soul of the West Side. While South of Grand gets the headlines for mansions, North of Grand delivers the lifestyle. The market here is driven by the Ingersoll Factor;\" the ability to walk or bike to the city?s most vibrant culinary and cultural corridor (The Avenues). Buyers here are looking for personality; they want the turn-of-the-century craftsmanship, hardwood inlays, leaded glass, and sleeping porches, but with a more relaxed, eclectic energy than the surrounding districts. The housing stock is incredibly diverse, ranging from stately mini-mansions near Grand Avenue to modest, artistic bungalows near the interstate. Contact me to evaluate the renovation reality of these homes; because the housing stock is older and varies greatly in condition, we need to inspect the wiring (knob-and-tube) and plaster condition carefully to distinguish between charming character and structural liability.",
+    "projection": "I project that North of Grand will see accelerated appreciation driven by the 'Walkability Premium.' As Ingersoll Avenue completes its streetscape transformation and fills with more high-end dining and retail, the residential blocks immediately north of it are becoming one of the most sought-after locations in the city. We are seeing a demographic shift where young professionals and empty nesters are prioritizing lifestyle radius over lawn size. Consequently, North of Grand is positioned to outperform the general market because it offers the rare Des Moines trifecta: historic character, immediate highway access, and genuine urban walkability. Buying here is securing a spot in a neighborhood that is evolving from a transitional zone into a destination district in its own right.",
+    "currentValue": 220502,
+    "change": 0.025,
     "historicalData": {
-      "2020": 0,
-      "2021": 0,
-      "2022": 0,
-      "2023": 0,
-      "2024": 0,
-      "2025": 0
+      "2020": 167107,
+      "2021": 181190,
+      "2022": 197829,
+      "2023": 209137,
+      "2024": 215012,
+      "2025": 220502
     }
   },
   {
@@ -1374,15 +1374,15 @@
     "ctaHeader": "CTA Header Placeholder",
     "currentTrend": "This historic neighborhood is the perfect alternative for buyers who love the architecture of Sherman Hill but want a dedicated yard and a slightly quieter streetscape. It is currently seeing a wave of high-quality renovations, supported by financing provided by Invest DSM. All in, Woodland Heights is a prime spot for appreciation near the Ingersoll corridor, so let's connect to find a Victorian or Craftsman here that matches your vision.",
     "projection": "wert",
-    "currentValue": 0,
-    "change": 0,
+    "currentValue": 192767,
+    "change": 0.027,
     "historicalData": {
-      "2020": 0,
-      "2021": 0,
-      "2022": 0,
-      "2023": 0,
-      "2024": 0,
-      "2025": 0
+      "2020": 149954,
+      "2021": 158655,
+      "2022": 173279,
+      "2023": 180991,
+      "2024": 187763,
+      "2025": 192767
     }
   },
   {
