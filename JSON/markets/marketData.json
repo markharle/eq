@@ -1389,21 +1389,21 @@
     "entity": "Template",
     "type": "Neighborhood",
     "date": "Q4 2025",
-    "heroText": "Lorem ipsum dolor sit amet.",
-    "welcomeText": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation",
-    "hookText": "Sed ut perspiciatis unde omnis iste natus error sit voluptatem",
-    "ctaHeader": "Voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur",
-    "currentTrend": "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. ",
-    "projection": "Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.",
-    "currentValue": 200000,
-    "change": 0.014,
+    "heroText": "Update the code blocks with the neighborhood name",
+    "welcomeText": "Update the code blocks with the neighborhood name",
+    "hookText": "Update the code blocks with the neighborhood name",
+    "ctaHeader": "Update the code blocks with the neighborhood name",
+    "currentTrend": "Update the code blocks with the neighborhood name",
+    "projection": "Update the code blocks with the neighborhood name",
+    "currentValue": 0,
+    "change": 0,
     "historicalData": {
-      "2020": 180000,
-      "2021": 185000,
-      "2022": 190000,
-      "2023": 210000,
-      "2024": 180000,
-      "2025": 200000
+      "2020": 0,
+      "2021": 0,
+      "2022": 0,
+      "2023": 0,
+      "2024": 0,
+      "2025": 0
     }
   }
 ]
