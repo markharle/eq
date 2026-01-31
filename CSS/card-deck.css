@@ -38,3 +38,27 @@
     grid-template-columns: repeat(var(--deck-columns, 3), 1fr);
   }
 }
+
+/* Start top left icon card */
+
+.card-icon-top-left h4 {
+    color: #040404;
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.3;
+    margin-top: 16px;
+}
+
+.card-icon-top-left p {
+    color: #595959;
+    font-size: 16px;
+    line-height: 26px;
+}
+.card-icon-top-left img {
+    height: 48px;
+    width: 48px;
+}
+
+
+/* End top left icon card */
