@@ -1,0 +1,40 @@
+/* Global Grid Card Deck Wrapper */
+.grid-card-deck-wrapper {
+  display: grid;
+  width: 100%;
+  
+  /* 
+    1. Mobile Layout (Default):
+    Stack vertically (1 column) on generic mobile devices.
+  */
+  grid-template-columns: 1fr;
+  
+  /* 
+    2. Dynamic Gap:
+    Uses a CSS variable '--deck-gap'. 
+    Defaults to 20px if the variable isn't defined.
+  */
+  gap: var(--deck-gap, 20px);
+}
+
+/* 
+  3. Equal Height Logic:
+  Grid cells stretch by default. This ensures the direct child 
+  (your card container) fills the full height of that cell.
+*/
+.grid-card-deck-wrapper > * {
+  height: 100%;
+  box-sizing: border-box; /* Good practice to ensure padding doesn't break layout */
+}
+
+/* 
+  4. Desktop Layout (768px+):
+  Squarespace 7.1 usually breaks tablet/desktop around 768px.
+  We switch to the column count defined by '--deck-columns'.
+*/
+@media screen and (min-width: 768px) {
+  .grid-card-deck-wrapper {
+    /* Defaults to 3 columns if variable is missing */
+    grid-template-columns: repeat(var(--deck-columns, 3), 1fr);
+  }
+}
