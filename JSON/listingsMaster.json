@@ -1,5 +1,27 @@
 [
   {
+    "Timestamp": "2026-02-11T20:35:06.000Z",
+    "Publish": true,
+    "MLS": "",
+    "streetAddress": "1746 Driftwood Dr SW",
+    "City": "Altoona",
+    "State": "IA",
+    "Zip": 50009,
+    "County": "Polk",
+    "Neighborhood": "Other",
+    "Latitude": 41.6337237,
+    "Longitude": -93.4733966,
+    "Price": 450000,
+    "Status": "Sold",
+    "currentListingStatusLabel": "Sold",
+    "dateSold": "",
+    "imageURL": "https://photos.zillowstatic.com/fp/40e179e3af9a2daebe4b8753872a861a-cc_ft_960.webp",
+    "ZillowURL": "https://www.zillow.com/homedetails/1746-Driftwood-Dr-SW-Altoona-IA-50009/68189563_zpid/",
+    "Summary": "Pride of ownership shines throughout this sun-filled, custom-built walkout nestled in the highly sought-after Venbury neighborhood! ",
+    "priceRange": "$250k - $499k",
+    "yearSold": ""
+  },
+  {
     "Timestamp": "2026-02-11T19:46:05.000Z",
     "Publish": true,
     "MLS": "",
