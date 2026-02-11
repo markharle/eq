@@ -1,5 +1,27 @@
 [
   {
+    "Timestamp": "2026-02-11T19:46:05.000Z",
+    "Publish": true,
+    "MLS": "",
+    "streetAddress": "1010 24th St",
+    "City": "Des Moines",
+    "State": "IA",
+    "Zip": 50311,
+    "County": "Polk",
+    "Neighborhood": "Drake",
+    "Latitude": 41.5956161,
+    "Longitude": -93.6499869,
+    "Price": 372500,
+    "Status": "Available",
+    "currentListingStatusLabel": "New Listing",
+    "dateSold": "",
+    "imageURL": "https://photos.zillowstatic.com/fp/954fef9fe298096fae803f5478a08483-cc_ft_1536.webp",
+    "ZillowURL": "https://www.zillow.com/homedetails/1010-24th-St-Des-Moines-IA-50311/772102_zpid/",
+    "Summary": "Beautifully restored Craftsman in the historic Drake Neighborhood, revitalized through the Invest DSM program",
+    "priceRange": "$250k - $499k",
+    "yearSold": ""
+  },
+  {
     "Timestamp": "2026-02-11T19:17:10.000Z",
     "Publish": true,
     "MLS": "",
