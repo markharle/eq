@@ -1,5 +1,27 @@
 [
   {
+    "Timestamp": "2026-02-11T22:18:23.000Z",
+    "Publish": true,
+    "MLS": "",
+    "streetAddress": "1422 31st St",
+    "City": "Des Moines",
+    "State": "IA",
+    "Zip": 50311,
+    "County": "Polk",
+    "Neighborhood": "Drake",
+    "Latitude": 41.6048206,
+    "Longitude": -93.6600459,
+    "Price": 135000,
+    "Status": "Sold",
+    "currentListingStatusLabel": "Sold",
+    "dateSold": "2025-11-14T00:00:00.000Z",
+    "imageURL": "https://photos.zillowstatic.com/fp/dbed03e43362b5c08e45091a29a147ce-cc_ft_960.webp",
+    "ZillowURL": "https://www.zillow.com/homedetails/1422-31st-St-Des-Moines-IA-50311/806332_zpid/",
+    "Summary": "An updated 1.5-story in the heart of Des Moines with the versatile spaces buyers and investors love.",
+    "priceRange": "Under $150k",
+    "yearSold": ""
+  },
+  {
     "Timestamp": "2026-02-11T22:02:39.000Z",
     "Publish": true,
     "MLS": "",
