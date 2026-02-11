@@ -1,5 +1,27 @@
 [
   {
+    "Timestamp": "2026-02-11T19:17:10.000Z",
+    "Publish": true,
+    "MLS": "",
+    "streetAddress": "1343 43rd St, Des Moines",
+    "City": "Des Moines",
+    "State": "IA",
+    "Zip": 50311,
+    "County": "Polk",
+    "Neighborhood": "Waveland Park",
+    "Latitude": 41.6036193,
+    "Longitude": -93.67573089999999,
+    "Price": 315000,
+    "Status": "Available",
+    "currentListingStatusLabel": "New Listing",
+    "dateSold": "",
+    "imageURL": "https://photos.zillowstatic.coACm/fp/9d9d97352911c5780fdfb3739d2994f2-cc_ft_1536.webp",
+    "ZillowURL": "https://www.zillow.com/homedetails/1343-43rd-St-Des-Moines-IA-50311/802055_zpid/",
+    "Summary": "Quintessential Craftsman in the historic Waveland neighborhood",
+    "priceRange": "$250k - $499k",
+    "yearSold": ""
+  },
+  {
     "Timestamp": "2025-11-06T13:48:22.000Z",
     "Publish": true,
     "MLS": "",
