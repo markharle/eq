@@ -1,5 +1,27 @@
 [
   {
+    "Timestamp": "2026-02-11T20:48:31.000Z",
+    "Publish": true,
+    "MLS": "",
+    "streetAddress": "3915 3rd St",
+    "City": "Des Moines",
+    "State": "IA",
+    "Zip": 50313,
+    "County": "Polk",
+    "Neighborhood": "Other",
+    "Latitude": 41.6318945,
+    "Longitude": -93.6208925,
+    "Price": 105000,
+    "Status": "Sold",
+    "currentListingStatusLabel": "Sold",
+    "dateSold": "2025-12-19T00:00:00.000Z",
+    "imageURL": "https://photos.zillowstatic.com/fp/36dcc935924836d96442a9ca61545fd4-cc_ft_960.webp",
+    "ZillowURL": "https://www.zillow.com/homedetails/3915-3rd-St-Des-Moines-IA-50313/786009_zpid/",
+    "Summary": "Fantastic investment opportunity. Tenant occupied with rental certificate, this 3 bedroom ranch style home offers a full bathroom, large lot and a great layout! ",
+    "priceRange": "Under $150k",
+    "yearSold": ""
+  },
+  {
     "Timestamp": "2026-02-11T20:35:06.000Z",
     "Publish": true,
     "MLS": "",
