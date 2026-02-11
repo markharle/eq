@@ -1,5 +1,27 @@
 [
   {
+    "Timestamp": "2026-02-11T22:02:39.000Z",
+    "Publish": true,
+    "MLS": "",
+    "streetAddress": "1245 34th St",
+    "City": "Des Moines",
+    "State": "IA",
+    "Zip": 50311,
+    "County": "Polk",
+    "Neighborhood": "Drake",
+    "Latitude": 41.6020938,
+    "Longitude": -93.6626847,
+    "Price": 475000,
+    "Status": "Sold",
+    "currentListingStatusLabel": "Sold",
+    "dateSold": "2026-01-23T00:00:00.000Z",
+    "imageURL": "https://photos.zillowstatic.com/fp/40b3e31e0543abf6364c96bf8d8a7b65-cc_ft_960.webp",
+    "ZillowURL": "https://www.zillow.com/homedetails/1245-34th-St-Des-Moines-IA-50311/807080_zpid/",
+    "Summary": "The historic Phi Delta Theta House on 34th Street in the heart of the Drake Neighborhood.",
+    "priceRange": "$250k - $499k",
+    "yearSold": ""
+  },
+  {
     "Timestamp": "2026-02-11T21:24:37.000Z",
     "Publish": true,
     "MLS": "",
