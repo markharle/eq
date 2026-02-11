@@ -1,5 +1,27 @@
 [
   {
+    "Timestamp": "2026-02-11T21:24:37.000Z",
+    "Publish": true,
+    "MLS": "",
+    "streetAddress": "6093 Crescent Chase",
+    "City": "Johnston",
+    "State": "IA",
+    "Zip": 50131,
+    "County": "Polk",
+    "Neighborhood": "Other",
+    "Latitude": 41.6703635,
+    "Longitude": -93.73535299999999,
+    "Price": 495000,
+    "Status": "Sold",
+    "currentListingStatusLabel": "Sold",
+    "dateSold": "2025-12-12T00:00:00.000Z",
+    "imageURL": "https://photos.zillowstatic.com/fp/85673ab5c33a002c4de9713db0ed2564-cc_ft_960.webp",
+    "ZillowURL": "https://www.zillow.com/homedetails/6093-Crescent-Chas-Johnston-IA-50131/2057840263_zpid/",
+    "Summary": "Spacious and stylish this 4-bedroom 4-bath, 1.5 home has over 3.500 sq. ft. of gorgeous updated finish.",
+    "priceRange": "$250k - $499k",
+    "yearSold": ""
+  },
+  {
     "Timestamp": "2026-02-11T20:48:31.000Z",
     "Publish": true,
     "MLS": "",
