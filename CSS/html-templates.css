@@ -1491,3 +1491,52 @@ margin: 0 .5rem;
 }
 
 /* End of CSS to style the Current Trends and Projections content on city and neighborhood pages */
+
+/* ===== Start Icon / Header Row Styling ===== */
+
+/* Base Layout (Desktop defaults) */
+.icon-headline-wrapper {
+  display: flex;
+  flex-direction: row; /* Icon left, Text right */
+  align-items: center; /* Vertically centers the text with the image */
+  gap: 1.5rem; /* Space between the image and the text */
+  width: 100%;
+}
+
+/* Image Control */
+.icon-headline-wrapper .headline-icon {
+  /* This grabs the variable set in the HTML style attribute */
+  width: var(--icon-width, 50px); /* 50px is a fallback if admin does not set it */
+  height: auto; 
+  flex-shrink: 0; /* Ensures the image doesn't squish if text is long */
+  display: block;
+}
+
+/* Headline Text Control */
+.icon-headline-wrapper h1,
+.icon-headline-wrapper h2,
+.icon-headline-wrapper h3,
+.icon-headline-wrapper h4 {
+  margin: 0; /* Removes default browser margin for better alignment */
+  line-height: 1.2;
+}
+
+/* Mobile Layout (Triggers on screens smaller than 768px) */
+@media screen and (max-width: 768px) {
+  .icon-headline-wrapper {
+    flex-direction: column; /* Stacks items: Icon top, Text bottom */
+    text-align: center; /* Centers the text */
+    gap: 1rem; /* Adjust spacing for mobile if desired */
+  }
+
+  /* 
+     Flexbox column centers items vertically, 
+     but to center them horizontally in column mode 
+     we use align-items: center 
+  */
+  .icon-headline-wrapper {
+    align-items: center; 
+  }
+}
+
+/* ===== End Icon / Header Row Styling ===== */
