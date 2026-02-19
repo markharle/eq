@@ -1540,3 +1540,42 @@ margin: 0 .5rem;
 }
 
 /* ===== End Icon / Header Row Styling ===== */
+
+/* Start btn-cta-4 (used for Property Renovation Page Renovation Incentives Sidebar component*/
+.btn-cta-4 {
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-content: end;
+    transition: color 0.3s ease;
+    color:#fff;
+}
+.btn-cta-4:after{
+    content:'\f0da';
+    font-family:FontAwesome;
+    display:inline-block;
+    padding-right:3px;
+    padding-left:8px;
+    color:#fff;
+}
+.btn-cta-4:hover {
+  opacity:.5;
+}
+
+.btn-cta-4 a {
+    display: contents;
+    text-decoration: none;
+    color: #fff;
+    outline: none;
+    border: none;
+    box-shadow: none;
+    font-weight:600;
+    text-transform:uppercase;
+}
+
+.btn-cta-4 a:hover {
+    color: #fff;
+}
+
+/* End btn-cta-4 */
+
+
