@@ -1,6 +1,6 @@
 [
   {
-    "Publish": "True",
+    "Publish": true,
     "Timestamp": "2026-02-17T20:37:36.2641186-06:00",
     "City": "Des Moines",
     "County": "Polk",
@@ -20,7 +20,7 @@
     "summary": "Quintessential Craftsman in the historic Waveland neighborhood."
   },
   {
-    "Publish": "True",
+    "Publish": true,
     "Timestamp": "2026-02-17T20:21:38.2360544-06:00",
     "City": "Des Moines",
     "County": "Polk",
@@ -39,7 +39,7 @@
     "summary": "Summary"
   },
   {
-    "Publish": "True",
+    "Publish": true,
     "Timestamp": "2026-02-17T20:38:15.9842183-06:00",
     "City": "Des Moines",
     "County": "Polk",
@@ -59,7 +59,7 @@
     "summary": "Summary"
   },
   {
-    "Publish": "True",
+    "Publish": true,
     "Timestamp": "2026-02-22T12:50:50.4995924-06:00",
     "City": "Des Moines",
     "County": "Polk",
@@ -81,7 +81,7 @@
     "summary": "This property is off market, which means it's not currently listed for sale or rent on Zillow. This may be different from what's available on other websites or public sources."
   },
   {
-    "Publish": "True",
+    "Publish": true,
     "City": "Des Moines",
     "County": "Polk",
     "dateSold": "2017-04-12",
