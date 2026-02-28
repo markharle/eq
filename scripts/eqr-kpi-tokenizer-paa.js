@@ -1,4 +1,4 @@
-// KPI Tokenizer (Re-factored version of kpiTokenizer.js. This updated script utilizes the JSON file produced by PAA and retrieved from S3, instead of the legacy Google Drive implementation (28-FEB-2026) Tested 07-AUG-2025 Releave v1.0.1-kpiTokenizer)
+// KPI Tokenizer (Re-factored version of kpiTokenizer.js. This updated script utilizes the JSON file produced by PAA and retrieved from S3, instead of the legacy Google Drive implementation (28-FEB-2026).
 
 async function fetchAndDisplayTokens() {
   // Updated URL to fetch KPI data from S3-hosted JSON.
@@ -81,4 +81,5 @@ async function fetchAndDisplayTokens() {
 document.addEventListener('DOMContentLoaded', fetchAndDisplayTokens);
 
 // If you are using <script defer>, you can just call it directly:
+
 // fetchAndDisplayTokens();
