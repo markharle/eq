@@ -139,7 +139,7 @@
             const priceText = formatPriceForPin(price);
             
             // Determine background color based on status
-            const backgroundColor = status === 'Available' ? '#008000' : '#808080';
+            const backgroundColor = status === 'Available' ? '#008000' : '#f48132';
             
             return L.divIcon({
                 html: `<div style="
