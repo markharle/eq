@@ -1,8 +1,12 @@
 // KPI Tokenizer (Re-factored version of kpiTokenizer.js. This updated script utilizes the JSON file produced by PAA and retrieved from S3, instead of the legacy Google Drive implementation (28-FEB-2026).
 
 async function fetchAndDisplayTokens() {
-  // Updated URL to fetch KPI data from S3-hosted JSON.
-  const url = 'https://eq-realtor.s3.us-east-2.amazonaws.com/eq-realtor/EQR_KPIs.json';
+  // Base URL for the S3-hosted JSON
+  const baseUrl = 'https://eq-realtor.s3.us-east-2.amazonaws.com/eq-realtor/EQR_KPIs.json';
+  
+  // CACHE BUSTING: Append a unique timestamp to the URL. 
+  // This forces the browser to request a fresh copy from S3 every time.
+  const url = `${baseUrl}?t=${Date.now()}`;
   
   // An object to hold our target elements. This makes the code cleaner.
   const elements = {
@@ -31,7 +35,9 @@ async function fetchAndDisplayTokens() {
   }
 
   try {
-    const response = await fetch(url);
+    // We add { cache: 'no-store' } as a secondary measure to ensure fresh data
+    const response = await fetch(url, { cache: 'no-store' });
+    
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -79,9 +85,3 @@ async function fetchAndDisplayTokens() {
 // though using 'defer' on the script tag is the modern way to achieve this.
 // If you can't use defer, you can wrap the call in this event listener.
 document.addEventListener('DOMContentLoaded', fetchAndDisplayTokens);
-
-// If you are using <script defer>, you can just call it directly:
-
-// fetchAndDisplayTokens();
-
-
