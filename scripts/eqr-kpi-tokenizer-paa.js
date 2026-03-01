@@ -2,7 +2,7 @@
 
 async function fetchAndDisplayTokens() {
   // Updated URL to fetch KPI data from S3-hosted JSON.
-  const url = 'https://eq-realtor.s3.us-east-2.amazonaws.com/eq-realtor/EQR_KPIs.JSON ';
+  const url = 'https://eq-realtor.s3.us-east-2.amazonaws.com/eq-realtor/EQR_KPIs.JSON';
   
   // An object to hold our target elements. This makes the code cleaner.
   const elements = {
@@ -83,3 +83,4 @@ document.addEventListener('DOMContentLoaded', fetchAndDisplayTokens);
 // If you are using <script defer>, you can just call it directly:
 
 // fetchAndDisplayTokens();
+
