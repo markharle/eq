@@ -35,8 +35,9 @@ document.addEventListener('DOMContentLoaded', function() {
     return 'Price upon request';
   }
   
-  // Fetch the JSON data     
-  fetch('https://script.google.com/macros/s/AKfycbzrauZh3iI4ZYGekexd9Z0sO0E1bpL34ohwOAM6TzrrEg-CMBg1oWpGE6SW4vsY-Q0x/exec?function=doGetListings')
+  // Fetch the JSON data    
+  fetch('https://eq-realtor.s3.us-east-2.amazonaws.com/eq-realtor/eqrListingsPAA.json')
+  // Replaced 28-MAR-2026 fetch('https://script.google.com/macros/s/AKfycbzrauZh3iI4ZYGekexd9Z0sO0E1bpL34ohwOAM6TzrrEg-CMBg1oWpGE6SW4vsY-Q0x/exec?function=doGetListings')
   /* fetch('https://script.google.com/macros/s/AKfycbzaUVXyP2jt1eH7QQUt2pFlRE5b9jJVaqHC3d2TCuIyL58jDocQ5jWrUgd2m9OCEZbG/exec') */
     .then(response => {
       if (!response.ok) {
