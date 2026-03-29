@@ -1,4 +1,4 @@
-// Current Listing Cards V2 JS - fetch JSON from Google Drive 
+// Current Listing Cards V2 JS - fetch JSON from Google Drive  
 
 document.addEventListener('DOMContentLoaded', function() {
   // Get the card deck container and overlay
