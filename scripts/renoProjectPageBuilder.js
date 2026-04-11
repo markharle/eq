@@ -1,57 +1,106 @@
+(async function initFeaturedListing() {
+  // 1. Failsafe: Ensure CONFIG was loaded on the page
+  if (typeof CONFIG === 'undefined') {
+    console.error('Project Builder: CONFIG object is missing on this page.');
+    return;
+  }
 
-  (async function initFeaturedListing() {
-    const targetDiv = document.getElementById('renoProjectContent');
+  // 2. THE RENDER MAP (This makes future expansion incredibly easy)
+  // To add a 3rd section later, simply add another object to this array.
+  const renderMap = [
+    {
+      templateUrl: CONFIG.HTML_HERO_TEMPLATE,
+      targetId: 'renoProjectHeroContent'
+    },
+    {
+      templateUrl: CONFIG.HTML_BODY_TEMPLATE,
+      targetId: 'renoProjectContent'
+    }
+  ];
 
-    if (!targetDiv) {
-      console.error('Target container #renoProjectContent not found.');
-      return;
+  try {
+    const jsonUrl = `${CONFIG.JSON_BASE_URL}/DSMReno-project-${CONFIG.ID}.json`;
+
+    // 3. Prepare all fetch requests to run concurrently
+    // The first request in the array is ALWAYS the JSON data
+    const fetchPromises = [fetch(jsonUrl)];
+    
+    // Add the template fetches based on the render map
+    renderMap.forEach(section => {
+      if (section.templateUrl) {
+        fetchPromises.push(fetch(section.templateUrl));
+      }
+    });
+
+    // Execute all fetches at exactly the same time for max speed
+    const responses = await Promise.all(fetchPromises);
+
+    // Check for any 404s or network errors
+    responses.forEach(res => {
+      if (!res.ok) throw new Error(`Fetch failed for ${res.url}: ${res.statusText}`);
+    });
+
+    // 4. Extract the JSON Data (It is always the first item we fetched)
+    const jsonResponse = responses.shift(); // .shift() removes and returns the first item from the array
+    const jsonDataArray = await jsonResponse.json();
+    const projectData = jsonDataArray[0];
+
+    if (!projectData) {
+      throw new Error('Project Builder: JSON data is empty or malformed.');
     }
 
-    try {
-      // Construct the JSON URL based on the ID
-      const jsonUrl = `${CONFIG.JSON_BASE_URL}/DSMReno-project-${CONFIG.ID}.json`;
-
-      // Fetch both the HTML Template and the JSON data AT THE SAME TIME for maximum speed
-      const [templateResponse, dataResponse] = await Promise.all([
-        fetch(CONFIG.HTML_TEMPLATE),
-        fetch(jsonUrl)
-      ]);
-
-      // Check for 404s or network errors
-      if (!templateResponse.ok) throw new Error(`Template fetch failed: ${templateResponse.statusText}`);
-      if (!dataResponse.ok) throw new Error(`JSON fetch failed: ${dataResponse.statusText}`);
-
-      // Parse the responses
-      let htmlMarkup = await templateResponse.text();
-      const jsonDataArray = await dataResponse.json();
-
-      // Your JSON sample is an array containing one object. We need to extract that first object.
-      const projectData = jsonDataArray[0]; 
-
-      if (!projectData) {
-        throw new Error('JSON data is empty or malformed.');
-      }
-
-      // Dynamically replace all [tokens] in the HTML with values from the JSON object
-      for (const [key, value] of Object.entries(projectData)) {
-        // We use a case-insensitive regular expression ('gi'). 
-        // This is important because your HTML uses [city] but your JSON key is "City".
+    // 5. Helper Function: Replaces tokens in HTML with JSON values
+    const processTemplate = (htmlMarkup, data) => {
+      let processed = htmlMarkup;
+      for (const [key, value] of Object.entries(data)) {
         const tokenRegex = new RegExp(`\\[${key}\\]`, 'gi');
-        
-        // If the value is null or undefined, replace with an empty string so "null" doesn't print on screen
         const safeValue = (value !== null && value !== undefined) ? value : '';
-        
-        htmlMarkup = htmlMarkup.replace(tokenRegex, safeValue);
+        processed = processed.replace(tokenRegex, safeValue);
       }
+      // Cleanup any unused tokens left in the markup
+      return processed.replace(/\[.*?\]/g, '');
+    };
 
-      // Cleanup any leftover tokens that existed in HTML but NOT in the JSON (optional but recommended)
-      htmlMarkup = htmlMarkup.replace(/\[.*?\]/g, '');
-
-      // Inject the processed HTML into the page
-      targetDiv.innerHTML = htmlMarkup;
-
-    } catch (error) {
-      console.error('Error rendering featured listing:', error);
-      targetDiv.innerHTML = `<p style="color: red;">We're sorry, project details could not be loaded at this time.</p>`;
+    // 6. Process and Inject Templates into their respective DIVs
+    // Since we removed the JSON response using .shift(), 'responses' now 
+    // strictly contains the HTML template responses in the exact order of the renderMap.
+    for (let i = 0; i < renderMap.length; i++) {
+      const section = renderMap[i];
+      const targetDiv = document.getElementById(section.targetId);
+      
+      // If the target container exists on the page and a template was configured
+      if (targetDiv && section.templateUrl) {
+        const htmlMarkup = await responses[i].text();
+        targetDiv.innerHTML = processTemplate(htmlMarkup, projectData);
+      } else if (!targetDiv) {
+        // Silently warn in the console if the Content Manager forgot to add a target block
+        console.warn(`Project Builder: Target container #${section.targetId} not found on the page.`);
+      }
     }
-  })();
+
+  } catch (error) {
+    console.error('Project Builder Error:', error);
+    
+    // Fallback error messaging for all target divs
+    renderMap.forEach(section => {
+      const targetDiv = document.getElementById(section.targetId);
+      if (targetDiv) {
+        targetDiv.innerHTML = `<p style="text-align:center; color: red;">Content could not be loaded at this time.</p>`;
+      }
+    });
+  }
+})();
+How to use this pattern for the future:
+Let's say in a month you want to add an image gallery section (<div id="renoProjectGalleryContent"></div>).
+
+All you have to do is:
+
+Add HTML_GALLERY_TEMPLATE: 'https://...' to your Squarespace CONFIG.
+Add one block to the renderMap array in your GitHub JS file:
+Javascript
+copy
+Open in Browser
+{
+  templateUrl: CONFIG.HTML_GALLERY_TEMPLATE,
+  targetId: 'renoProjectGalleryContent'
+}
