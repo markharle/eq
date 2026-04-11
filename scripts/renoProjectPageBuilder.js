@@ -90,17 +90,3 @@
     });
   }
 })();
-How to use this pattern for the future:
-Let's say in a month you want to add an image gallery section (<div id="renoProjectGalleryContent"></div>).
-
-All you have to do is:
-
-Add HTML_GALLERY_TEMPLATE: 'https://...' to your Squarespace CONFIG.
-Add one block to the renderMap array in your GitHub JS file:
-Javascript
-copy
-Open in Browser
-{
-  templateUrl: CONFIG.HTML_GALLERY_TEMPLATE,
-  targetId: 'renoProjectGalleryContent'
-}
