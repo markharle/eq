@@ -1,0 +1,232 @@
+  /* =========================================
+   1. The Grid (Configurable columns)
+   ========================================= */
+.team-deck {
+  display: grid;
+  /* Requirement: 1 card per row on mobile */
+  grid-template-columns: 1fr; 
+  gap: 3rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Requirement: Configurable Desktop Columns via Utility Classes */
+@media screen and (min-width: 768px) {
+  .desktop-cols-2 { grid-template-columns: repeat(2, 1fr); }
+  .desktop-cols-3 { grid-template-columns: repeat(3, 1fr); }
+  .desktop-cols-4 { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* =========================================
+   2. The Card 
+   ========================================= */
+.team-card {
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  border-radius: 8px;
+  /* Requirement: Subtle Box Shadow */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  /* Requirement: Cards in a row stretch to equal height */
+  height: 100%; 
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.team-card:hover {
+  /*  transform: translateY(-4px);Optional: slight lift on hover */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+}
+
+/* =========================================
+   3. Alternative Headshot Presentations
+   ========================================= */
+.team-card__img-link {
+  display: block;
+  flex-shrink: 0;
+  text-decoration: none;
+}
+
+.team-card__img {
+  display: block;
+  /* 
+    Forces all images to be the exact same height/proportion, 
+    preventing row misalignment regardless of original upload size. 
+  */
+  aspect-ratio: 1 / 1; 
+  object-fit: cover; 
+}
+
+/* Option A: Edge-to-Edge Rectangle */
+.img-style-rectangle {
+  width: 100%;
+  border-radius: 8px 8px 0 0;
+}
+
+/* Option B: Centered Circle */
+.img-style-circle {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  margin: 2rem auto 0 auto;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Option C: Inset Rounded */
+.img-style-rounded {
+  width: calc(100% - 2rem);
+  margin: 1rem auto 0 auto;
+  border-radius: 8px;
+}
+
+/* =========================================
+   4. Card Body & Truncation
+   ========================================= */
+.team-card__body {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  /* flex-grow: 1 forces the body to expand, which pushes the button to the bottom */
+  flex-grow: 1; 
+}
+
+.team-card__name {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.25rem;
+  color: #222;
+}
+
+/* Requirement: Truncate to 3 lines */
+.team-card__blurb {
+  margin: 0 0 1.5rem 0;
+  color: #555;
+  line-height: 1.5;
+  
+  /* CSS magic to truncate text with an ellipsis after 3 lines */
+  display: -webkit-box;
+  -webkit-line-clamp: 3; 
+  -webkit-box-orient: vertical;  
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+/* =========================================
+   5. Learn More Button Options
+      margin-top: auto mathematically pins the button to the bottom of the card
+   ========================================= */
+/* Option 0. Block Button */
+/* .team-card__btn {
+  margin-top: auto; 
+  display: inline-block;
+  text-align: center;
+  background-color: #0056b3;
+  color: #ffffff;
+  padding: 0.6rem 1.2rem;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.team-card__btn:hover {
+  background-color: #004494;
+} */
+
+/* Option 1: Clean Link with Animated Caret 
+ On hover, darken the text and slide the arrow to the right */
+.team-card__btn {
+  margin-top: auto; 
+  align-self: flex-start; 
+  text-decoration: none; 
+  color: #0056b3;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  transition: color 0.2s ease;
+}
+.team-card__btn::after {
+  content: "\f105"; 
+  font-family: "FontAwesome", "Font Awesome 5 Free", "Font Awesome 6 Free";
+  font-weight: 900;
+  margin-left: 0.5rem;
+  transition: transform 0.2s ease-in-out;
+}
+.team-card__btn:hover {
+  color: #003d82;
+}
+.team-card__btn:hover::after {
+  transform: translateX(5px); 
+} 
+
+/* Option 2: "Ghost" with outline */
+/* .team-card__btn {
+  margin-top: auto; 
+  align-self: flex-start; 
+  
+  color: #0056b3;
+  background-color: transparent;
+  border: 2px solid #0056b3;
+  padding: 0.5rem 1.2rem;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.team-card__btn:hover {
+  background-color: #0056b3;
+  color: #ffffff;
+} */
+
+/* Option 3: Soft background "Pill"  */
+/* .team-card__btn {
+  margin-top: auto; 
+  align-self: flex-start; 
+  
+  color: #0056b3;
+  background-color: #e6f0fa; 
+  padding: 0.5rem 1.25rem;
+  border-radius: 50px; 
+  text-decoration: none;
+  font-weight: 600;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.team-card__btn:hover {
+  background-color: #cce0f5; 
+  color: #004494;
+}
+ */
+
+ /* Option 4: Animated underline */
+ /* Creates the hidden underline */
+/* On hover, the underline expands to 100% width team-card__btn:hover::after {width: 100%;}*/
+ /* .team-card__btn {
+  margin-top: auto; 
+  align-self: flex-start; 
+  color: #0056b3;
+  text-decoration: none;
+  font-weight: 600;
+  position: relative;
+  padding-bottom: 2px;
+}
+
+.team-card__btn::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: #0056b3;
+  transition: width 0.3s ease-in-out;
+}
+.team-card__btn:hover::after {
+  width: 100%;
+}
+
+.team-card__btn:hover {
+  color: #003d82;
+} */
