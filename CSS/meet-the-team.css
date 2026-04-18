@@ -230,3 +230,259 @@
 .team-card__btn:hover {
   color: #003d82;
 } */
+
+
+
+/* -----------------------------------
+   1. Main Wrapper Layout
+----------------------------------- */
+.contact-card {
+  /* Req 1: Consumes 100% of viewport/parent horizontally on all devices */
+  width: 100%;
+  margin: 2rem auto; 
+  box-sizing: border-box;
+  padding: 1.5rem;
+  
+  /* Image left, content vertically centered */
+  display: flex;
+  flex-direction: row;
+  align-items: center; /* Keeps children centered vertically */
+  gap: 2rem; 
+
+  /* Styling */
+  background: #F0F8FF;
+  border: 1px solid #CAE9F5;
+  border-radius: 8px;
+}
+/* Note: Desktop width media query removed per Req 1 */
+
+/* -----------------------------------
+   2. Image Styling
+----------------------------------- */
+.contact-logo {
+  /* Req 2: Max-width forced to 150px to prevent theme overrides */
+  max-width: 150px !important; 
+  height: auto;
+  flex-shrink: 0; 
+}
+
+/* -----------------------------------
+   3. Content Layout & Spacing
+----------------------------------- */
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  /* Req 3: Forces items to cluster in the vertical center and prevents stretching */
+  justify-content: center; 
+}
+
+/* Req 3: Applying strict 1rem bottom margin instead of flexible gaps */
+.contact-item {
+  margin-bottom: 0;
+}
+
+/* Removes the margin from the very last item so it doesn't push the vertical centering off-balance */
+.contact-item:last-child {
+  margin-bottom: 0;
+}
+
+/* -----------------------------------
+   4. Link Styling
+----------------------------------- */
+.contact-item a {
+  display: flex;
+  align-items: flex-start;
+  text-decoration: none;
+  color: #111; 
+  font-weight: 500;
+  transition: color 0.2s ease-in-out;
+}
+
+.contact-item a:hover {
+  color: #0056b3; 
+}
+
+/* -----------------------------------
+   5. FontAwesome Pseudo-Elements 
+----------------------------------- */
+.contact-item a::before {
+  font-family: "FontAwesome", "Font Awesome 5 Free", "Font Awesome 6 Free";
+  display: inline-block;
+  width: 1.5rem;
+  text-align: center;
+  margin-right: 0.75rem;
+  margin-top: 0.15rem; 
+  flex-shrink: 0; 
+}
+
+.item-email a::before {
+  content: "\f003"; 
+  font-weight: 400; 
+}
+
+.item-phone a::before {
+  content: "\f095"; 
+  font-weight: 900; 
+}
+
+.item-location a::before {
+  content: "\f041"; 
+  font-weight: 900;
+}
+
+/* -----------------------------------
+   6. Multi-line Address Formatting
+----------------------------------- */
+.location-text {
+  display: flex;
+  flex-direction: column; 
+}
+
+.location-name {
+  font-weight: 500;
+  margin-bottom: 0.2rem;
+}
+
+.location-address {
+  font-weight: 300;
+  line-height: 1.4;
+}
+/* -----------------------------------
+   7. Extended Icons (Website & Brands)
+----------------------------------- */
+
+/* Website uses the standard FontAwesome family (Globe icon) */
+.item-website a::before {
+  content: "\f0ac"; /* Unicode for fa-globe */
+  font-weight: 900;
+}
+
+/* -----------------------------------
+   7.b. Social Media Row
+----------------------------------- */
+.social-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap; /* Requirement: Wrap to multiple lines if necessary */
+  justify-content: center; /* Requirement: Center horizontally */
+  gap: 1rem; /* Adjust space between icons */
+  margin-top: 1rem; /* Adds breathing room beneath the address block */
+  width: 100%;
+}
+
+/* Requirement: 32px square divs */
+.social-icon {
+  width: 32px;
+  height: 32px;
+}
+
+/* Forces the <a> tag to fill the 32px div and center the icon inside it */
+.social-icon a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+  color: #111; 
+  font-size: 1.5rem; /* Scales the icon to fit nicely inside the 32px box */
+  transition: color 0.2s ease-in-out;
+}
+
+.social-icon a:hover {
+  color: #0056b3; 
+}
+
+/* -----------------------------------
+   8. Social Brand Pseudo-Elements
+----------------------------------- */
+.social-icon a::before {
+  font-family: "FontAwesome", "Font Awesome 5 Brands", "Font Awesome 6 Brands";
+  font-weight: 400;
+  display: block; 
+}
+
+.item-website a::before { content: "\f0ac"; }
+.item-facebook a::before { content: "\f09a"; }
+.item-x a::before { content: "\f099"; } /* or \e61b for the X icon (requires Font Awesome v6.4.2+.) */
+.item-instagram a::before { content: "\f16d"; }
+.item-linkedin a::before { content: "\f08c"; }
+
+
+/* Start Modal Popup Body V2 / Text with Right-Aligned Image Block */
+
+.wrap-image-block-2 {
+  width: 100%;                 /* Full width of the page content column */
+  margin: 1rem 0 4rem 0;         
+}
+
+/* Title row */
+.wrap-image-block-2__title-row {
+  width: 100%;
+  margin: 1.5rem 0;
+  text-align: center;
+}
+
+.wrap-image-block-2__title-row h2 {
+  margin: 0;                   
+}
+
+/* Body (text + image area) */
+.wrap-image-block-2__body {
+  width: 100%;
+  overflow: auto;              /* Contains the floated image */
+}
+
+/* Right-aligned image with text wrapping */
+.wrap-image-block-2__image-head {
+  float: right;
+  width: 250px;   
+  height: 250px;              
+  max-width: 250px!important;            /* Optional: prevent overly large images on wide screens */
+  max-height: 250px!important; 
+  margin: 0 0 .25rem 1.5rem;  /* Space below and to the left of the head shot */
+  display: block;
+  border-radius: 50%;
+  /*box-shadow: .4px .4px .5px rgba(0, 0, 0, .33), 9.6px 8.8px 11.8px -2px rgba(0, 0, 0, .24), 25.5px 23.6px 31.5px -3px */
+  box-shadow: .4px .4px 5px rgba(0, 0, 0, .25), 1.5px 1.4px 10px -3.9px rgba(0, 0, 0, .19);
+}
+
+.wrap-image-block-2__image-logo {
+  float: left;
+  width: 200px;   
+  height: 200px;              
+  max-width: 200px!important;            /* Optional: prevent overly large images on wide screens */
+  max-height: 200px!important; 
+  margin: 0 0 .5rem 1.5rem;  /* Space below and to the left of the logo */
+  display: block;
+  /* border-radius: 50%; */
+  /*box-shadow: .4px .4px .5px rgba(0, 0, 0, .33), 9.6px 8.8px 11.8px -2px rgba(0, 0, 0, .24), 25.5px 23.6px 31.5px -3px */
+ /* box-shadow: .4px .4px 5px rgba(0, 0, 0, .25), 1.5px 1.4px 10px -3.9px rgba(0, 0, 0, .19);  */
+}
+
+/* Optional: tweak spacing for h4 / p inside this component only */
+.wrap-image-block-2__body h4 {
+  margin-top: 0;
+  margin-bottom: 0.4rem;
+}
+
+.wrap-image-block-2__body p {
+  margin-top: 0;
+  margin-bottom: 0.9rem;
+}
+
+/*  Responsive behavior */
+@media (max-width: 768px) {
+  .wrap-image-block-2__image {
+    float: none;
+    width: 100%;
+    max-width: 100%;
+    margin: 0 0 1rem 0;        /* Full-width image above text on mobile */
+  }
+  .wrap-image-block-2__title-row {
+    margin:1rem 0;
+    padding:0 2rem; /* Indent title row to not overlap close icon */
+}
+}
+
+/* End Modal Popup Body V2 / Text with Right-Aligned Image Block */
