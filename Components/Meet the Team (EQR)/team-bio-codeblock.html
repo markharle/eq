@@ -1,0 +1,41 @@
+<script>
+  /**
+   * ─────────────────────────────────────────────────────────────────────────
+   * TEAM MEMBER BIO — Squarespace Code Block
+   * Place this code block on the dynamic Team Member details page.
+   *
+   * CONTENT MANAGER INSTRUCTIONS
+   * Update the fields in the CONFIG section below, then save the page.
+   * ─────────────────────────────────────────────────────────────────────────
+   */
+  window.TEAM_BIO_CONFIG = {
+
+    // REQUIRED — Absolute URL to the JSON file in your S3 bucket.
+    jsonUrl: 'https://eq-realtor.s3.amazonaws.com/eq-realtor/teamMembersEQR.json',
+
+    // REQUIRED — The URL parameter key used to identify the team member.
+    // This must match the query-string key used in the card deck <a href> links.
+    // Example: href="#wm-popup=/team-member/details?TeamMemberId=1"
+    urlParamKey: 'TeamMemberId',
+
+    // REQUIRED — Absolute URL to the bio HTML template (hosted on GitHub/jsDelivr).
+    htmlUrl: 'https://cdn.jsdelivr.net/gh/YOUR-GITHUB-USERNAME/YOUR-REPO@main/team-bio-template.html',
+
+    // REQUIRED — Absolute URL to the bio JavaScript (hosted on GitHub/jsDelivr).
+    jsUrl: 'https://cdn.jsdelivr.net/gh/YOUR-GITHUB-USERNAME/YOUR-REPO@main/team-member-bio.js',
+
+    // OPTIONAL — Absolute URL to a CSS file for bio page styles.
+    // Leave as empty string '' if you are handling styles in Squarespace Custom CSS.
+    cssUrl: '',
+
+    // REQUIRED — The id attribute of the target <div> below.
+    targetDivId: 'team-member-bio'
+
+  };
+</script>
+
+<!-- TARGET DIV — The bio content will be injected here. Do not remove. -->
+<div id="team-member-bio"></div>
+
+<!-- Load the bio script AFTER the CONFIG and target div above. -->
+<script src="https://cdn.jsdelivr.net/gh/YOUR-GITHUB-USERNAME/YOUR-REPO@main/team-member-bio.js"></script>
