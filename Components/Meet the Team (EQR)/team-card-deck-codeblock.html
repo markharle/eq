@@ -1,0 +1,52 @@
+<script>
+  /**
+   * ─────────────────────────────────────────────────────────────────────────
+   * TEAM MEMBER CARD DECK — Squarespace Code Block
+   * Place this code block on the page that displays the Team Member card deck.
+   *
+   * CONTENT MANAGER INSTRUCTIONS
+   * Update the fields in the CONFIG section below, then save the page.
+   * ─────────────────────────────────────────────────────────────────────────
+   */
+  window.TEAM_CARD_CONFIG = {
+
+    // REQUIRED — Absolute URL to the JSON file in your S3 bucket.
+    jsonUrl: 'https://eq-realtor.s3.amazonaws.com/eq-realtor/teamMembersEQR.json',
+
+    // REQUIRED — Absolute URL to the card deck HTML template (hosted on GitHub/jsDelivr).
+    htmlUrl: 'https://cdn.jsdelivr.net/gh/YOUR-GITHUB-USERNAME/YOUR-REPO@main/team-card-template.html',
+
+    // REQUIRED — Absolute URL to the card deck JavaScript (hosted on GitHub/jsDelivr).
+    jsUrl: 'https://cdn.jsdelivr.net/gh/YOUR-GITHUB-USERNAME/YOUR-REPO@main/team-member-card-deck.js',
+
+    // OPTIONAL — Absolute URL to a CSS file for card deck styles.
+    // Leave as empty string '' if you are handling styles in Squarespace Custom CSS.
+    cssUrl: '',
+
+    // REQUIRED — The id attribute of the target <div> below.
+    targetDivId: 'team-member-card-deck',
+
+    // OPTIONAL — Filter rules applied to the JSON data before rendering cards.
+    // Remove or set to null to display all records.
+    //
+    // logic: 'AND' — record must satisfy ALL rules (default)
+    // logic: 'OR'  — record must satisfy ANY rule
+    //
+    // Supported operators: '==' | '!=' | '>' | '>=' | '<' | '<='
+    //
+    // Example: show only active EQR members
+    filter: {
+      logic: 'AND',
+      rules: [
+        { field: 'Status', operator: '==', value: 1 }
+      ]
+    }
+
+  };
+</script>
+
+<!-- TARGET DIV — The card deck will be injected here. Do not remove. -->
+<div id="team-member-card-deck"></div>
+
+<!-- Load the card deck script AFTER the CONFIG and target div above. -->
+<script src="https://cdn.jsdelivr.net/gh/YOUR-GITHUB-USERNAME/YOUR-REPO@main/team-member-card-deck.js"></script>
