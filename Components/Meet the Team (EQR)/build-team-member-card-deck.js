@@ -260,9 +260,10 @@
     // Build a document fragment for a single DOM write
     const fragment = document.createDocumentFragment();
 
-    // Outer wrapper  — preserves the .team-deck grid class from the template
-    const deckWrapper = document.createElement("div");
-    deckWrapper.innerHTML = extractDeckWrapper(templateHtml); // see helper below
+    // Outer wrapper — extractDeckWrapper() returns an HTMLElement directly;
+    // assigning it to innerHTML would stringify it as "[object HTMLDivElement]",
+    // so we use it as a node reference instead.
+    const deckWrapper = extractDeckWrapper(templateHtml);
 
     // Extract the repeating card markup from the template
     const cardTemplate = extractCardTemplate(templateHtml);
