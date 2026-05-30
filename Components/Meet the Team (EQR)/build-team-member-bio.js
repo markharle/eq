@@ -12,22 +12,51 @@
  * -----------------
  * Data-fetching  →  fetchTeamData()      returns the full raw array
  * Member lookup  →  findMemberById()     returns one matched record
- * Rendering      →  renderBio()          writes the bio to the DOM
+ * Rendering      →  renderHero()         writes the hero block to the DOM
+ *                →  renderBio()          writes the bio block to the DOM
  * Social icons   →  processSocialRow()   shows/hides each icon div
  *
  * Configuration block expected on the page
  * ----------------------------------------
  * <script type="application/json" id="team-bio-config">
  * {
- *   "jsonUrl":       "https://…/team-members.json",
- *   "jsUrl":         "https://…/build-team-member-bio.js",
- *   "htmlUrl":       "https://…/display-team-member-bio.html",
- *   "cssUrl":        "https://…/team-member-bio.css",
- *   "bootstrapUrl":  "https://cdn.jsdelivr.net/…/bootstrap.min.css",
- *   "imageBaseUrl":  "https://YOUR-BUCKET.s3.amazonaws.com/eq-realtor/",
- *   "targetDivId":   "team-member-bio"
+ *   "jsonUrl":          "https://…/team-members.json",
+ *   "jsUrl":            "https://…/build-team-member-bio.js",
+ *   "htmlUrl":          "https://…/display-team-member-bio.html",
+ *   "cssUrl":           "https://…/team-member-bio.css",
+ *   "bootstrapUrl":     "https://cdn.jsdelivr.net/…/bootstrap.min.css",
+ *   "imageBaseUrl":     "https://YOUR-BUCKET.s3.amazonaws.com/eq-realtor/",
+ *   "targetDivId":      "team-member-bio",
+ *   "heroHtmlUrl":      "https://…/display-team-member-hero.html",
+ *   "heroTargetDivId":  "team-member-hero"
  * }
  * </script>
+ *
+ * Adding a new content block to this page
+ * ----------------------------------------
+ * Follow this four-step pattern for any new block (e.g. a pull-quote,
+ * a stats panel, a related listings strip):
+ *
+ *   Step 1 — HTML template
+ *     Create display-team-member-BLOCKNAME.html with [tokens] where
+ *     dynamic values should appear.
+ *
+ *   Step 2 — CONFIG keys (in the existing config block)
+ *     Add "blocknameHtmlUrl"     — S3 URL to the new template file
+ *     Add "blocknameTargetDivId" — the id of the div that will receive it
+ *
+ *   Step 3 — JS render function
+ *     Add renderBlockname(member, templateHtml, targetDiv, imageBaseUrl)
+ *     following the same shape as renderBio() / renderHero() below.
+ *     If the block needs special token logic (like social show/hide),
+ *     add a dedicated processor function for it.
+ *
+ *   Step 4 — Squarespace DISPLAY code block
+ *     Add a new Code Block on the page at the position you want it to
+ *     appear. Paste in the target div and spinner markup, using the
+ *     blocknameTargetDivId value as the div id.
+ *     The single CONFIG code block and single <script src="…"> tag
+ *     already on the page do not need to change.
  *
  * URL querystring parameter
  * -------------------------
@@ -50,7 +79,8 @@
     const config = loadConfig("team-bio-config");
     if (!config) return; // loadConfig() already logged the error
 
-    const { jsonUrl, htmlUrl, cssUrl, bootstrapUrl, imageBaseUrl, targetDivId } = config;
+    const { jsonUrl, htmlUrl, cssUrl, bootstrapUrl, imageBaseUrl, targetDivId,
+            heroHtmlUrl, heroTargetDivId } = config;
 
     // -- 1b. Validate required fields ----------------------------------------
     if (!jsonUrl || !htmlUrl || !targetDivId) {
@@ -65,11 +95,26 @@
     if (bootstrapUrl) injectStylesheet(bootstrapUrl);
     if (cssUrl)       injectStylesheet(cssUrl);
 
-    // -- 1d. Locate the target div -------------------------------------------
+    // -- 1d. Locate the bio target div ----------------------------------------
     const targetDiv = document.getElementById(targetDivId);
     if (!targetDiv) {
       console.error(`[TeamBio] Target div #${targetDivId} not found in the DOM.`);
       return;
+    }
+
+    // -- 1d2. Locate the hero target div (optional) ---------------------------
+    // heroHtmlUrl and heroTargetDivId are both required to render the hero.
+    // If either is absent the hero block is silently skipped — the bio still
+    // renders normally.  This keeps the config backward-compatible.
+    const heroTargetDiv = (heroHtmlUrl && heroTargetDivId)
+      ? document.getElementById(heroTargetDivId)
+      : null;
+
+    if (heroHtmlUrl && heroTargetDivId && !heroTargetDiv) {
+      console.warn(
+        `[TeamBio] heroTargetDivId "#${heroTargetDivId}" is configured but ` +
+        "not found in the DOM. Hero block will be skipped."
+      );
     }
 
     // -- 1e. Extract TeamMemberId from the querystring -----------------------
@@ -81,29 +126,42 @@
       return;
     }
 
-    // -- 1f. Show the loading spinner ----------------------------------------
+    // -- 1f. Show the loading spinner in each active block -------------------
     showSpinner(targetDiv);
+    if (heroTargetDiv) showSpinner(heroTargetDiv);
 
-    // -- 1g. Fetch data + template simultaneously, then render ---------------
+    // -- 1g. Fetch data + all templates simultaneously, then render ----------
+    // Build the fetch array dynamically so heroHtmlUrl is only fetched when
+    // the hero block is actually configured and its target div exists.
     try {
-      const [teamData, templateHtml] = await Promise.all([
+      const fetchPromises = [
         fetchTeamData(jsonUrl),
-        fetchTemplate(htmlUrl)
-      ]);
+        fetchTemplate(htmlUrl),
+        heroTargetDiv ? fetchTemplate(heroHtmlUrl) : Promise.resolve(null)
+      ];
+
+      const [teamData, bioTemplateHtml, heroTemplateHtml] = await Promise.all(fetchPromises);
 
       const member = findMemberById(teamData, memberId);
 
       if (!member) {
         console.error(`[TeamBio] No team member found with Id = ${memberId}.`);
         showError(targetDiv);
+        if (heroTargetDiv) showError(heroTargetDiv);
         return;
       }
 
-      renderBio(member, templateHtml, targetDiv, imageBaseUrl);
+      // Render hero first (sits above bio on the page)
+      if (heroTargetDiv && heroTemplateHtml) {
+        renderHero(member, heroTemplateHtml, heroTargetDiv, imageBaseUrl);
+      }
+
+      renderBio(member, bioTemplateHtml, targetDiv, imageBaseUrl);
 
     } catch (err) {
       console.error("[TeamBio] Failed to load team member bio:", err);
       showError(targetDiv);
+      if (heroTargetDiv) showError(heroTargetDiv);
     }
   }
 
@@ -226,7 +284,35 @@
 
 
   /* =====================================================================
-     7.  BIO RENDERER
+     7.  HERO RENDERER
+     ===================================================================== */
+
+  /**
+   * Renders the hero content block — a lightweight token-replace with no
+   * special processing needed (no social row, no image URL resolution).
+   * Image URL resolution is included for forward-compatibility in case a
+   * future hero template references [Headshot] or another image field.
+   *
+   * @param  {object}      member       — the matched team member record
+   * @param  {string}      templateHtml — raw HTML string with [tokens]
+   * @param  {HTMLElement} targetDiv    — the DOM node to inject into
+   * @param  {string}      imageBaseUrl — S3 base URL prepended to image filenames
+   */
+  function renderHero(member, templateHtml, targetDiv, imageBaseUrl) {
+
+    // Resolve image URLs in case a future hero template uses [Headshot]
+    const resolvedMember = resolveImageUrls(member, imageBaseUrl);
+
+    // Replace tokens and inject
+    const populatedHtml = replaceTokens(templateHtml, resolvedMember);
+    targetDiv.innerHTML = populatedHtml;
+
+    console.log(`[TeamBio] Rendered hero for ${member.FirstName} ${member.LastName}.`);
+  }
+
+
+  /* =====================================================================
+     8.  BIO RENDERER
      ===================================================================== */
 
   /**
@@ -241,33 +327,20 @@
    */
   function renderBio(member, templateHtml, targetDiv, imageBaseUrl) {
 
-    // -- 7a. Resolve image URLs ----------------------------------------------
-    // Headshot and Logo values in the JSON are filenames only (e.g. "Eric-Quiner.jpg").
-    // Prepend the S3 base URL so <img src="…"> is a valid absolute URL.
-    // If imageBaseUrl is not configured, the filename is used as-is.
-    const resolvedMember = Object.assign({}, member);
+    // -- 8a. Resolve image URLs ----------------------------------------------
+    const resolvedMember = resolveImageUrls(member, imageBaseUrl);
 
-    if (imageBaseUrl) {
-      const base = imageBaseUrl.replace(/\/$/, ""); // strip any trailing slash
-      if (resolvedMember.Headshot && !resolvedMember.Headshot.startsWith("http")) {
-        resolvedMember.Headshot = `${base}/${resolvedMember.Headshot}`;
-      }
-      if (resolvedMember.Logo && !resolvedMember.Logo.startsWith("http")) {
-        resolvedMember.Logo = `${base}/${resolvedMember.Logo}`;
-      }
-    }
-
-    // -- 7b. Replace all standard [tokens] -----------------------------------
+    // -- 8b. Replace all standard [tokens] -----------------------------------
     const populatedHtml = replaceTokens(templateHtml, resolvedMember);
 
-    // -- 7c. Parse the populated HTML into a live DOM tree -------------------
+    // -- 8c. Parse the populated HTML into a live DOM tree -------------------
     const parser = new DOMParser();
     const doc = parser.parseFromString(populatedHtml, "text/html");
 
-    // -- 7d. Apply social media show/hide rules ------------------------------
+    // -- 8d. Apply social media show/hide rules ------------------------------
     processSocialRow(doc, resolvedMember);
 
-    // -- 7e. Extract the rendered body and inject into the target div --------
+    // -- 8e. Extract the rendered body and inject into the target div --------
     // We want everything inside <body>, not the full document wrapper.
     targetDiv.innerHTML = "";
     const bioContent = doc.body;
@@ -276,12 +349,42 @@
       targetDiv.appendChild(bioContent.firstChild);
     }
 
-    console.log(`[TeamBio] Rendered bio for ${member.FirstName} ${member.LastName}.`);
+    console.log(`[TeamBio] Rendered bio for ${member.FirstName} ${member.LastName}.`);`);
   }
 
 
   /* =====================================================================
-     8.  TOKEN REPLACER
+     9.  IMAGE URL RESOLVER  (shared by renderHero and renderBio)
+     ===================================================================== */
+
+  /**
+   * Returns a shallow copy of the member object with Headshot and Logo
+   * fields prepended with the S3 imageBaseUrl when they are filenames
+   * rather than fully-qualified URLs.
+   *
+   * @param  {object} member       — original team member record
+   * @param  {string} imageBaseUrl — S3 base path from config (may be empty)
+   * @returns {object}             — copy with resolved image URLs
+   */
+  function resolveImageUrls(member, imageBaseUrl) {
+    const resolved = Object.assign({}, member);
+
+    if (imageBaseUrl) {
+      const base = imageBaseUrl.replace(/\/$/, ""); // strip any trailing slash
+      if (resolved.Headshot && !resolved.Headshot.startsWith("http")) {
+        resolved.Headshot = `${base}/${resolved.Headshot}`;
+      }
+      if (resolved.Logo && !resolved.Logo.startsWith("http")) {
+        resolved.Logo = `${base}/${resolved.Logo}`;
+      }
+    }
+
+    return resolved;
+  }
+
+
+  /* =====================================================================
+     10.  TOKEN REPLACER
      ===================================================================== */
 
   /**
@@ -305,7 +408,7 @@
 
 
   /* =====================================================================
-     9.  SOCIAL ROW PROCESSOR
+     11.  SOCIAL ROW PROCESSOR
      ===================================================================== */
 
   /**
@@ -348,7 +451,7 @@
 
 
   /* =====================================================================
-     10.  UI HELPERS  (spinner, error, stylesheet injection)
+     12.  UI HELPERS  (spinner, error, stylesheet injection)
      ===================================================================== */
 
   /**
