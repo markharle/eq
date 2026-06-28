@@ -353,6 +353,11 @@
       targetDiv.appendChild(content.firstChild);
     }
 
+    // -- 8g. Initialise lightbox JS controls ---------------------------------
+    // Must run AFTER content is in the live DOM so event listeners can
+    // find the gallery elements.
+    initLightboxControls(targetDiv);
+
     console.log("[SchoolDetails] Rendered details for " + school.Name + ".");
   }
 
@@ -517,25 +522,25 @@
 
       html += '<div class="gallery-item">';
 
-      // Thumbnail link - opens lightbox via :target
-      html +=   '<a href="#' + imgId + '" class="gallery-thumb-link">';
+      // Thumbnail link - JS intercepts click, opens lightbox without scrolling
+      html +=   '<a href="#" data-lightbox="open" data-target="' + imgId + '" class="gallery-thumb-link">';
       html +=     '<img src="' + imgSrc + '" alt="' + altText + '" class="gallery-thumb" loading="lazy">';
       html +=   '</a>';
 
-      // Lightbox overlay - hidden until :target is matched
+      // Lightbox overlay - shown/hidden via .is-open class (toggled by JS)
       html +=   '<div id="' + imgId + '" class="gallery-lightbox" role="dialog" aria-modal="true" aria-label="Image ' + (i + 1) + ' of ' + total + '">';
 
-      // Close button - clears :target, closing the lightbox
-      html +=     '<a href="#" class="gallery-lightbox__close" aria-label="Close lightbox">&times;</a>';
+      // Close button - JS intercepts, removes .is-open without scrolling
+      html +=     '<a href="#" data-lightbox="close" class="gallery-lightbox__close" aria-label="Close lightbox">&times;</a>';
 
       // Prev button - omitted for the first image
       if (i > 0) {
-        html +=   '<a href="#gallery-img-' + (i - 1) + '" class="gallery-lightbox__prev" aria-label="Previous image">&#10094;</a>';
+        html +=   '<a href="#" data-lightbox="prev" data-target="gallery-img-' + (i - 1) + '" class="gallery-lightbox__prev" aria-label="Previous image">&#10094;</a>';
       }
 
       // Next button - omitted for the last image
       if (i < total - 1) {
-        html +=   '<a href="#gallery-img-' + (i + 1) + '" class="gallery-lightbox__next" aria-label="Next image">&#10095;</a>';
+        html +=   '<a href="#" data-lightbox="next" data-target="gallery-img-' + (i + 1) + '" class="gallery-lightbox__next" aria-label="Next image">&#10095;</a>';
       }
 
       // Image counter label (e.g. "3 / 8")
@@ -556,7 +561,103 @@
 
 
   /* =====================================================================
-     13.  UI HELPERS  (spinner, error, stylesheet injection)
+     13.  LIGHTBOX CONTROLLER
+     =====================================================================
+     Handles three interactions that cannot be solved with CSS alone:
+       1. Opening a lightbox without scrolling the page
+       2. Closing a lightbox without scrolling to top (was caused by href="#")
+       3. ESC key to close the active lightbox
+
+     Mechanism
+     ---------
+     Lightboxes are shown/hidden by toggling a .is-open CSS class rather
+     than relying on the :target pseudo-class.  All link clicks within the
+     gallery are intercepted via event delegation on the container div;
+     e.preventDefault() stops the browser's native hash-scroll behavior.
+
+     This function must be called AFTER the gallery HTML is in the live DOM.
+     ===================================================================== */
+
+  /**
+   * Attaches click (event delegation) and keydown (ESC) handlers to
+   * control the lightbox.  Called once per renderDetails() invocation.
+   *
+   * @param {HTMLElement} container - the details target div containing the gallery
+   */
+  function initLightboxControls(container) {
+
+    // -- Click handler (event delegation on container) ----------------------
+    // Catches clicks on open / close / prev / next controls in one listener.
+    container.addEventListener("click", function (e) {
+
+      // Walk up from the clicked element to find a data-lightbox anchor
+      var link = e.target;
+      while (link && link !== container) {
+        if (link.getAttribute && link.getAttribute("data-lightbox")) { break; }
+        link = link.parentNode;
+      }
+
+      if (!link || !link.getAttribute || !link.getAttribute("data-lightbox")) { return; }
+
+      e.preventDefault(); // prevent hash navigation and page scroll
+
+      var action = link.getAttribute("data-lightbox");
+      var target = link.getAttribute("data-target");
+
+      if (action === "open" || action === "prev" || action === "next") {
+        openLightbox(container, target);
+      } else if (action === "close") {
+        closeLightbox(container);
+      }
+    });
+
+    // -- ESC key handler ----------------------------------------------------
+    // Stored as a named function so it can be removed if the component is
+    // ever torn down (prevents stacking listeners on repeated renders).
+    if (container._lightboxKeyHandler) {
+      document.removeEventListener("keydown", container._lightboxKeyHandler);
+    }
+
+    container._lightboxKeyHandler = function (e) {
+      if (e.key === "Escape") {
+        closeLightbox(container);
+      }
+    };
+
+    document.addEventListener("keydown", container._lightboxKeyHandler);
+  }
+
+  /**
+   * Opens a specific lightbox by adding .is-open to its element.
+   * Closes any currently open lightbox first.
+   *
+   * @param {HTMLElement} container - the details target div
+   * @param {string}      imgId     - the id of the lightbox div to open
+   */
+  function openLightbox(container, imgId) {
+    closeLightbox(container); // ensure only one lightbox is open at a time
+    var lightbox = container.querySelector("#" + imgId);
+    if (lightbox) {
+      lightbox.classList.add("is-open");
+    }
+  }
+
+  /**
+   * Closes the currently open lightbox by removing .is-open.
+   * Page scroll position is not affected.
+   *
+   * @param {HTMLElement} container - the details target div
+   */
+  function closeLightbox(container) {
+    var open = container.querySelector(".gallery-lightbox.is-open");
+    if (open) {
+      open.classList.remove("is-open");
+    }
+  }
+
+
+  /* =====================================================================
+     14.  UI HELPERS  (spinner, error, stylesheet injection)
      ===================================================================== */
 
   function showSpinner(targetDiv) {
@@ -585,4 +686,3 @@
   }
 
 })(); // end IIFE
- 
