@@ -461,9 +461,16 @@
    * (e.g. "[\"img1.jpg\",\"img2.jpg\"]") and must be JSON.parsed first.
    *
    * The lightbox uses the CSS :target pseudo-class - no custom JS needed.
-   * Each thumbnail links to href="#gallery-img-N" which sets the URL
-   * fragment, triggering .gallery-lightbox:target { display: flex }.
-   * The close button links to href="#" to clear the fragment.
+   * Each thumbnail links to href="#gallery-img-N" which triggers
+   * .gallery-lightbox:target { display: flex } on the matching overlay.
+   *
+   * Prev / Next navigation
+   * ----------------------
+   * Each lightbox overlay contains prev and next anchor links that point
+   * to the adjacent #gallery-img-N fragment.  Clicking them changes the
+   * :target, which closes the current overlay and opens the adjacent one -
+   * pure CSS, no JavaScript.  The prev link is omitted on the first image
+   * and the next link is omitted on the last image.
    *
    * @param  {Document} doc          - the parsed DOMParser document
    * @param  {object}   school       - the original (pre-resolved) school record
@@ -496,11 +503,13 @@
       return;
     }
 
+    var total = images.length;
+
     // -- Build gallery HTML -------------------------------------------------
     var base = imageBaseUrl.replace(/\/$/, "");
     var html = "";
 
-    for (var i = 0; i < images.length; i++) {
+    for (var i = 0; i < total; i++) {
       var filename = images[i];
       var imgSrc   = base + "/" + filename;
       var imgId    = "gallery-img-" + i;
@@ -514,8 +523,24 @@
       html +=   '</a>';
 
       // Lightbox overlay - hidden until :target is matched
-      html +=   '<div id="' + imgId + '" class="gallery-lightbox" role="dialog" aria-modal="true" aria-label="Image lightbox">';
+      html +=   '<div id="' + imgId + '" class="gallery-lightbox" role="dialog" aria-modal="true" aria-label="Image ' + (i + 1) + ' of ' + total + '">';
+
+      // Close button - clears :target, closing the lightbox
       html +=     '<a href="#" class="gallery-lightbox__close" aria-label="Close lightbox">&times;</a>';
+
+      // Prev button - omitted for the first image
+      if (i > 0) {
+        html +=   '<a href="#gallery-img-' + (i - 1) + '" class="gallery-lightbox__prev" aria-label="Previous image">&#10094;</a>';
+      }
+
+      // Next button - omitted for the last image
+      if (i < total - 1) {
+        html +=   '<a href="#gallery-img-' + (i + 1) + '" class="gallery-lightbox__next" aria-label="Next image">&#10095;</a>';
+      }
+
+      // Image counter label (e.g. "3 / 8")
+      html +=     '<span class="gallery-lightbox__counter">' + (i + 1) + ' / ' + total + '</span>';
+
       html +=     '<img src="' + imgSrc + '" alt="' + altText + '" class="gallery-lightbox__img">';
       html +=   '</div>';
 
@@ -526,7 +551,7 @@
       galleryGrid.innerHTML = html;
     }
 
-    console.log("[SchoolDetails] Built image gallery with " + images.length + " image(s).");
+    console.log("[SchoolDetails] Built image gallery with " + total + " image(s).");
   }
 
 
