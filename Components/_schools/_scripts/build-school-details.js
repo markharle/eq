@@ -153,10 +153,11 @@
       return;
     }
 
-    // -- 1f. Show the loading spinner in the details and citiesServed divs ---
-    // Hero div intentionally has no spinner per the requirements.
+    // -- 1f. Show the loading spinner in the details div ---------------------
+    // Hero and CitiesServed divs intentionally have no programmatic spinner —
+    // the hero has none by design, and the citiesServed spinner is embedded
+    // in the target div markup so that static intro text above it is preserved.
     showSpinner(targetDiv);
-    if (citiesServedTargetDiv) { showSpinner(citiesServedTargetDiv); }
 
     // -- 1g. Fetch data + all templates simultaneously -----------------------
     // All three templates are fetched in one Promise.all call.
@@ -488,9 +489,31 @@
       }
     });
 
-    // -- 9e. Inject the populated deck into the target div ------------------
-    targetDiv.innerHTML = "";
-    targetDiv.appendChild(deckWrapper);
+    // -- 9e. Replace tokens in the target div's static content ---------------
+    // The target div markup may contain [tokens] in its static intro text
+    // (e.g. [Nickname], [Name]).  We replace these using the school object
+    // BEFORE injecting the card deck so the intro text is populated.
+    // Note: only school-level JSON fields are available here.  City-level
+    // fields (e.g. thumbnailImage) live inside the CitiesServed array and
+    // will not resolve — use school-level fields in the static markup only.
+    targetDiv.innerHTML = replaceTokens(targetDiv.innerHTML, school);
+
+    // -- 9f. Inject the card deck into the designated slot ------------------
+    // We target .citiesServed-deck-slot so only the spinner placeholder is
+    // replaced, leaving the intro text above it intact.
+    var slot = targetDiv.querySelector(".citiesServed-deck-slot");
+
+    if (slot) {
+      slot.innerHTML = "";
+      slot.appendChild(deckWrapper);
+    } else {
+      // Fallback: slot not found — append deck to end of target div
+      console.warn(
+        "[SchoolDetails] .citiesServed-deck-slot not found in #" + targetDiv.id +
+        " — appending card deck to end of target div."
+      );
+      targetDiv.appendChild(deckWrapper);
+    }
 
     console.log("[SchoolDetails] Rendered " + cities.length + " cities-served card(s) for " + school.Name + ".");
   }
