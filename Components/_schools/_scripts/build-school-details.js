@@ -13,27 +13,38 @@
  *
  * Architecture note
  * -----------------
- * Data-fetching  ->  fetchSchoolData()      returns the full raw array
- * Member lookup  ->  findSchoolById()       returns one matched record
- * Rendering      ->  renderHero()           writes the hero block to the DOM
- *                ->  renderDetails()        writes the details block to the DOM
- * Processors     ->  processSocialRow()     shows/hides each icon div
- *                ->  processImageGallery()  builds or hides the gallery
+ * Data-fetching  ->  fetchSchoolData()        returns the full raw array
+ * Member lookup  ->  findSchoolById()         returns one matched record
+ * Rendering      ->  renderHero()             writes the hero block to the DOM
+ *                ->  renderDetails()          writes the details block to the DOM
+ *                ->  renderCitiesServed()     writes the cities card deck to the DOM
+ * Processors     ->  processSocialRow()       shows/hides each icon div
+ *                ->  processImageGallery()    builds or hides the gallery
  *
  * Configuration block expected on the page
  * ----------------------------------------
  * <script type="application/json" id="school-details-config">
  * {
- *   "jsonUrl":         "https://...schoolJSON.json",
- *   "jsUrl":           "https://...build-school-details.js",
- *   "htmlUrl":         "https://...display-school-details.html",
- *   "heroHtmlUrl":     "https://...display-school-hero.html",
- *   "cssUrl":          "https://...school-component.css",
- *   "bootstrapUrl":    "https://cdn.jsdelivr.net/.../bootstrap.min.css",
- *   "imageRootUrl":    "https://eq-realtor.s3.us-east-2.amazonaws.com/eq-realtor/_schools/",
- *   "targetDivId":     "school-details",
- *   "heroTargetDivId": "school-hero"
+ *   "jsonUrl":                  "https://...schoolJSON.json",
+ *   "jsUrl":                    "https://...build-school-details.js",
+ *   "htmlUrl":                  "https://...display-school-details.html",
+ *   "heroHtmlUrl":              "https://...display-school-hero.html",
+ *   "citiesServedHtmlUrl":      "https://...display-citiesServed-card-deck.html",
+ *   "cssUrl":                   "https://...school-component.css",
+ *   "bootstrapUrl":             "https://cdn.jsdelivr.net/.../bootstrap.min.css",
+ *   "imageRootUrl":             "https://...amazonaws.com/eq-realtor/_schools",
+ *   "cityImageRootUrl":         "https://...amazonaws.com/eq-realtor/_cities",
+ *   "targetDivId":              "school-details",
+ *   "heroTargetDivId":          "school-hero",
+ *   "citiesServedTargetDivId":  "citiesServed-cards"
  * }
+ *
+ * CitiesServed field note
+ * -----------------------
+ * CitiesServed is a native JSON array (not stringified), so no JSON.parse
+ * is needed.  Each element contains: ID, City, thumbnailImage, urlSlugCity.
+ * The full image URL is constructed at render time as:
+ *   cityImageRootUrl + "/" + city.urlSlugCity + "/" + city.thumbnailImage
  * </script>
  *
  * CONFIG key notes
@@ -73,14 +84,17 @@
     var config = loadConfig("school-details-config");
     if (!config) { return; }
 
-    var jsonUrl         = config.jsonUrl;
-    var htmlUrl         = config.htmlUrl;
-    var heroHtmlUrl     = config.heroHtmlUrl;
-    var cssUrl          = config.cssUrl;
-    var bootstrapUrl    = config.bootstrapUrl;
-    var imageRootUrl    = config.imageRootUrl || "";
-    var targetDivId     = config.targetDivId;
-    var heroTargetDivId = config.heroTargetDivId;
+    var jsonUrl                  = config.jsonUrl;
+    var htmlUrl                  = config.htmlUrl;
+    var heroHtmlUrl              = config.heroHtmlUrl;
+    var citiesServedHtmlUrl      = config.citiesServedHtmlUrl;
+    var cssUrl                   = config.cssUrl;
+    var bootstrapUrl             = config.bootstrapUrl;
+    var imageRootUrl             = config.imageRootUrl             || "";
+    var cityImageRootUrl         = config.cityImageRootUrl         || "";
+    var targetDivId              = config.targetDivId;
+    var heroTargetDivId          = config.heroTargetDivId;
+    var citiesServedTargetDivId  = config.citiesServedTargetDivId;
 
     // -- 1b. Validate required fields ----------------------------------------
     if (!jsonUrl || !htmlUrl || !targetDivId) {
@@ -116,6 +130,20 @@
       );
     }
 
+    // -- 1d3. Locate the citiesServed target div (optional) ------------------
+    // Both citiesServedHtmlUrl and citiesServedTargetDivId must be present
+    // for the block to render.  If either is missing it is silently skipped.
+    var citiesServedTargetDiv = (citiesServedHtmlUrl && citiesServedTargetDivId)
+      ? document.getElementById(citiesServedTargetDivId)
+      : null;
+
+    if (citiesServedHtmlUrl && citiesServedTargetDivId && !citiesServedTargetDiv) {
+      console.warn(
+        "[SchoolDetails] citiesServedTargetDivId #" + citiesServedTargetDivId + " is configured " +
+        "but not found in the DOM. CitiesServed block will be skipped."
+      );
+    }
+
     // -- 1e. Extract schoolId from the querystring ---------------------------
     var schoolId = getQueryParam("schoolId");
 
@@ -125,22 +153,27 @@
       return;
     }
 
-    // -- 1f. Show the loading spinner in the details div ---------------------
+    // -- 1f. Show the loading spinner in the details and citiesServed divs ---
     // Hero div intentionally has no spinner per the requirements.
     showSpinner(targetDiv);
+    if (citiesServedTargetDiv) { showSpinner(citiesServedTargetDiv); }
 
     // -- 1g. Fetch data + all templates simultaneously -----------------------
+    // All three templates are fetched in one Promise.all call.
+    // citiesServed template is only fetched when its target div is present.
     try {
       var fetchPromises = [
         fetchSchoolData(jsonUrl),
         fetchTemplate(htmlUrl),
-        heroTargetDiv ? fetchTemplate(heroHtmlUrl) : Promise.resolve(null)
+        heroTargetDiv         ? fetchTemplate(heroHtmlUrl)         : Promise.resolve(null),
+        citiesServedTargetDiv ? fetchTemplate(citiesServedHtmlUrl) : Promise.resolve(null)
       ];
 
-      var results          = await Promise.all(fetchPromises);
-      var schoolData       = results[0];
-      var detailsTemplate  = results[1];
-      var heroTemplate     = results[2];
+      var results               = await Promise.all(fetchPromises);
+      var schoolData            = results[0];
+      var detailsTemplate       = results[1];
+      var heroTemplate          = results[2];
+      var citiesServedTemplate  = results[3];
 
       var school = findSchoolById(schoolData, schoolId);
 
@@ -164,10 +197,16 @@
 
       renderDetails(school, detailsTemplate, targetDiv, imageBaseUrl);
 
+      // Render cities-served card deck (optional block)
+      if (citiesServedTargetDiv && citiesServedTemplate) {
+        renderCitiesServed(school, citiesServedTemplate, citiesServedTargetDiv, cityImageRootUrl);
+      }
+
     } catch (err) {
       console.error("[SchoolDetails] Failed to load school details:", err);
       showError(targetDiv);
-      if (heroTargetDiv) { heroTargetDiv.innerHTML = ""; }
+      if (heroTargetDiv)         { heroTargetDiv.innerHTML = ""; }
+      if (citiesServedTargetDiv) { citiesServedTargetDiv.innerHTML = ""; }
     }
   }
 
@@ -363,7 +402,139 @@
 
 
   /* =====================================================================
-     9.  IMAGE URL RESOLVER
+     9.  CITIES SERVED RENDERER
+     ===================================================================== */
+
+  /**
+   * Builds a vertically stacked card deck from the school's CitiesServed
+   * array, or hides the target div entirely if no cities are present.
+   *
+   * CitiesServed is a native JSON array (not stringified), so no
+   * JSON.parse is needed.  Each city object contains:
+   *   ID              - City ID; used in the detail-page href
+   *   City            - City name displayed on the card
+   *   thumbnailImage  - Image filename for the card background
+   *   urlSlugCity     - S3 folder name for the city's images
+   *
+   * Full image URL construction:
+   *   cityImageRootUrl + "/" + city.urlSlugCity + "/" + city.thumbnailImage
+   *   e.g. ".../eq-realtor/_cities/altoona-2/thumbnail-altoona.webp"
+   *
+   * A virtual field "thumbnailImageUrl" is added to each city object
+   * before token replacement so the template can reference it as
+   * [thumbnailImageUrl] without needing to know the base URL.
+   *
+   * Template fixes applied in display-citiesServed-card-deck.html:
+   *   - [Name] corrected to [City] to match JSON field name
+   *   - src="[thumbnailImageUrl]" replaces the relative path placeholder
+   *   - Stray CSS comment between </style> and <div> removed
+   *
+   * @param  {object}      school           - the matched school record
+   * @param  {string}      templateHtml     - raw HTML string for the card deck
+   * @param  {HTMLElement} targetDiv        - the DOM node to inject into
+   * @param  {string}      cityImageRootUrl - S3 root path for city images
+   */
+  function renderCitiesServed(school, templateHtml, targetDiv, cityImageRootUrl) {
+
+    // -- 9a. Validate CitiesServed array ------------------------------------
+    var cities = school.CitiesServed;
+
+    if (!cities || !Array.isArray(cities) || cities.length === 0) {
+      // Hide the entire block - this school has no associated cities
+      targetDiv.style.display = "none";
+      console.log("[SchoolDetails] No CitiesServed data for " + school.Name + " - block hidden.");
+      return;
+    }
+
+    // -- 9b. Parse the template and inject inline styles --------------------
+    // The template contains a <style> block for citiesServed-specific CSS.
+    // DOMParser moves <style> tags to <head>, so we inject them into the
+    // live document head to ensure the styles are applied.
+    var parser = new DOMParser();
+    var doc    = parser.parseFromString(templateHtml, "text/html");
+
+    var styleEls = doc.querySelectorAll("head style");
+    styleEls.forEach(function (styleEl) {
+      // Only inject once - check for existing style block by marker attribute
+      if (!document.querySelector("style[data-cities-served]")) {
+        var liveStyle = document.createElement("style");
+        liveStyle.setAttribute("data-cities-served", "true");
+        liveStyle.textContent = styleEl.textContent;
+        document.head.appendChild(liveStyle);
+      }
+    });
+
+    // -- 9c. Extract the deck wrapper and the repeating card template --------
+    var deckWrapper  = extractCitiesWrapper(doc);
+    var cardTemplate = extractCityCardTemplate(doc);
+
+    // -- 9d. Build one card per city ----------------------------------------
+    var cityBase = cityImageRootUrl.replace(/\/$/, ""); // strip trailing slash
+
+    cities.forEach(function (city) {
+
+      // Augment the city object with the computed full image URL.
+      // The template references this as [thumbnailImageUrl].
+      var resolvedCity = Object.assign({}, city);
+      resolvedCity.thumbnailImageUrl = cityBase + "/" + city.urlSlugCity + "/" + city.thumbnailImage;
+
+      var cardHtml = replaceTokens(cardTemplate, resolvedCity);
+
+      var temp = document.createElement("div");
+      temp.innerHTML = cardHtml.trim();
+
+      while (temp.firstChild) {
+        deckWrapper.appendChild(temp.firstChild);
+      }
+    });
+
+    // -- 9e. Inject the populated deck into the target div ------------------
+    targetDiv.innerHTML = "";
+    targetDiv.appendChild(deckWrapper);
+
+    console.log("[SchoolDetails] Rendered " + cities.length + " cities-served card(s) for " + school.Name + ".");
+  }
+
+  /**
+   * Extracts the outer .citiesServed-deck wrapper from the parsed template
+   * as a clean empty element ready to receive cards.
+   *
+   * @param  {Document} doc  - parsed DOMParser document
+   * @returns {HTMLElement}  - empty deck wrapper
+   */
+  function extractCitiesWrapper(doc) {
+    var wrapper = doc.querySelector(".citiesServed-deck");
+
+    if (!wrapper) {
+      var fallback = document.createElement("div");
+      fallback.className = "citiesServed-deck";
+      return fallback;
+    }
+
+    return wrapper.cloneNode(false); // shallow clone - no children
+  }
+
+  /**
+   * Extracts the repeating .citiesServed-card markup from the template.
+   *
+   * @param  {Document} doc  - parsed DOMParser document
+   * @returns {string}       - HTML string for one card with [tokens] intact
+   */
+  function extractCityCardTemplate(doc) {
+    var card = doc.querySelector(".citiesServed-card");
+
+    if (!card) {
+      throw new Error(
+        "[SchoolDetails] Could not find a .citiesServed-card element in the CitiesServed template."
+      );
+    }
+
+    return card.outerHTML;
+  }
+
+
+  /* =====================================================================
+     10.  IMAGE URL RESOLVER
      ===================================================================== */
 
   /**
@@ -394,7 +565,7 @@
 
 
   /* =====================================================================
-     10.  TOKEN REPLACER
+     11.  TOKEN REPLACER
      ===================================================================== */
 
   /**
@@ -418,7 +589,7 @@
 
 
   /* =====================================================================
-     11.  SOCIAL ROW PROCESSOR
+     12.  SOCIAL ROW PROCESSOR
      ===================================================================== */
 
   /**
@@ -455,7 +626,7 @@
 
 
   /* =====================================================================
-     12.  IMAGE GALLERY PROCESSOR
+     13.  IMAGE GALLERY PROCESSOR
      ===================================================================== */
 
   /**
@@ -561,7 +732,7 @@
 
 
   /* =====================================================================
-     13.  LIGHTBOX CONTROLLER
+     14.  LIGHTBOX CONTROLLER
      =====================================================================
      Handles three interactions that cannot be solved with CSS alone:
        1. Opening a lightbox without scrolling the page
@@ -657,7 +828,7 @@
 
 
   /* =====================================================================
-     14.  UI HELPERS  (spinner, error, stylesheet injection)
+     15.  UI HELPERS  (spinner, error, stylesheet injection)
      ===================================================================== */
 
   function showSpinner(targetDiv) {
