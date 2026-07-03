@@ -18,6 +18,8 @@
  * Rendering      ->  renderHero()             writes the hero block to the DOM
  *                ->  renderDetails()          writes the details block to the DOM
  *                ->  renderCitiesServed()     writes the cities card deck to the DOM
+ *                ->  renderImageGallery()     writes the image gallery to the DOM
+ *                ->  renderSocialMedia()      writes the social media block to the DOM
  * Processors     ->  processSocialRow()       shows/hides each icon div
  *                ->  processImageGallery()    builds or hides the gallery
  *
@@ -36,7 +38,11 @@
  *   "cityImageRootUrl":         "https://...amazonaws.com/eq-realtor/_cities",
  *   "targetDivId":              "school-details",
  *   "heroTargetDivId":          "school-hero",
- *   "citiesServedTargetDivId":  "citiesServed-cards"
+ *   "citiesServedTargetDivId":  "citiesServed-cards",
+ *   "imageGalleryTargetDivID":  "school-image-gallery",
+ *   "imageGalleryRootURL":      "https://...display-school-image-gallery.html",
+ *   "socialMediaTargetDivID":   "school-social-media",
+ *   "socialMediaRootURL":       "https://...display-school-social-media.html"
  * }
  *
  * CitiesServed field note
@@ -95,6 +101,10 @@
     var targetDivId              = config.targetDivId;
     var heroTargetDivId          = config.heroTargetDivId;
     var citiesServedTargetDivId  = config.citiesServedTargetDivId;
+    var imageGalleryTargetDivID  = config.imageGalleryTargetDivID;
+    var imageGalleryRootURL      = config.imageGalleryRootURL;
+    var socialMediaTargetDivID   = config.socialMediaTargetDivID;
+    var socialMediaRootURL       = config.socialMediaRootURL;
 
     // -- 1b. Validate required fields ----------------------------------------
     if (!jsonUrl || !htmlUrl || !targetDivId) {
@@ -144,6 +154,30 @@
       );
     }
 
+    // -- 1d4. Locate the image gallery target div (optional) -----------------
+    var imageGalleryTargetDiv = (imageGalleryRootURL && imageGalleryTargetDivID)
+      ? document.getElementById(imageGalleryTargetDivID)
+      : null;
+
+    if (imageGalleryRootURL && imageGalleryTargetDivID && !imageGalleryTargetDiv) {
+      console.warn(
+        "[SchoolDetails] imageGalleryTargetDivID #" + imageGalleryTargetDivID + " is configured " +
+        "but not found in the DOM. Image Gallery block will be skipped."
+      );
+    }
+
+    // -- 1d5. Locate the social media target div (optional) ------------------
+    var socialMediaTargetDiv = (socialMediaRootURL && socialMediaTargetDivID)
+      ? document.getElementById(socialMediaTargetDivID)
+      : null;
+
+    if (socialMediaRootURL && socialMediaTargetDivID && !socialMediaTargetDiv) {
+      console.warn(
+        "[SchoolDetails] socialMediaTargetDivID #" + socialMediaTargetDivID + " is configured " +
+        "but not found in the DOM. Social Media block will be skipped."
+      );
+    }
+
     // -- 1e. Extract schoolId from the querystring ---------------------------
     var schoolId = getQueryParam("schoolId");
 
@@ -157,17 +191,20 @@
     // Hero and CitiesServed divs intentionally have no programmatic spinner —
     // the hero has none by design, and the citiesServed spinner is embedded
     // in the target div markup so that static intro text above it is preserved.
+    // Image Gallery and Social Media spinners are embedded in their target divs.
     showSpinner(targetDiv);
 
     // -- 1g. Fetch data + all templates simultaneously -----------------------
-    // All three templates are fetched in one Promise.all call.
-    // citiesServed template is only fetched when its target div is present.
+    // All templates are fetched in one Promise.all call.
+    // Optional templates resolve to null when their target div is absent.
     try {
       var fetchPromises = [
         fetchSchoolData(jsonUrl),
         fetchTemplate(htmlUrl),
-        heroTargetDiv         ? fetchTemplate(heroHtmlUrl)         : Promise.resolve(null),
-        citiesServedTargetDiv ? fetchTemplate(citiesServedHtmlUrl) : Promise.resolve(null)
+        heroTargetDiv         ? fetchTemplate(heroHtmlUrl)          : Promise.resolve(null),
+        citiesServedTargetDiv ? fetchTemplate(citiesServedHtmlUrl)  : Promise.resolve(null),
+        imageGalleryTargetDiv ? fetchTemplate(imageGalleryRootURL)  : Promise.resolve(null),
+        socialMediaTargetDiv  ? fetchTemplate(socialMediaRootURL)   : Promise.resolve(null)
       ];
 
       var results               = await Promise.all(fetchPromises);
@@ -175,6 +212,8 @@
       var detailsTemplate       = results[1];
       var heroTemplate          = results[2];
       var citiesServedTemplate  = results[3];
+      var imageGalleryTemplate  = results[4];
+      var socialMediaTemplate   = results[5];
 
       var school = findSchoolById(schoolData, schoolId);
 
@@ -203,11 +242,25 @@
         renderCitiesServed(school, citiesServedTemplate, citiesServedTargetDiv, cityImageRootUrl);
       }
 
+      // Render image gallery (optional block)
+      // Note: initLightboxControls is called inside renderImageGallery on
+      // the gallery div, since the gallery no longer lives in school-details.
+      if (imageGalleryTargetDiv && imageGalleryTemplate) {
+        renderImageGallery(school, imageGalleryTemplate, imageGalleryTargetDiv, imageBaseUrl);
+      }
+
+      // Render social media block (optional block)
+      if (socialMediaTargetDiv && socialMediaTemplate) {
+        renderSocialMedia(school, socialMediaTemplate, socialMediaTargetDiv, imageBaseUrl);
+      }
+
     } catch (err) {
       console.error("[SchoolDetails] Failed to load school details:", err);
       showError(targetDiv);
-      if (heroTargetDiv)         { heroTargetDiv.innerHTML = ""; }
-      if (citiesServedTargetDiv) { citiesServedTargetDiv.innerHTML = ""; }
+      if (heroTargetDiv)          { heroTargetDiv.innerHTML = ""; }
+      if (citiesServedTargetDiv)  { citiesServedTargetDiv.innerHTML = ""; }
+      if (imageGalleryTargetDiv)  { showError(imageGalleryTargetDiv); }
+      if (socialMediaTargetDiv)   { showError(socialMediaTargetDiv); }
     }
   }
 
@@ -557,7 +610,104 @@
 
 
   /* =====================================================================
-     10.  IMAGE URL RESOLVER
+     10.  IMAGE GALLERY RENDERER
+     ===================================================================== */
+
+  /**
+   * Renders the Image Gallery block in its own target div.
+   *
+   * The gallery template contains a [Nickname] token used in the section
+   * heading and a .gallery-grid div that processImageGallery() populates.
+   * If the school has no images, processImageGallery() hides the entire
+   * .school-image-gallery section automatically.
+   *
+   * initLightboxControls() is called on the gallery target div (not the
+   * school-details div) since the gallery now lives in its own Squarespace
+   * section.
+   *
+   * @param  {object}      school       - the matched school record
+   * @param  {string}      templateHtml - raw HTML from display-school-image-gallery.html
+   * @param  {HTMLElement} targetDiv    - the #school-image-gallery DOM node
+   * @param  {string}      imageBaseUrl - full S3 path for this school's images
+   */
+  function renderImageGallery(school, templateHtml, targetDiv, imageBaseUrl) {
+
+    // -- 10a. Replace tokens (e.g. [Nickname] in the gallery heading) --------
+    var populatedHtml = replaceTokens(templateHtml, school);
+
+    // -- 10b. Parse into a live DOM tree -------------------------------------
+    var parser = new DOMParser();
+    var doc    = parser.parseFromString(populatedHtml, "text/html");
+
+    // -- 10c. Build masonry grid (or hide section if no images) --------------
+    processImageGallery(doc, school, imageBaseUrl);
+
+    // -- 10d. Inject into target div -----------------------------------------
+    targetDiv.innerHTML = "";
+    var content = doc.body;
+
+    while (content.firstChild) {
+      targetDiv.appendChild(content.firstChild);
+    }
+
+    // -- 10e. Initialise lightbox controls on the gallery div ----------------
+    // Must run AFTER content is in the live DOM.
+    // The gallery now lives here, not in the school-details div.
+    initLightboxControls(targetDiv);
+
+    console.log("[SchoolDetails] Rendered image gallery for " + school.Name + ".");
+  }
+
+
+  /* =====================================================================
+     11.  SOCIAL MEDIA RENDERER
+     ===================================================================== */
+
+  /**
+   * Renders the Social Media block in its own target div.
+   *
+   * The social media template contains the .contact-card with the school
+   * logo, intro text, and social icon row.  Logo is resolved from a
+   * filename to a full S3 URL before token replacement.  Social icon
+   * divs with empty URL fields are hidden by processSocialRow().
+   *
+   * Note: the template also contains an empty .social-media-links div
+   * above the contact card.  This div is preserved as-is for future use.
+   *
+   * @param  {object}      school       - the matched school record
+   * @param  {string}      templateHtml - raw HTML from display-school-social-media.html
+   * @param  {HTMLElement} targetDiv    - the #school-social-media DOM node
+   * @param  {string}      imageBaseUrl - full S3 path for this school's images
+   */
+  function renderSocialMedia(school, templateHtml, targetDiv, imageBaseUrl) {
+
+    // -- 11a. Resolve Logo URL -----------------------------------------------
+    var resolvedSchool = resolveImageUrls(school, imageBaseUrl);
+
+    // -- 11b. Replace all standard [tokens] ----------------------------------
+    var populatedHtml = replaceTokens(templateHtml, resolvedSchool);
+
+    // -- 11c. Parse into a live DOM tree -------------------------------------
+    var parser = new DOMParser();
+    var doc    = parser.parseFromString(populatedHtml, "text/html");
+
+    // -- 11d. Apply social icon show/hide rules ------------------------------
+    processSocialRow(doc, resolvedSchool);
+
+    // -- 11e. Inject into target div -----------------------------------------
+    targetDiv.innerHTML = "";
+    var content = doc.body;
+
+    while (content.firstChild) {
+      targetDiv.appendChild(content.firstChild);
+    }
+
+    console.log("[SchoolDetails] Rendered social media for " + school.Name + ".");
+  }
+
+
+  /* =====================================================================
+     12.  IMAGE URL RESOLVER
      ===================================================================== */
 
   /**
@@ -588,7 +738,7 @@
 
 
   /* =====================================================================
-     11.  TOKEN REPLACER
+     13.  TOKEN REPLACER
      ===================================================================== */
 
   /**
@@ -612,7 +762,7 @@
 
 
   /* =====================================================================
-     12.  SOCIAL ROW PROCESSOR
+     14.  SOCIAL ROW PROCESSOR
      ===================================================================== */
 
   /**
@@ -649,7 +799,7 @@
 
 
   /* =====================================================================
-     13.  IMAGE GALLERY PROCESSOR
+     15.  IMAGE GALLERY PROCESSOR
      ===================================================================== */
 
   /**
@@ -755,7 +905,7 @@
 
 
   /* =====================================================================
-     14.  LIGHTBOX CONTROLLER
+     16.  LIGHTBOX CONTROLLER
      =====================================================================
      Handles three interactions that cannot be solved with CSS alone:
        1. Opening a lightbox without scrolling the page
@@ -851,7 +1001,7 @@
 
 
   /* =====================================================================
-     15.  UI HELPERS  (spinner, error, stylesheet injection)
+     17.  UI HELPERS  (spinner, error, stylesheet injection)
      ===================================================================== */
 
   function showSpinner(targetDiv) {
