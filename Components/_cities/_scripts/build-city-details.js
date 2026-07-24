@@ -284,7 +284,7 @@
    * Note: JSON primary key field is "ID" (all caps) for this component.
    */
   function findCityById(cityData, id) {
-    return cityData.find(function (city) { return city.ID == id; }) || null;
+    return cityData.find(function (city) { return city.Id == id; }) || null;
   }
 
 
