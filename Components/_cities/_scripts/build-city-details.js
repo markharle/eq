@@ -84,16 +84,18 @@
     var config = loadConfig("city-details-config");
     if (!config) { return; }
 
-    var jsonUrl            = config.jsonUrl;
-    var cssUrl             = config.cssUrl;
-    var bootstrapUrl       = config.bootstrapUrl;
-    var cityImageRootUrl   = config.cityImageRootUrl   || "";
-    var heroTargetDivId    = config.heroTargetDivId;
-    var heroHtmlUrl        = config.heroHtmlUrl;
-    var detailsTargetDivId = config.detailsTargetDivId;
-    var detailsHtmlUrl     = config.detailsHtmlUrl;
-    var footerTargetDivId  = config.footerTargetDivId;
-    var footerHtmlUrl      = config.footerHtmlUrl;
+    var jsonUrl                    = config.jsonUrl;
+    var cssUrl                     = config.cssUrl;
+    var bootstrapUrl               = config.bootstrapUrl;
+    var cityImageRootUrl           = config.cityImageRootUrl           || "";
+    var heroTargetDivId            = config.heroTargetDivId;
+    var heroHtmlUrl                = config.heroHtmlUrl;
+    var detailsTargetDivId         = config.detailsTargetDivId;
+    var detailsHtmlUrl             = config.detailsHtmlUrl;
+    var footerTargetDivId          = config.footerTargetDivId;
+    var footerHtmlUrl              = config.footerHtmlUrl;
+    var realEstateTeamTargetDivId  = config.realEstateTeamTargetDivId;
+    var realEstateTeamUrl          = config.realEstateTeamUrl;
 
     // -- 1b. Validate required fields ----------------------------------------
     if (!jsonUrl || !detailsTargetDivId || !detailsHtmlUrl) {
@@ -139,6 +141,18 @@
       );
     }
 
+    // -- 1d4. Locate the real estate team target div (optional) --------------
+    var realEstateTeamTargetDiv = (realEstateTeamUrl && realEstateTeamTargetDivId)
+      ? document.getElementById(realEstateTeamTargetDivId)
+      : null;
+
+    if (realEstateTeamUrl && realEstateTeamTargetDivId && !realEstateTeamTargetDiv) {
+      console.warn(
+        "[CityDetails] realEstateTeamTargetDivId #" + realEstateTeamTargetDivId + " is configured " +
+        "but not found in the DOM. Real Estate Team block will be skipped."
+      );
+    }
+
     // -- 1e. Extract CityID from the querystring -----------------------------
     var cityId = getQueryParam("CityID");
 
@@ -158,15 +172,17 @@
       var fetchPromises = [
         fetchCityData(jsonUrl),
         fetchTemplate(detailsHtmlUrl),
-        heroTargetDiv   ? fetchTemplate(heroHtmlUrl)   : Promise.resolve(null),
-        footerTargetDiv ? fetchTemplate(footerHtmlUrl) : Promise.resolve(null)
+        heroTargetDiv           ? fetchTemplate(heroHtmlUrl)         : Promise.resolve(null),
+        footerTargetDiv         ? fetchTemplate(footerHtmlUrl)       : Promise.resolve(null),
+        realEstateTeamTargetDiv ? fetchTemplate(realEstateTeamUrl)   : Promise.resolve(null)
       ];
 
-      var results          = await Promise.all(fetchPromises);
-      var cityData         = results[0];
-      var detailsTemplate  = results[1];
-      var heroTemplate     = results[2];
-      var footerTemplate   = results[3];
+      var results               = await Promise.all(fetchPromises);
+      var cityData              = results[0];
+      var detailsTemplate       = results[1];
+      var heroTemplate          = results[2];
+      var footerTemplate        = results[3];
+      var realEstateTeamTemplate = results[4];
 
       var city = findCityById(cityData, cityId);
 
@@ -189,11 +205,17 @@
         renderFooter(city, footerTemplate, footerTargetDiv);
       }
 
+      // Render real estate team block (optional)
+      if (realEstateTeamTargetDiv && realEstateTeamTemplate) {
+        renderRealEstateTeam(city, realEstateTeamTemplate, realEstateTeamTargetDiv);
+      }
+
     } catch (err) {
       console.error("[CityDetails] Failed to load city details:", err);
       showError(detailsTargetDiv);
-      if (heroTargetDiv)   { heroTargetDiv.innerHTML = ""; }
-      if (footerTargetDiv) { footerTargetDiv.innerHTML = ""; }
+      if (heroTargetDiv)           { heroTargetDiv.innerHTML = ""; }
+      if (footerTargetDiv)         { footerTargetDiv.innerHTML = ""; }
+      if (realEstateTeamTargetDiv) { realEstateTeamTargetDiv.innerHTML = ""; }
     }
   }
 
@@ -376,7 +398,27 @@
 
 
   /* =====================================================================
-     10.  TOKEN REPLACER
+     10.  REAL ESTATE TEAM RENDERER
+     ===================================================================== */
+
+  /**
+   * Renders the Real Estate Team block.
+   * Standard token replacement only — no special processing required.
+   * The template uses [name] (lowercase) which matches the JSON field.
+   *
+   * @param  {object}      city         - the matched city record
+   * @param  {string}      templateHtml - raw HTML from display-real-estate-team.html
+   * @param  {HTMLElement} targetDiv    - the #real-estate-team DOM node
+   */
+  function renderRealEstateTeam(city, templateHtml, targetDiv) {
+    var populatedHtml   = replaceTokens(templateHtml, city);
+    targetDiv.innerHTML = populatedHtml;
+    console.log("[CityDetails] Rendered real estate team block for " + city.name + ".");
+  }
+
+
+  /* =====================================================================
+     11.  TOKEN REPLACER
      ===================================================================== */
 
   /**
@@ -397,7 +439,7 @@
 
 
   /* =====================================================================
-     11.  SHOW / HIDE PROCESSOR
+     12.  SHOW / HIDE PROCESSOR
      ===================================================================== */
 
   /**
@@ -451,7 +493,7 @@
 
 
   /* =====================================================================
-     12.  ALTERNATING SPLIT-LAYOUT PROCESSOR
+     13.  ALTERNATING SPLIT-LAYOUT PROCESSOR
      ===================================================================== */
 
   /**
@@ -492,7 +534,7 @@
 
 
   /* =====================================================================
-     13.  UI HELPERS  (spinner, error, stylesheet injection)
+     14.  UI HELPERS  (spinner, error, stylesheet injection)
      ===================================================================== */
 
   function showSpinner(targetDiv) {
