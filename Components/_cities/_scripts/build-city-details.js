@@ -96,6 +96,8 @@
     var footerHtmlUrl              = config.footerHtmlUrl;
     var realEstateTeamTargetDivId  = config.realEstateTeamTargetDivId;
     var realEstateTeamUrl          = config.realEstateTeamUrl;
+    var investDsmTargetDivID       = config.investDsmTargetDivID;
+    var investDsmHtmlURL           = config.investDsmHtmlURL;
 
     // -- 1b. Validate required fields ----------------------------------------
     if (!jsonUrl || !detailsTargetDivId || !detailsHtmlUrl) {
@@ -153,6 +155,18 @@
       );
     }
 
+    // -- 1d5. Locate the investDSM target div (optional) ---------------------
+    var investDsmTargetDiv = (investDsmHtmlURL && investDsmTargetDivID)
+      ? document.getElementById(investDsmTargetDivID)
+      : null;
+
+    if (investDsmHtmlURL && investDsmTargetDivID && !investDsmTargetDiv) {
+      console.warn(
+        "[CityDetails] investDsmTargetDivID #" + investDsmTargetDivID + " is configured " +
+        "but not found in the DOM. InvestDSM block will be skipped."
+      );
+    }
+
     // -- 1e. Extract CityID from the querystring -----------------------------
     var cityId = getQueryParam("CityID");
 
@@ -174,15 +188,17 @@
         fetchTemplate(detailsHtmlUrl),
         heroTargetDiv           ? fetchTemplate(heroHtmlUrl)         : Promise.resolve(null),
         footerTargetDiv         ? fetchTemplate(footerHtmlUrl)       : Promise.resolve(null),
-        realEstateTeamTargetDiv ? fetchTemplate(realEstateTeamUrl)   : Promise.resolve(null)
+        realEstateTeamTargetDiv ? fetchTemplate(realEstateTeamUrl)   : Promise.resolve(null),
+        investDsmTargetDiv      ? fetchTemplate(investDsmHtmlURL)    : Promise.resolve(null)
       ];
 
-      var results               = await Promise.all(fetchPromises);
-      var cityData              = results[0];
-      var detailsTemplate       = results[1];
-      var heroTemplate          = results[2];
-      var footerTemplate        = results[3];
+      var results                = await Promise.all(fetchPromises);
+      var cityData               = results[0];
+      var detailsTemplate        = results[1];
+      var heroTemplate           = results[2];
+      var footerTemplate         = results[3];
       var realEstateTeamTemplate = results[4];
+      var investDsmTemplate      = results[5];
 
       var city = findCityById(cityData, cityId);
 
@@ -210,12 +226,25 @@
         renderRealEstateTeam(city, realEstateTeamTemplate, realEstateTeamTargetDiv);
       }
 
+      // Render investDSM block (optional)
+      // Show/hide rule: only render if city.investDSM === 2.
+      // Any other value (null, blank, 1, etc.) hides the target div entirely.
+      if (investDsmTargetDiv && investDsmTemplate) {
+        if (city.investDSM == 2) {
+          renderInvestDSM(city, investDsmTemplate, investDsmTargetDiv);
+        } else {
+          investDsmTargetDiv.style.display = "none";
+          console.log("[CityDetails] InvestDSM block hidden — investDSM value is not 2 for " + city.name + ".");
+        }
+      }
+
     } catch (err) {
       console.error("[CityDetails] Failed to load city details:", err);
       showError(detailsTargetDiv);
       if (heroTargetDiv)           { heroTargetDiv.innerHTML = ""; }
       if (footerTargetDiv)         { footerTargetDiv.innerHTML = ""; }
       if (realEstateTeamTargetDiv) { realEstateTeamTargetDiv.innerHTML = ""; }
+      if (investDsmTargetDiv)      { investDsmTargetDiv.innerHTML = ""; }
     }
   }
 
@@ -418,7 +447,31 @@
 
 
   /* =====================================================================
-     11.  TOKEN REPLACER
+     11.  INVEST DSM RENDERER
+     ===================================================================== */
+
+  /**
+   * Renders the InvestDSM content block.
+   *
+   * Show/hide rule (enforced in initDetails before this function is called):
+   *   city.investDSM == 2  → block renders
+   *   any other value      → target div hidden, this function not called
+   *
+   * Standard token replacement only — no additional processing required.
+   *
+   * @param  {object}      city         - the matched city record
+   * @param  {string}      templateHtml - raw HTML from display-investDSM.html
+   * @param  {HTMLElement} targetDiv    - the #investDSM DOM node
+   */
+  function renderInvestDSM(city, templateHtml, targetDiv) {
+    var populatedHtml   = replaceTokens(templateHtml, city);
+    targetDiv.innerHTML = populatedHtml;
+    console.log("[CityDetails] Rendered InvestDSM block for " + city.name + ".");
+  }
+
+
+  /* =====================================================================
+     12.  TOKEN REPLACER
      ===================================================================== */
 
   /**
@@ -439,7 +492,7 @@
 
 
   /* =====================================================================
-     12.  SHOW / HIDE PROCESSOR
+     13.  SHOW / HIDE PROCESSOR
      ===================================================================== */
 
   /**
@@ -493,7 +546,7 @@
 
 
   /* =====================================================================
-     13.  ALTERNATING SPLIT-LAYOUT PROCESSOR
+     14.  ALTERNATING SPLIT-LAYOUT PROCESSOR
      ===================================================================== */
 
   /**
@@ -534,7 +587,7 @@
 
 
   /* =====================================================================
-     14.  UI HELPERS  (spinner, error, stylesheet injection)
+     15.  UI HELPERS  (spinner, error, stylesheet injection)
      ===================================================================== */
 
   function showSpinner(targetDiv) {
