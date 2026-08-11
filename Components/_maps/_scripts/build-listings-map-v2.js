@@ -81,7 +81,6 @@
     var targetDivId         = config.listingsMapTargetDivId;
     var listingsMapModalUrl = config.listingsMapModalUrl;
     var filters             = config.filters;
-    var requireCityId       = config.requireCityId || false;
 
     // -- 1b. Validate required fields ----------------------------------------
     if (!jsonUrl || !targetDivId) {
@@ -125,7 +124,7 @@
       var popupTemplate   = results[1];
 
       // -- 1h. Filter listings for this map instance --------------------------
-      var filteredListings = filterListings(allListings, filters, requireCityId);
+      var filteredListings = filterListings(allListings, filters);
 
       if (filteredListings.length === 0) {
         showNoResults(targetDiv);
@@ -283,49 +282,27 @@
    * Determines which listings to display based on the current page context:
    *
    * City / Neighborhood mode (CityID in URL):
-   *   Returns all listings whose "community" field matches the URL parameter.
-   *   The "community" JSON field is populated with:
-   *     - CityID value       for city-level listings
-   *     - NeighborhoodID     for neighborhood-level listings
-   *   This allows ?CityID=12 to show only city-level Des Moines listings
-   *   and ?CityID=35 to show only Drake neighborhood listings.
-   *   Config filters are intentionally ignored in this mode.
+   *   Returns all listings whose CityID matches the URL parameter.
+   *   Config filters are intentionally ignored in this mode — the city page
+   *   shows all listing statuses for that city.
    *
-   * requireCityId mode (city config with no CityID in URL):
-   *   If "requireCityId": true is set in the config and no CityID parameter
-   *   is present, returns an empty array and shows the no-results message.
-   *   This prevents the city map from showing ALL listings when accessed
-   *   without a CityID parameter.
-   *
-   * Sold / Available mode (no CityID in URL, requireCityId not set):
+   * Sold / Available mode (no CityID in URL):
    *   Applies the filter rules defined in the CONFIG script.
    *
-   * @param  {Array}      allListings   - full listings array from JSON
-   * @param  {Array|null} filters       - filter rules from CONFIG
-   * @param  {boolean}    requireCityId - true = show nothing if no CityID in URL
-   * @returns {Array}                   - filtered listings array
+   * @param  {Array}      allListings  - full listings array from JSON
+   * @param  {Array|null} filters      - filter rules from CONFIG
+   * @returns {Array}                  - filtered listings array
    */
-  function filterListings(allListings, filters, requireCityId) {
+  function filterListings(allListings, filters) {
     var cityId = getQueryParam("CityID");
 
-    // City/neighborhood config: CityID required but not present in URL
-    if (requireCityId && !cityId) {
-      console.log(
-        "[ListingsMap] requireCityId is set but no CityID parameter found - " +
-        "showing no listings."
-      );
-      return [];
-    }
-
     if (cityId) {
-      // City/neighborhood mode: filter on the "community" field.
-      // "community" is set to CityID for city listings and NeighborhoodID
-      // for neighborhood listings, enabling precise filtering at both levels.
+      // City mode: filter by CityID, config filters not applied
       var cityFiltered = allListings.filter(function (listing) {
-        return listing.community == cityId;
+        return listing.CityID == cityId;
       });
       console.log(
-        "[ListingsMap] City/neighborhood mode (CityID=" + cityId + "): " +
+        "[ListingsMap] City mode (CityID=" + cityId + "): " +
         cityFiltered.length + " listing(s) found."
       );
       return cityFiltered;
