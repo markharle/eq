@@ -424,8 +424,8 @@
 
     // Plot one marker per listing
     listings.forEach(function (listing) {
-      var lat = parseFloat(listing.latitude);
-      var lng = parseFloat(listing.longitude);
+      var lat = parseFloat(listing.Latitude);
+      var lng = parseFloat(listing.Longitude);
 
       if (isNaN(lat) || isNaN(lng)) {
         console.warn(
@@ -564,15 +564,17 @@
      ===================================================================== */
 
   /**
-   * Returns a shallow copy of the listing with any field-name casing
+   * Returns a shallow copy of the listing with field-name casing
    * discrepancies between the JSON and the popup template resolved.
    *
-   * Current normalization:
-   *   JSON "State" (capital S) -> also expose as "state" (lowercase)
-   *   so the popup [state] token resolves correctly.
+   * JSON field -> popup token aliases added:
+   *   City      -> city        (popup uses [city])
+   *   State     -> state       (popup uses [state])
+   *   Zip       -> zip         (popup uses [zip])
+   *   ZillowURL -> zillowURL   (popup uses [zillowURL])
    *
-   * When the JSON is republished with "state" (lowercase), this function
-   * becomes a no-op but remains harmless.
+   * These aliases can be removed once the JSON is republished with
+   * consistent lowercase field names.
    *
    * @param  {object} listing  - raw listing from JSON
    * @returns {object}         - normalized copy
@@ -580,9 +582,10 @@
   function normalizeListing(listing) {
     var normalized = Object.assign({}, listing);
 
-    if (normalized.State !== undefined && normalized.state === undefined) {
-      normalized.state = normalized.State;
-    }
+    if (normalized.City      !== undefined) { normalized.city      = normalized.City; }
+    if (normalized.State     !== undefined) { normalized.state     = normalized.State; }
+    if (normalized.Zip       !== undefined) { normalized.zip       = normalized.Zip; }
+    if (normalized.ZillowURL !== undefined) { normalized.zillowURL = normalized.ZillowURL; }
 
     return normalized;
   }
