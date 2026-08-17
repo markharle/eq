@@ -522,7 +522,7 @@
    */
   function applyAlternatingSplitLayout(doc) {
 
-    var contentBlock = doc.getElementById("cityContentBlocks");
+    var contentBlock = doc.getElementById("neighborhoodContentBlocks");
     if (!contentBlock) { return; }
 
     var sections     = contentBlock.querySelectorAll(".split-layout");
