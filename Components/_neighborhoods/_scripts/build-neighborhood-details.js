@@ -20,6 +20,9 @@
  *                ->  renderFooter()                 footer CTA block
  *                ->  renderRealEstateTeam()         team block
  *                ->  renderInvestDSM()              investDSM block
+ *                ->  renderMarketAnalysisHeader()   market analysis header
+ *                ->  renderMarketAnalysisCurrent()  market analysis current
+ *                ->  renderMarketAnalysisProjection() market analysis projection
  * Processors     ->  processShowHide()              section/button visibility
  *                ->  applyAlternatingSplitLayout()  alternates image placement
  *
@@ -102,6 +105,14 @@
     var investDsmTargetDivID       = config.investDsmTargetDivID;
     var investDsmHtmlURL           = config.investDsmHtmlURL;
 
+    // Market analysis config keys (show/hide controlled by showMarketTrends field)
+    var marketAnalysisHeaderTargetDivId      = config.marketAnalysisHeaderTargetDivId;
+    var marketAnalysisHeaderHtmlUrl          = config.marketAnalysisHeaderHtmlUrl;
+    var marketAnalysisCurrentTargetDivId     = config.marketAnalysisCurrentTargetDivId;
+    var marketAnalysisCurrentHtmlUrl         = config.marketAnalysisCurrentHtmlUrl;
+    var marketAnalysisProjectionTargetDivId  = config.marketAnalysisProjectionTargetDivId;
+    var marketAnalysisProjectionHtmlUrl      = config.marketAnalysisProjectionHtmlUrl;
+
     if (!jsonUrl || !detailsTargetDivId || !detailsHtmlUrl) {
       console.error(
         "[NeighborhoodDetails] Configuration is missing required fields: " +
@@ -154,6 +165,20 @@
         " configured but not found. InvestDSM block will be skipped.");
     }
 
+    // -- Market analysis target divs (optional) ------------------------------
+    // All three are located unconditionally here; the show/hide decision
+    // is made later after the neighborhood record is fetched and
+    // showMarketTrends is evaluated.  If the wrapper div is hidden, these
+    // divs are hidden alongside it and no templates are rendered into them.
+    var marketAnalysisHeaderTargetDiv = (marketAnalysisHeaderHtmlUrl && marketAnalysisHeaderTargetDivId)
+      ? document.getElementById(marketAnalysisHeaderTargetDivId) : null;
+
+    var marketAnalysisCurrentTargetDiv = (marketAnalysisCurrentHtmlUrl && marketAnalysisCurrentTargetDivId)
+      ? document.getElementById(marketAnalysisCurrentTargetDivId) : null;
+
+    var marketAnalysisProjectionTargetDiv = (marketAnalysisProjectionHtmlUrl && marketAnalysisProjectionTargetDivId)
+      ? document.getElementById(marketAnalysisProjectionTargetDivId) : null;
+
     // -- Extract NeighborhoodID from querystring ----------------------------
     var neighborhoodId = getQueryParam("NeighborhoodID");
 
@@ -172,19 +197,25 @@
       var fetchPromises = [
         fetchNeighborhoodData(jsonUrl),
         fetchTemplate(detailsHtmlUrl),
-        heroTargetDiv           ? fetchTemplate(heroHtmlUrl)         : Promise.resolve(null),
-        footerTargetDiv         ? fetchTemplate(footerHtmlUrl)       : Promise.resolve(null),
-        realEstateTeamTargetDiv ? fetchTemplate(realEstateTeamUrl)   : Promise.resolve(null),
-        investDsmTargetDiv      ? fetchTemplate(investDsmHtmlURL)    : Promise.resolve(null)
+        heroTargetDiv                    ? fetchTemplate(heroHtmlUrl)                    : Promise.resolve(null),
+        footerTargetDiv                  ? fetchTemplate(footerHtmlUrl)                  : Promise.resolve(null),
+        realEstateTeamTargetDiv          ? fetchTemplate(realEstateTeamUrl)              : Promise.resolve(null),
+        investDsmTargetDiv               ? fetchTemplate(investDsmHtmlURL)               : Promise.resolve(null),
+        marketAnalysisHeaderTargetDiv    ? fetchTemplate(marketAnalysisHeaderHtmlUrl)    : Promise.resolve(null),
+        marketAnalysisCurrentTargetDiv   ? fetchTemplate(marketAnalysisCurrentHtmlUrl)   : Promise.resolve(null),
+        marketAnalysisProjectionTargetDiv ? fetchTemplate(marketAnalysisProjectionHtmlUrl) : Promise.resolve(null)
       ];
 
-      var results                = await Promise.all(fetchPromises);
-      var neighborhoodData       = results[0];
-      var detailsTemplate        = results[1];
-      var heroTemplate           = results[2];
-      var footerTemplate         = results[3];
-      var realEstateTeamTemplate = results[4];
-      var investDsmTemplate      = results[5];
+      var results                        = await Promise.all(fetchPromises);
+      var neighborhoodData               = results[0];
+      var detailsTemplate                = results[1];
+      var heroTemplate                   = results[2];
+      var footerTemplate                 = results[3];
+      var realEstateTeamTemplate         = results[4];
+      var investDsmTemplate              = results[5];
+      var marketAnalysisHeaderTemplate   = results[6];
+      var marketAnalysisCurrentTemplate  = results[7];
+      var marketAnalysisProjectionTemplate = results[8];
 
       var neighborhood = findNeighborhoodById(neighborhoodData, neighborhoodId);
 
@@ -233,6 +264,45 @@
             neighborhood.name + "."
           );
         }
+      }
+
+      // Market Analysis blocks ---------------------------------------------------
+      // Show/hide rule: the entire #market-analysis-wrapper and its contents
+      // are shown only when showMarketTrends == 2.
+      // If showMarketTrends is absent, null, blank, or any value other than 2,
+      // the wrapper div is hidden and no market analysis content is rendered.
+      var marketWrapper = document.getElementById("market-analysis-wrapper");
+
+      if (neighborhood.showMarketTrends == 2) {
+
+        if (marketAnalysisHeaderTargetDiv && marketAnalysisHeaderTemplate) {
+          renderMarketAnalysisHeader(neighborhood, marketAnalysisHeaderTemplate,
+            marketAnalysisHeaderTargetDiv);
+        }
+
+        if (marketAnalysisCurrentTargetDiv && marketAnalysisCurrentTemplate) {
+          renderMarketAnalysisCurrent(neighborhood, marketAnalysisCurrentTemplate,
+            marketAnalysisCurrentTargetDiv);
+        }
+
+        if (marketAnalysisProjectionTargetDiv && marketAnalysisProjectionTemplate) {
+          renderMarketAnalysisProjection(neighborhood, marketAnalysisProjectionTemplate,
+            marketAnalysisProjectionTargetDiv);
+        }
+
+        console.log(
+          "[NeighborhoodDetails] Market analysis blocks rendered for " + neighborhood.name + "."
+        );
+
+      } else {
+        // Hide the wrapper div and all its contents
+        if (marketWrapper) {
+          marketWrapper.style.display = "none";
+        }
+        console.log(
+          "[NeighborhoodDetails] Market analysis wrapper hidden - " +
+          "showMarketTrends is not 2 for " + neighborhood.name + "."
+        );
       }
 
     } catch (err) {
@@ -439,7 +509,49 @@
 
 
   /* =====================================================================
-     12.  TOKEN REPLACER
+     12.  MARKET ANALYSIS RENDERERS
+     ===================================================================== */
+
+  /**
+   * Renders the Market Analysis header block.
+   * Standard token replacement — uses [name] from neighborhoodsJSON.json.
+   */
+  function renderMarketAnalysisHeader(neighborhood, templateHtml, targetDiv) {
+    var populatedHtml   = replaceTokens(templateHtml, neighborhood);
+    targetDiv.innerHTML = populatedHtml;
+    console.log(
+      "[NeighborhoodDetails] Rendered market analysis header for " + neighborhood.name + "."
+    );
+  }
+
+  /**
+   * Renders the Market Analysis current trends block.
+   * Uses [name] and [marketAnalysisToday] from neighborhoodsJSON.json.
+   */
+  function renderMarketAnalysisCurrent(neighborhood, templateHtml, targetDiv) {
+    var populatedHtml   = replaceTokens(templateHtml, neighborhood);
+    targetDiv.innerHTML = populatedHtml;
+    console.log(
+      "[NeighborhoodDetails] Rendered market analysis current block for " + neighborhood.name + "."
+    );
+  }
+
+  /**
+   * Renders the Market Analysis projection block.
+   * Uses [name] and [marketAnalysisProjection] from neighborhoodsJSON.json.
+   */
+  function renderMarketAnalysisProjection(neighborhood, templateHtml, targetDiv) {
+    var populatedHtml   = replaceTokens(templateHtml, neighborhood);
+    targetDiv.innerHTML = populatedHtml;
+    console.log(
+      "[NeighborhoodDetails] Rendered market analysis projection block for " +
+      neighborhood.name + "."
+    );
+  }
+
+
+  /* =====================================================================
+     13.  TOKEN REPLACER
      ===================================================================== */
 
   /**
@@ -457,7 +569,7 @@
 
 
   /* =====================================================================
-     13.  SHOW / HIDE PROCESSOR
+     14.  SHOW / HIDE PROCESSOR
      ===================================================================== */
 
   /**
@@ -508,7 +620,7 @@
 
 
   /* =====================================================================
-     14.  ALTERNATING SPLIT-LAYOUT PROCESSOR
+     15.  ALTERNATING SPLIT-LAYOUT PROCESSOR
      ===================================================================== */
 
   /**
@@ -545,7 +657,7 @@
 
 
   /* =====================================================================
-     15.  UI HELPERS
+     16.  UI HELPERS
      ===================================================================== */
 
   function showSpinner(targetDiv) {
