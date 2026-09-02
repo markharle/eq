@@ -263,25 +263,39 @@
   function extractDeckWrapper(html) {
     var parser  = new DOMParser();
     var doc     = parser.parseFromString(html, "text/html");
-    var wrapper = doc.querySelector(".image-deck");
+
+    // Use the root element of the template regardless of its class name.
+    // This fully decouples the JS from any presentation markup decisions.
+    var wrapper = doc.body.firstElementChild;
 
     if (!wrapper) {
-      var fallback = document.createElement("div");
-      fallback.className = "image-deck desktop-cols-3";
-      return fallback;
+      throw new Error(
+        "[NeighborhoodCardDeck] Could not find a root wrapper element in the HTML template."
+      );
     }
 
-    return wrapper.cloneNode(false);
+    return wrapper.cloneNode(false); // shallow clone — no children
   }
 
   function extractCardTemplate(html) {
-    var parser = new DOMParser();
-    var doc    = parser.parseFromString(html, "text/html");
-    var card   = doc.querySelector(".image-card");
+    var parser  = new DOMParser();
+    var doc     = parser.parseFromString(html, "text/html");
+    var wrapper = doc.body.firstElementChild;
+
+    if (!wrapper) {
+      throw new Error(
+        "[NeighborhoodCardDeck] Could not find a root wrapper element in the HTML template."
+      );
+    }
+
+    // Use the first child element of the wrapper as the repeating card template,
+    // regardless of its class name or element type.
+    var card = wrapper.firstElementChild;
 
     if (!card) {
       throw new Error(
-        "[NeighborhoodCardDeck] Could not find a .image-card element in the HTML template."
+        "[NeighborhoodCardDeck] Could not find a card element inside the wrapper " +
+        "in the HTML template. Make sure the wrapper contains at least one card element."
       );
     }
 
