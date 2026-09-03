@@ -435,8 +435,8 @@
 
     // Plot one marker per listing
     listings.forEach(function (listing) {
-      var lat = parseFloat(listing.Latitude);
-      var lng = parseFloat(listing.Longitude);
+      var lat = parseFloat(listing.latitude);
+      var lng = parseFloat(listing.longitude);
 
       if (isNaN(lat) || isNaN(lng)) {
         console.warn(
