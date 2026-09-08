@@ -82,6 +82,7 @@
     var listingsMapModalUrl = config.listingsMapModalUrl;
     var filters             = config.filters;
     var requireCityId       = config.requireCityId || false;
+    var mapConfigUrl        = config.mapConfigUrl;
 
     // -- 1b. Validate required fields ----------------------------------------
     if (!jsonUrl || !targetDivId) {
@@ -114,15 +115,17 @@
       // -- 1f. Ensure Leaflet library is available ----------------------------
       await loadLeaflet(leafletJsUrl);
 
-      // -- 1g. Fetch listings data + popup template simultaneously ------------
+      // -- 1g. Fetch listings data, popup template, and map config in parallel
       var fetchPromises = [
         fetchListingsData(jsonUrl),
-        listingsMapModalUrl ? fetchTemplate(listingsMapModalUrl) : Promise.resolve(null)
+        listingsMapModalUrl ? fetchTemplate(listingsMapModalUrl) : Promise.resolve(null),
+        mapConfigUrl        ? fetchMapConfig(mapConfigUrl)        : Promise.resolve(null)
       ];
 
-      var results         = await Promise.all(fetchPromises);
-      var allListings     = results[0];
-      var popupTemplate   = results[1];
+      var results       = await Promise.all(fetchPromises);
+      var allListings   = results[0];
+      var popupTemplate = results[1];
+      var mapConfig     = results[2];
 
       // -- 1h. Filter listings for this map instance --------------------------
       var filteredListings = filterListings(allListings, filters, requireCityId);
@@ -133,7 +136,7 @@
       }
 
       // -- 1i. Initialize the map ---------------------------------------------
-      initializeMap(targetDiv, filteredListings, popupTemplate);
+      initializeMap(targetDiv, filteredListings, popupTemplate, mapConfig);
 
     } catch (err) {
       console.error("[ListingsMap] Failed to initialize map:", err);
@@ -276,6 +279,37 @@
 
 
   /* =====================================================================
+     6b.  MAP CONFIG FETCH
+     ===================================================================== */
+
+  /**
+   * Fetches the map configuration JSON from S3.
+   * Returns null on failure so the map still renders with defaults.
+   *
+   * @param  {string} url  - absolute URL to mapConfig.json
+   * @returns {Promise<object|null>}
+   */
+  async function fetchMapConfig(url) {
+    try {
+      var response = await fetch(url);
+
+      if (!response.ok) {
+        console.warn("[ListingsMap] Could not load mapConfig (" + response.status + ") - using defaults.");
+        return null;
+      }
+
+      var cfg = await response.json();
+      console.log("[ListingsMap] Map config loaded from " + url);
+      return cfg;
+
+    } catch (e) {
+      console.warn("[ListingsMap] Failed to fetch mapConfig — using defaults.", e);
+      return null;
+    }
+  }
+
+
+  /* =====================================================================
      7.  LISTING FILTER
      ===================================================================== */
 
@@ -398,42 +432,102 @@
      ===================================================================== */
 
   /**
-   * Clears the target div, initializes a Leaflet map, plots all filtered
-   * listings as pill markers, fits the map to show all markers, and wires
-   * up the ESC key to close any open popup.
+   * Clears the target div, optionally injects a header, initializes a
+   * Leaflet map, plots all filtered listings as markers, fits the map
+   * to show all markers, and wires up the ESC key to close any open popup.
    *
-   * @param  {HTMLElement} targetDiv        - the map container element
-   * @param  {Array}       listings         - filtered listings to plot
-   * @param  {string|null} popupTemplate    - raw HTML for the popup template
+   * All five visual/behavioural settings are controlled by mapConfig:
+   *
+   *   markerStyle       "default" | "pill"   (default: "default")
+   *   popupTrigger      "click"   | "hover"  (default: "click")
+   *   showRecenterControl  true | false      (default: false)
+   *   mapHeaderText     string               (default: "")
+   *   tileUrl           string               (default: OpenStreetMap)
+   *   tileMaxZoom       number               (default: 19)
+   *
+   * If mapConfig is null (file not found or not configured), sensible
+   * defaults are applied so the map always renders.
+   *
+   * @param  {HTMLElement} targetDiv     - the map container element
+   * @param  {Array}       listings      - filtered listings to plot
+   * @param  {string|null} popupTemplate - raw HTML for the popup template
+   * @param  {object|null} mapConfig     - options from mapConfig.json
    */
-  function initializeMap(targetDiv, listings, popupTemplate) {
+  function initializeMap(targetDiv, listings, popupTemplate, mapConfig) {
 
-    // Extract reusable inner popup HTML from the template
-    // (Leaflet generates its own outer wrapper — we only provide inner content)
+    var cfg = mapConfig || {};
+
+    // -- Resolve config values with defaults --------------------------------
+    var markerStyle         = cfg.markerStyle          || "default";
+    var popupTrigger        = cfg.popupTrigger         || "click";
+    var showRecenterControl = cfg.showRecenterControl  === true;
+    var mapHeaderText       = cfg.mapHeaderText        || "";
+    var tileUrl             = cfg.tileUrl              || "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
+    var tileMaxZoom         = cfg.tileMaxZoom          !== undefined ? cfg.tileMaxZoom : 19;
+
+    // -- Extract reusable inner popup HTML ----------------------------------
     var popupInnerHtml = popupTemplate ? extractPopupContent(popupTemplate) : null;
 
-    // Clear the spinner and prepare the container
-    // Leaflet requires position:relative or position:absolute on the container
-    targetDiv.innerHTML = "";
+    // -- Inject optional header above the map container --------------------
+    // The header is a sibling div inserted immediately before targetDiv so
+    // it does not interfere with Leaflet's management of the container.
+    if (mapHeaderText) {
+      var existingHeader = document.getElementById("listings-map-header");
+      if (!existingHeader) {
+        var headerEl       = document.createElement("div");
+        headerEl.id        = "listings-map-header";
+        headerEl.className = "listings-map-header";
+        headerEl.innerHTML = mapHeaderText;
+        targetDiv.parentNode.insertBefore(headerEl, targetDiv);
+      }
+    }
+
+    // -- Clear the spinner and prepare the container -----------------------
+    targetDiv.innerHTML    = "";
     targetDiv.style.position = "relative";
 
-    // Initialise the Leaflet map directly on the target div element
+    // -- Initialise the Leaflet map ----------------------------------------
     var map = L.map(targetDiv, {
-      attributionControl: false,  // hide attribution string per requirements
+      attributionControl: false,
       zoomControl:        true,
       scrollWheelZoom:    true,
-      tap:                false    // prevents double-tap issues on iOS
+      tap:                false
     });
 
-    // OpenStreetMap tile layer (same provider as v1)
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      maxZoom: 19
-    }).addTo(map);
+    // -- Tile layer (configurable provider) --------------------------------
+    L.tileLayer(tileUrl, { maxZoom: tileMaxZoom }).addTo(map);
 
-    // Accumulate bounds so we can fit all markers into view after plotting
-    var bounds = L.latLngBounds();
+    // -- Optional re-center control ----------------------------------------
+    // Stores the fitted bounds so the button always re-centers to the
+    // extent of the current marker set, not a hardcoded coordinate.
+    var originalBounds = L.latLngBounds();
 
-    // Plot one marker per listing
+    if (showRecenterControl) {
+      var RecenterControl = L.Control.extend({
+        options: { position: "topleft" },
+        onAdd: function () {
+          var btn       = L.DomUtil.create("button", "leaflet-control-recenter");
+          btn.title     = "Re-center map";
+          btn.innerHTML = '<i class="fa fa-crosshairs" aria-hidden="true"></i>';
+
+          L.DomEvent.on(btn, "click", function (e) {
+            L.DomEvent.stopPropagation(e);
+            L.DomEvent.preventDefault(e);
+            if (originalBounds.isValid()) {
+              map.fitBounds(originalBounds, { padding: [24, 24] });
+            }
+          });
+
+          return btn;
+        }
+      });
+
+      new RecenterControl().addTo(map);
+    }
+
+    // -- Plot one marker per listing ---------------------------------------
+    var markersPlaced = 0;
+
     listings.forEach(function (listing) {
       var lat = parseFloat(listing.latitude);
       var lng = parseFloat(listing.longitude);
@@ -447,24 +541,30 @@
       }
 
       var latLng = L.latLng(lat, lng);
-      bounds.extend(latLng);
+      originalBounds.extend(latLng);
 
-      var marker = L.marker(latLng, {
-        icon: buildMarkerIcon(listing)
-      }).addTo(map);
+      // Build marker — default Leaflet pin or custom pill
+      var markerOptions = {};
+      if (markerStyle === "pill") {
+        markerOptions.icon = buildMarkerIcon(listing);
+      }
+      // markerStyle === "default": no icon option = Leaflet default blue pin
 
-      // Hover: scale the pill up and back down
-      marker.on("mouseover", function () {
-        var pillEl = this._icon ? this._icon.querySelector(".map-pill-marker") : null;
-        if (pillEl) { pillEl.classList.add("map-pill-marker--hovered"); }
-      });
+      var marker = L.marker(latLng, markerOptions).addTo(map);
 
-      marker.on("mouseout", function () {
-        var pillEl = this._icon ? this._icon.querySelector(".map-pill-marker") : null;
-        if (pillEl) { pillEl.classList.remove("map-pill-marker--hovered"); }
-      });
+      // Pill hover scale effect (only relevant when markerStyle is "pill")
+      if (markerStyle === "pill") {
+        marker.on("mouseover", function () {
+          var pillEl = this._icon ? this._icon.querySelector(".map-pill-marker") : null;
+          if (pillEl) { pillEl.classList.add("map-pill-marker--hovered"); }
+        });
+        marker.on("mouseout", function () {
+          var pillEl = this._icon ? this._icon.querySelector(".map-pill-marker") : null;
+          if (pillEl) { pillEl.classList.remove("map-pill-marker--hovered"); }
+        });
+      }
 
-      // Click: open popup with listing details
+      // -- Popup binding (click or hover) ----------------------------------
       if (popupInnerHtml) {
         var normalizedListing = normalizeListing(listing);
         var popupContent      = buildPopupContent(popupInnerHtml, normalizedListing);
@@ -474,22 +574,61 @@
           closeButton: true,
           className:   "listings-map-popup"
         });
+
+        if (popupTrigger === "hover") {
+          // Open on mouseover; use a short delay on mouseout so the user
+          // can move the cursor from the marker into the popup without it
+          // closing, allowing interaction with the popup buttons.
+          var hoverTimeout = null;
+
+          marker.on("mouseover", function () {
+            clearTimeout(hoverTimeout);
+            this.openPopup();
+          });
+
+          marker.on("mouseout", function () {
+            var self = this;
+            hoverTimeout = setTimeout(function () {
+              self.closePopup();
+            }, 300); // 300ms grace period
+          });
+
+          // If the cursor enters the popup before the timeout fires, cancel close
+          marker.on("popupopen", function () {
+            var popupEl = this.getPopup() && this.getPopup().getElement
+              ? this.getPopup().getElement()
+              : null;
+
+            if (popupEl) {
+              L.DomEvent.on(popupEl, "mouseenter", function () {
+                clearTimeout(hoverTimeout);
+              });
+              L.DomEvent.on(popupEl, "mouseleave", function () {
+                hoverTimeout = setTimeout(function () {
+                  map.closePopup();
+                }, 300);
+              });
+            }
+          });
+
+        }
+        // popupTrigger === "click" is Leaflet's default — bindPopup handles it
       }
+
+      markersPlaced++;
     });
 
-    // Fit map view to all markers, with padding
-    if (bounds.isValid()) {
-      map.fitBounds(bounds, { padding: [24, 24] });
+    // -- Fit map to all markers --------------------------------------------
+    if (originalBounds.isValid()) {
+      map.fitBounds(originalBounds, { padding: [24, 24] });
     }
 
-    // ESC key closes any open popup
+    // -- ESC key closes any open popup ------------------------------------
     document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape") {
-        map.closePopup();
-      }
+      if (e.key === "Escape") { map.closePopup(); }
     });
 
-    console.log("[ListingsMap] Map initialized with " + listings.length + " marker(s).");
+    console.log("[ListingsMap] Map initialized with " + markersPlaced + " marker(s) placed.");
   }
 
 
