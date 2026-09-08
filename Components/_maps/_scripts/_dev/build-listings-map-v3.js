@@ -1,5 +1,5 @@
 /**
- * build-listings-map-v2.js
+ * build-listings-map-v3.js
  * -----------------------------------------------------------------------
  * Reads configuration from a <script type="application/json"> block in
  * the page header, fetches the listings JSON and the popup HTML template
