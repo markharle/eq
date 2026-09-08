@@ -464,38 +464,36 @@
     var mapHeaderText       = cfg.mapHeaderText        || "";
     var tileUrl             = cfg.tileUrl              || "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
     var tileMaxZoom         = cfg.tileMaxZoom          !== undefined ? cfg.tileMaxZoom : 19;
+    var scrollWheelZoom     = cfg.scrollWheelZoom      !== undefined ? cfg.scrollWheelZoom : true;
 
     // -- Extract reusable inner popup HTML ----------------------------------
     var popupInnerHtml = popupTemplate ? extractPopupContent(popupTemplate) : null;
 
-    // -- Inject optional header above the map container --------------------
-    // The header is a sibling div inserted immediately before targetDiv so
-    // it does not interfere with Leaflet's management of the container.
-    if (mapHeaderText) {
-      var existingHeader = document.getElementById("listings-map-header");
-      if (!existingHeader) {
-        var headerEl       = document.createElement("div");
-        headerEl.id        = "listings-map-header";
-        headerEl.className = "listings-map-header";
-        headerEl.innerHTML = mapHeaderText;
-        targetDiv.parentNode.insertBefore(headerEl, targetDiv);
-      }
-    }
-
     // -- Clear the spinner and prepare the container -----------------------
-    targetDiv.innerHTML    = "";
+    targetDiv.innerHTML      = "";
     targetDiv.style.position = "relative";
 
     // -- Initialise the Leaflet map ----------------------------------------
     var map = L.map(targetDiv, {
       attributionControl: false,
       zoomControl:        true,
-      scrollWheelZoom:    true,
+      scrollWheelZoom:    scrollWheelZoom,
       tap:                false
     });
 
     // -- Tile layer (configurable provider) --------------------------------
     L.tileLayer(tileUrl, { maxZoom: tileMaxZoom }).addTo(map);
+
+    // -- Optional header overlaid on the map --------------------------------
+    // Injected AFTER Leaflet initializes so it sits above the map panes.
+    // CSS positions it 1rem from the top, centered horizontally.
+    // pointer-events: none ensures it does not block map interaction.
+    if (mapHeaderText) {
+      var headerEl       = document.createElement("div");
+      headerEl.className = "listings-map-header";
+      headerEl.innerHTML = mapHeaderText;
+      targetDiv.appendChild(headerEl);
+    }
 
     // -- Optional re-center control ----------------------------------------
     // Stores the fitted bounds so the button always re-centers to the
