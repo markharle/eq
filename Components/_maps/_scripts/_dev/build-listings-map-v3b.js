@@ -470,6 +470,23 @@
     var tileUrl             = cfg.tileUrl              || "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
     var tileMaxZoom         = cfg.tileMaxZoom          !== undefined ? cfg.tileMaxZoom : 19;
     var scrollWheelZoom     = cfg.scrollWheelZoom      !== undefined ? cfg.scrollWheelZoom : true;
+    var popupOffset         = cfg.popupOffset          !== undefined ? cfg.popupOffset : 0;
+    var popupTipColor       = cfg.popupTipColor        || "";
+
+    // -- Inject popup tip (caret) colour into document head ----------------
+    // Makes the Leaflet down-arrow beneath the popup match the popup
+    // background colour so it visually connects the popup to its pin.
+    // A guard attribute prevents duplicate injections on re-renders.
+    if (popupTipColor && !document.querySelector("style[data-map-tip-style]")) {
+      var tipStyleEl = document.createElement("style");
+      tipStyleEl.setAttribute("data-map-tip-style", "true");
+      tipStyleEl.textContent =
+        ".listings-map-popup .leaflet-popup-tip { " +
+          "background: " + popupTipColor + " !important; " +
+          "box-shadow: none; " +
+        "}";
+      document.head.appendChild(tipStyleEl);
+    }
 
     // -- Extract reusable inner popup HTML ----------------------------------
     var popupInnerHtml = popupTemplate ? extractPopupContent(popupTemplate) : null;
@@ -582,7 +599,8 @@
         marker.bindPopup(popupContent, {
           maxWidth:    300,
           closeButton: true,
-          className:   "listings-map-popup"
+          className:   "listings-map-popup",
+          offset:      L.point(0, popupOffset)
         });
 
         if (popupTrigger === "hover") {
