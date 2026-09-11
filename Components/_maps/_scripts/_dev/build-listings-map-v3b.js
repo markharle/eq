@@ -473,23 +473,13 @@
     var popupOffset         = cfg.popupOffset          !== undefined ? cfg.popupOffset : 0;
     var popupTipColor       = cfg.popupTipColor        || "";
 
-    // -- Inject popup tip (caret) colour into document head ----------------
-    // Makes the Leaflet down-arrow beneath the popup match the popup
-    // background colour so it visually connects the popup to its pin.
-    // A guard attribute prevents duplicate injections on re-renders.
-    if (popupTipColor && !document.querySelector("style[data-map-tip-style]")) {
-      var tipStyleEl = document.createElement("style");
-      tipStyleEl.setAttribute("data-map-tip-style", "true");
-      tipStyleEl.textContent =
-        ".listings-map-popup .leaflet-popup-tip { " +
-          "background: " + popupTipColor + " !important; " +
-          "box-shadow: none; " +
-        "}";
-      document.head.appendChild(tipStyleEl);
-    }
-
     // -- Extract reusable inner popup HTML ----------------------------------
-    var popupInnerHtml = popupTemplate ? extractPopupContent(popupTemplate) : null;
+    // popupTipColor is passed through so extractPopupContent can embed a
+    // custom caret directly inside the popup content (more reliable than
+    // styling Leaflet's built-in tip via CSS selector).
+    var popupInnerHtml = popupTemplate
+      ? extractPopupContent(popupTemplate, popupTipColor)
+      : null;
 
     // -- Clear the spinner and prepare the container -----------------------
     targetDiv.innerHTML      = "";
@@ -768,33 +758,31 @@
    * @returns {string}              - the .map-listing-popup outerHTML
    */
   /**
-   * Extracts the inner popup content from the template and injects any
-   * <style> blocks into the live document head.
+   * Extracts the inner popup content from the template, injects any
+   * <style> blocks into the live document head, and optionally appends
+   * a custom downward-pointing caret to the popup content.
    *
    * Two template formats are supported:
    *
-   * Format A — original popup (display-listing-map-popup-v2.html):
-   *   Looks for .map-listing-popup. Leaflet generates the outer wrapper.
+   * Format A — original popup (.map-listing-popup)
+   * Format B — tooltip popup  (.eqr-track__tooltip)
+   *   Hidden-state CSS is overridden inline so Leaflet controls visibility.
    *
-   * Format B — tooltip popup (display-listing-modal-REV.html):
-   *   Looks for .eqr-track__tooltip. This element is hidden by default
-   *   via CSS (opacity:0, visibility:hidden) so it can be used as a
-   *   CSS-driven tooltip in other contexts. When used inside a Leaflet
-   *   popup, those hidden-state styles are overridden inline so the
-   *   content is always visible — Leaflet handles the show/hide instead.
+   * When popupTipColor is set:
+   *   - A CSS triangle caret (border-trick div) is appended inside the
+   *     popup content with the configured colour.
+   *   - Leaflet's built-in white tip is hidden via a one-time style injection
+   *     (the in-content caret replaces it with full colour control).
    *
-   * If neither class is found the full template string is returned as-is
-   * with a console warning.
-   *
-   * @param  {string} templateHtml - raw HTML from the popup template file
-   * @returns {string}             - popup inner HTML ready for bindPopup()
+   * @param  {string} templateHtml  - raw HTML from the popup template file
+   * @param  {string} popupTipColor - CSS colour for the caret (e.g. "#1C1B19")
+   * @returns {string}              - popup inner HTML ready for bindPopup()
    */
-  function extractPopupContent(templateHtml) {
+  function extractPopupContent(templateHtml, popupTipColor) {
     var parser = new DOMParser();
     var doc    = parser.parseFromString(templateHtml, "text/html");
 
     // -- Inject <style> blocks from the template into the live document head
-    // Uses a marker attribute to prevent duplicate injection on re-renders.
     var styleEls = doc.querySelectorAll("style");
     styleEls.forEach(function (styleEl) {
       if (!document.querySelector("style[data-map-popup-styles]")) {
@@ -807,31 +795,61 @@
 
     // -- Format A: original popup class ------------------------------------
     var inner = doc.querySelector(".map-listing-popup");
-    if (inner) {
-      return inner.outerHTML;
-    }
 
     // -- Format B: tooltip popup class -------------------------------------
-    inner = doc.querySelector(".eqr-track__tooltip");
-    if (inner) {
-      // Override the CSS-driven hidden state so the content is always
-      // visible when rendered inside a Leaflet popup.
-      inner.style.opacity       = "1";
-      inner.style.visibility    = "visible";
-      inner.style.position      = "relative";
-      inner.style.bottom        = "auto";
-      inner.style.left          = "auto";
-      inner.style.transform     = "none";
-      inner.style.pointerEvents = "auto";
-      return inner.outerHTML;
+    if (!inner) {
+      inner = doc.querySelector(".eqr-track__tooltip");
+      if (inner) {
+        // Override the CSS-driven hidden state for Leaflet popup context
+        inner.style.opacity       = "1";
+        inner.style.visibility    = "visible";
+        inner.style.position      = "relative";
+        inner.style.bottom        = "auto";
+        inner.style.left          = "auto";
+        inner.style.transform     = "none";
+        inner.style.pointerEvents = "auto";
+      }
     }
 
-    // -- Fallback: return full template -----------------------------------
-    console.warn(
-      "[ListingsMap] No recognised popup element (.map-listing-popup or " +
-      ".eqr-track__tooltip) found in the popup template — using full template."
-    );
-    return templateHtml;
+    // -- Fallback: return full template ------------------------------------
+    if (!inner) {
+      console.warn(
+        "[ListingsMap] No recognised popup element (.map-listing-popup or " +
+        ".eqr-track__tooltip) found in the popup template — using full template."
+      );
+      return templateHtml;
+    }
+
+    // -- Append custom caret if popupTipColor is configured ---------------
+    // A CSS border-trick triangle is embedded directly in the popup content.
+    // This is more reliable than styling Leaflet's built-in tip via CSS
+    // selectors, since it avoids specificity and rendering edge cases.
+    if (popupTipColor) {
+
+      // Hide Leaflet's built-in white tip (our caret replaces it)
+      if (!document.querySelector("style[data-map-tip-hidden]")) {
+        var hideStyle = document.createElement("style");
+        hideStyle.setAttribute("data-map-tip-hidden", "true");
+        hideStyle.textContent =
+          ".listings-map-popup .leaflet-popup-tip-container { display: none !important; }";
+        document.head.appendChild(hideStyle);
+      }
+
+      // Create the caret as a zero-size div with CSS border triangle
+      var caret = doc.createElement("div");
+      caret.setAttribute("aria-hidden", "true");
+      caret.style.cssText =
+        "width:0;" +
+        "height:0;" +
+        "border-left:9px solid transparent;" +
+        "border-right:9px solid transparent;" +
+        "border-top:9px solid " + popupTipColor + ";" +
+        "margin:0 auto;" +
+        "display:block;";
+      inner.appendChild(caret);
+    }
+
+    return inner.outerHTML;
   }
 
   /**
