@@ -22,9 +22,51 @@
  *                ->  renderInvestDSM()              investDSM block
  *                ->  renderMarketAnalysisHeader()   market analysis header
  *                ->  renderMarketAnalysisCurrent()  market analysis current
- *                ->  renderMarketAnalysisProjection() market analysis projection
+ *                ->  renderMarketAnalysisProjection() Our Track Record (KPI + map)
+ *                ->  showError()                    custom "not found" block
  * Processors     ->  processShowHide()              section/button visibility
  *                ->  applyAlternatingSplitLayout()  alternates image placement
+ *
+ * REVISION NOTE — market-analysis-wrapper visibility
+ * -----------------------------------------------------------------------
+ * #market-analysis-wrapper ships hidden by default in the Squarespace
+ * code block (display:none inline). This script is the ONLY thing that
+ * reveals it, and only inside the showMarketTrends == 2 success branch
+ * below. An invalid/unmatched NeighborhoodID (the early-return branches)
+ * and a valid neighborhood with showMarketTrends != 2 both simply leave
+ * the wrapper at its hidden default.
+ *
+ * REVISION NOTE — "Our Track Record" (KPI + map) block
+ * -----------------------------------------------------------------------
+ * This block lives INSIDE #market-analysis-wrapper (div id
+ * "our-track-record"), rendered via renderMarketAnalysisProjection() /
+ * the marketAnalysisProjection* config keys. The four KPI numbers inside
+ * it (#yearsExperience, #totalSalesVolume, #totalClients,
+ * #averageSalesPrice) are populated separately by build-agent-stats.js,
+ * which listens for the "eqr:trackRecordRendered" event this script
+ * dispatches right after injecting that template.
+ *
+ * REVISION NOTE — custom "not found" markup (this revision)
+ * -----------------------------------------------------------------------
+ * Previously, any failure to resolve a neighborhood (missing
+ * NeighborhoodID param, no matching record, or a fetch/network error)
+ * showed a single hardcoded plain-text message via showError(). Since
+ * Squarespace's own 404 page can't be reused here, showError() now
+ * fetches and injects a configurable custom template (config key
+ * "notFoundHtmlUrl") instead, meant to visually mimic Squarespace's
+ * OOTB 404 page.
+ *
+ * This template is fetched ONCE, early — right after config loads and
+ * before the NeighborhoodID param is even checked — because that check
+ * is itself one of the three places showError() can be called from, so
+ * the template needs to already be available at that point, not fetched
+ * lazily inside showError() itself. The fetch uses its own safe wrapper
+ * (fetchTemplateSafe) that resolves to null on any failure rather than
+ * throwing, so a missing/broken notFoundHtmlUrl falls back to the
+ * original plain-text message instead of leaving the page broken or
+ * blank. showError() also receives the raw requested NeighborhoodID
+ * value (if any) as a token, in case the template wants to reference it
+ * — entirely optional for the template to use.
  *
  * Configuration block expected in the page header
  * ------------------------------------------------
@@ -38,6 +80,7 @@
  *   "heroHtmlUrl":               "https://...display-neighborhood-hero.html",
  *   "detailsTargetDivId":        "neighborhood-details",
  *   "detailsHtmlUrl":            "https://...display-neighborhood-details.html",
+ *   "notFoundHtmlUrl":           "https://...display-neighborhood-not-found.html",
  *   "footerTargetDivId":         "neighborhood-footer-cta",
  *   "footerHtmlUrl":             "https://...display-neighborhood-footer.html",
  *   "realEstateTeamTargetDivId": "real-estate-team",
@@ -98,6 +141,7 @@
     var heroHtmlUrl                = config.heroHtmlUrl;
     var detailsTargetDivId         = config.detailsTargetDivId;
     var detailsHtmlUrl             = config.detailsHtmlUrl;
+    var notFoundHtmlUrl            = config.notFoundHtmlUrl;
     var footerTargetDivId          = config.footerTargetDivId;
     var footerHtmlUrl              = config.footerHtmlUrl;
     var realEstateTeamTargetDivId  = config.realEstateTeamTargetDivId;
@@ -110,6 +154,9 @@
     var marketAnalysisHeaderHtmlUrl          = config.marketAnalysisHeaderHtmlUrl;
     var marketAnalysisCurrentTargetDivId     = config.marketAnalysisCurrentTargetDivId;
     var marketAnalysisCurrentHtmlUrl         = config.marketAnalysisCurrentHtmlUrl;
+    // "Projection" keys point at the Our Track Record (KPI + map) block.
+    // Target div id is "our-track-record", nested inside
+    // #market-analysis-wrapper.
     var marketAnalysisProjectionTargetDivId  = config.marketAnalysisProjectionTargetDivId;
     var marketAnalysisProjectionHtmlUrl      = config.marketAnalysisProjectionHtmlUrl;
 
@@ -123,6 +170,19 @@
 
     if (bootstrapUrl) { injectStylesheet(bootstrapUrl); }
     if (cssUrl)       { injectStylesheet(cssUrl); }
+
+    // -- Fetch the custom "not found" template early and independently --
+    // It's needed by THREE different early-exit paths below (missing
+    // param, no matching record, fetch error), including one that
+    // happens before the main Promise.all batch even runs, so it can't
+    // simply ride along in that batch. fetchTemplateSafe() resolves to
+    // null on any failure (missing config key, network error, bad
+    // status) rather than throwing, so a broken/unset notFoundHtmlUrl
+    // falls back to the plain-text message in showError() below instead
+    // of leaving the page broken.
+    var notFoundTemplate = notFoundHtmlUrl
+      ? await fetchTemplateSafe(notFoundHtmlUrl)
+      : null;
 
     // -- Locate all target divs ---------------------------------------------
     var detailsTargetDiv = document.getElementById(detailsTargetDivId);
@@ -168,7 +228,7 @@
     // -- Market analysis target divs (optional) ------------------------------
     // All three are located unconditionally here; the show/hide decision
     // is made later after the neighborhood record is fetched and
-    // showMarketTrends is evaluated.  If the wrapper div is hidden, these
+    // showMarketTrends is evaluated. If the wrapper div is hidden, these
     // divs are hidden alongside it and no templates are rendered into them.
     var marketAnalysisHeaderTargetDiv = (marketAnalysisHeaderHtmlUrl && marketAnalysisHeaderTargetDivId)
       ? document.getElementById(marketAnalysisHeaderTargetDivId) : null;
@@ -186,7 +246,7 @@
       console.error(
         "[NeighborhoodDetails] NeighborhoodID querystring parameter is missing."
       );
-      showError(detailsTargetDiv);
+      showError(detailsTargetDiv, notFoundTemplate, neighborhoodId);
       return;
     }
 
@@ -223,11 +283,15 @@
         console.error(
           "[NeighborhoodDetails] No neighborhood found with Id = " + neighborhoodId + "."
         );
-        showError(detailsTargetDiv);
+        showError(detailsTargetDiv, notFoundTemplate, neighborhoodId);
         if (heroTargetDiv)           { heroTargetDiv.innerHTML = ""; }
         if (footerTargetDiv)         { footerTargetDiv.innerHTML = ""; }
         if (realEstateTeamTargetDiv) { realEstateTeamTargetDiv.innerHTML = ""; }
         if (investDsmTargetDiv)      { investDsmTargetDiv.innerHTML = ""; }
+        // #market-analysis-wrapper is NOT touched here on purpose — it
+        // ships hidden by default, so an invalid/unmatched NeighborhoodID
+        // simply leaves it hidden without this branch having to know
+        // that div exists at all.
         return;
       }
 
@@ -267,10 +331,11 @@
       }
 
       // Market Analysis blocks ---------------------------------------------------
-      // Show/hide rule: the entire #market-analysis-wrapper and its contents
-      // are shown only when showMarketTrends == 2.
-      // If showMarketTrends is absent, null, blank, or any value other than 2,
-      // the wrapper div is hidden and no market analysis content is rendered.
+      // Show/hide rule: #market-analysis-wrapper ships hidden by default
+      // and is revealed HERE, only when showMarketTrends == 2. If
+      // showMarketTrends is absent, null, blank, or any value other than
+      // 2, the wrapper is simply left at its hidden default and no
+      // market analysis content is rendered.
       var marketWrapper = document.getElementById("market-analysis-wrapper");
 
       if (neighborhood.showMarketTrends == 2) {
@@ -288,6 +353,15 @@
         if (marketAnalysisProjectionTargetDiv && marketAnalysisProjectionTemplate) {
           renderMarketAnalysisProjection(neighborhood, marketAnalysisProjectionTemplate,
             marketAnalysisProjectionTargetDiv);
+
+          // Tell independent, page-agnostic scripts (build-agent-stats.js)
+          // that the Our Track Record markup now exists in the DOM.
+          document.dispatchEvent(new CustomEvent("eqr:trackRecordRendered"));
+        }
+
+        // Reveal the wrapper now that its contents are populated.
+        if (marketWrapper) {
+          marketWrapper.style.display = "";
         }
 
         console.log(
@@ -295,7 +369,9 @@
         );
 
       } else {
-        // Hide the wrapper div and all its contents
+        // Redundant with the hidden-by-default state in the code block —
+        // kept for defensiveness in case that inline default is ever
+        // removed or changed.
         if (marketWrapper) {
           marketWrapper.style.display = "none";
         }
@@ -307,11 +383,13 @@
 
     } catch (err) {
       console.error("[NeighborhoodDetails] Failed to load neighborhood details:", err);
-      showError(detailsTargetDiv);
+      showError(detailsTargetDiv, notFoundTemplate, neighborhoodId);
       if (heroTargetDiv)           { heroTargetDiv.innerHTML = ""; }
       if (footerTargetDiv)         { footerTargetDiv.innerHTML = ""; }
       if (realEstateTeamTargetDiv) { realEstateTeamTargetDiv.innerHTML = ""; }
       if (investDsmTargetDiv)      { investDsmTargetDiv.innerHTML = ""; }
+      // As with the "no neighborhood found" branch above, the wrapper is
+      // intentionally left untouched — hidden by default covers this too.
     }
   }
 
@@ -390,6 +468,26 @@
     }
 
     return response.text();
+  }
+
+  /**
+   * Same as fetchTemplate(), but never throws — resolves to null on any
+   * failure (network error, non-OK status). Used specifically for the
+   * "not found" template, since a broken/unset URL for THAT template
+   * must not prevent showError() from still showing something (the
+   * plain-text fallback) — it's the fallback content itself, so it
+   * can't have a hard dependency on its own success.
+   */
+  async function fetchTemplateSafe(url) {
+    try {
+      return await fetchTemplate(url);
+    } catch (err) {
+      console.warn(
+        "[NeighborhoodDetails] Could not load the custom not-found template " +
+        "(falling back to the default message):", err
+      );
+      return null;
+    }
   }
 
 
@@ -537,14 +635,16 @@
   }
 
   /**
-   * Renders the Market Analysis projection block.
-   * Uses [name] and [marketAnalysisProjection] from neighborhoodsJSON.json.
+   * Renders the Our Track Record (KPI + map) block.
+   * Standard token replacement — currently just [name] in the heading.
+   * The four KPI numbers inside are populated separately by
+   * build-agent-stats.js.
    */
   function renderMarketAnalysisProjection(neighborhood, templateHtml, targetDiv) {
     var populatedHtml   = replaceTokens(templateHtml, neighborhood);
     targetDiv.innerHTML = populatedHtml;
     console.log(
-      "[NeighborhoodDetails] Rendered market analysis projection block for " +
+      "[NeighborhoodDetails] Rendered Our Track Record block for " +
       neighborhood.name + "."
     );
   }
@@ -556,12 +656,13 @@
 
   /**
    * Replaces every [FieldName] token with the matching value from the
-   * neighborhood object (including any virtual fields injected by the
-   * render functions).  Missing/null/undefined fields produce empty string.
+   * supplied data object (a neighborhood record, or — for the not-found
+   * template — a small object like { requestedId: "7x" }). Missing/null/
+   * undefined fields produce empty string.
    */
-  function replaceTokens(template, neighborhood) {
+  function replaceTokens(template, data) {
     return template.replace(/\[([^\]]+)\]/g, function (match, key) {
-      var value = neighborhood[key];
+      var value = data[key];
       if (value === null || value === undefined) { return ""; }
       return String(value);
     });
@@ -668,7 +769,27 @@
       '</div>';
   }
 
-  function showError(targetDiv) {
+  /**
+   * Shows the "not found" state inside targetDiv.
+   *
+   * If notFoundTemplate was successfully fetched (see fetchTemplateSafe()
+   * in initDetails()), it's token-replaced and injected — meant to
+   * visually mimic Squarespace's own 404 page. [requestedId] is
+   * available to that template if it wants to reference the invalid/
+   * missing NeighborhoodID value; it's entirely optional for the
+   * template to use.
+   *
+   * If no template was configured, or its fetch failed, falls back to
+   * the original plain-text message so the page is never left blank or
+   * broken.
+   */
+  function showError(targetDiv, notFoundTemplate, requestedId) {
+    if (notFoundTemplate) {
+      var populatedHtml = replaceTokens(notFoundTemplate, { requestedId: requestedId || "" });
+      targetDiv.innerHTML = populatedHtml;
+      return;
+    }
+
     targetDiv.innerHTML =
       '<div class="alert alert-warning d-flex align-items-center gap-2" role="alert">' +
         '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>' +
