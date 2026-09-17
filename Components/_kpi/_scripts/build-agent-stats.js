@@ -16,6 +16,21 @@
  * NeighborhoodID/CityID and can run on any page that includes the four
  * target elements: neighborhood pages, city pages, an About page, etc.
  *
+ * REVISION NOTE — two triggers, not one
+ * -----------------------------------------------------------------------
+ * The four target elements now live inside a template
+ * (display-our-track-record.html) that build-neighborhood-details.js
+ * fetches and injects ASYNCHRONOUSLY, often after this script's own
+ * DOMContentLoaded handler has already run and found nothing. So this
+ * script listens for BOTH:
+ *   - "DOMContentLoaded"          (covers pages where the four elements
+ *                                  are already static in the markup)
+ *   - "eqr:trackRecordRendered"   (a custom event build-neighborhood-
+ *                                  details.js dispatches right after it
+ *                                  injects the track-record template)
+ * A simple "already ran" guard prevents fetching/populating twice if,
+ * for some reason, both end up finding the elements present.
+ *
  * Configuration block expected in the page header
  * ------------------------------------------------
  * <script type="application/json" id="agent-stats-config">
@@ -24,10 +39,10 @@
  * }
  * </script>
  *
- * If none of the four target elements exist on the page, the script
- * exits quietly after the DOM-ready check — no fetch is made, so it's
- * safe to load globally (e.g. in site-wide header injection) without
- * a network cost on pages that don't use these stats.
+ * If none of the four target elements exist yet at the time either
+ * trigger fires, the script exits quietly without fetching — so it's
+ * safe to load globally (e.g. in site-wide header injection) without a
+ * network cost on pages that never end up using these stats.
  * -----------------------------------------------------------------------
  */
 
@@ -41,16 +56,29 @@
     averageSalesPrice: "averageSalesPrice"
   };
 
-  document.addEventListener("DOMContentLoaded", initAgentStats);
+  var hasRun = false;
 
-  async function initAgentStats() {
+  document.addEventListener("DOMContentLoaded", tryInitAgentStats);
+  document.addEventListener("eqr:trackRecordRendered", tryInitAgentStats);
 
-    // Bail out quietly if this page doesn't have any of the target spans —
-    // avoids an unnecessary fetch on pages that don't use this block.
+  /**
+   * Guards against double-fetching if both triggers end up firing after
+   * the elements exist (e.g. a page that has them static in markup AND
+   * later re-dispatches the event for some other reason).
+   */
+  function tryInitAgentStats() {
+    if (hasRun) { return; }
+
     var hasAnyTarget = Object.keys(STAT_ELEMENT_IDS).some(function (key) {
       return document.getElementById(STAT_ELEMENT_IDS[key]) !== null;
     });
-    if (!hasAnyTarget) { return; }
+    if (!hasAnyTarget) { return; } // don't set hasRun — allow the other trigger to retry
+
+    hasRun = true;
+    initAgentStats();
+  }
+
+  async function initAgentStats() {
 
     var config = loadConfig("agent-stats-config");
     if (!config || !config.jsonUrl) {
