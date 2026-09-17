@@ -19,6 +19,24 @@
  * Utilities        ->  replaceTokens()        token replacer
  *                  ->  normalizeListing()     normalizes JSON field casing
  *
+ * REVISION NOTE — two triggers, not one
+ * -----------------------------------------------------------------------
+ * #listings-map-v3 (or whatever listingsMapTargetDivId is configured to)
+ * can now live inside a template (e.g. display-our-track-record.html)
+ * that another script fetches and injects ASYNCHRONOUSLY — often after
+ * this script's own DOMContentLoaded handler has already run and found
+ * nothing. So bootstrapping now listens for BOTH:
+ *   - "DOMContentLoaded"          (covers pages where the target div is
+ *                                  already static in the markup)
+ *   - "eqr:trackRecordRendered"   (a custom event build-neighborhood-
+ *                                  details.js dispatches right after it
+ *                                  injects the track-record template)
+ * tryInitMap() re-checks for the target div each time either fires, and
+ * a simple "already ran" guard (hasRun) prevents initializing the map
+ * twice if both end up firing after the div exists. The config block is
+ * parsed once in tryInitMap() and passed into initMap(), rather than
+ * re-parsed inside it.
+ *
  * Configuration block expected in the page header
  * ------------------------------------------------
  * <script type="application/json" id="listings-map-config">
@@ -64,31 +82,49 @@
   "use strict";
 
   /* =====================================================================
-     1.  BOOTSTRAP - wait for DOM, then kick off the component
+     1.  BOOTSTRAP - wait for the target div to exist, then kick off
      ===================================================================== */
-  document.addEventListener("DOMContentLoaded", initMap);
+  var hasRun = false;
 
-  async function initMap() {
+  document.addEventListener("DOMContentLoaded", tryInitMap);
+  document.addEventListener("eqr:trackRecordRendered", tryInitMap);
 
-    // -- 1a. Parse the configuration block ----------------------------------
+  /**
+   * Guards against double-initialization if both triggers end up firing
+   * after the target div exists. Parses the config once here (cheap —
+   * just reading/parsing an inline JSON script block, no network call)
+   * so it can check for the target div's presence before committing to
+   * initMap()'s async work.
+   */
+  function tryInitMap() {
+    if (hasRun) { return; }
+
     var config = loadConfig("listings-map-config");
-    if (!config) { return; }
+    if (!config || !config.listingsMapTargetDivId) { return; } // allow the other trigger to retry
+
+    var targetDiv = document.getElementById(config.listingsMapTargetDivId);
+    if (!targetDiv) { return; } // not in the DOM yet — allow the other trigger to retry
+
+    hasRun = true;
+    initMap(config, targetDiv);
+  }
+
+  async function initMap(config, targetDiv) {
 
     var jsonUrl             = config.jsonUrl;
     var cssUrl              = config.cssUrl;
     var leafletCssUrl       = config.leafletCssUrl;
     var leafletJsUrl        = config.leafletJsUrl;
-    var targetDivId         = config.listingsMapTargetDivId;
     var listingsMapModalUrl = config.listingsMapModalUrl;
     var filters             = config.filters;
     var requireCityId       = config.requireCityId || false;
     var mapConfigUrl        = config.mapConfigUrl;
 
     // -- 1b. Validate required fields ----------------------------------------
-    if (!jsonUrl || !targetDivId) {
-      console.error(
-        "[ListingsMap] Configuration is missing required fields: jsonUrl, listingsMapTargetDivId."
-      );
+    // (listingsMapTargetDivId and the target div's presence were already
+    // validated in tryInitMap() above.)
+    if (!jsonUrl) {
+      console.error("[ListingsMap] Configuration is missing required field: jsonUrl.");
       return;
     }
 
@@ -97,16 +133,6 @@
     // Custom CSS is injected alongside it.
     if (leafletCssUrl) { injectStylesheet(leafletCssUrl); }
     if (cssUrl)        { injectStylesheet(cssUrl); }
-
-    // -- 1d. Locate the target div -------------------------------------------
-    // Option A: the target div IS the Leaflet container.
-    // No separate HTML template is fetched — Leaflet initializes directly
-    // on this element, replacing the spinner.
-    var targetDiv = document.getElementById(targetDivId);
-    if (!targetDiv) {
-      console.error("[ListingsMap] Target div #" + targetDivId + " not found in the DOM.");
-      return;
-    }
 
     // -- 1e. Show the loading spinner ----------------------------------------
     showSpinner(targetDiv);
