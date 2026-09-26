@@ -56,6 +56,20 @@
  * "notFoundHtmlUrl") instead, meant to visually mimic Squarespace's
  * OOTB 404 page.
  *
+ * REVISION NOTE — dynamic market-analysis-wrapper background photo
+ * -----------------------------------------------------------------------
+ * #market-analysis-wrapper's background photo is now set to the
+ * CURRENT NEIGHBORHOOD's own hero image, rather than a hardcoded photo,
+ * reusing the same "folder" + "heroImage" fields the hero block itself
+ * already uses (see display-neighborhood-hero.html) via the
+ * previously-unused imageBaseUrl variable. The URL is handed to CSS
+ * through a custom property (--eqr-market-photo) rather than a full
+ * inline background shorthand, so the constant part of the treatment
+ * (tint overlay, sizing, the flat-color fallback for a record with no
+ * heroImage) stays owned by CSS — see the .eqr-market-bg class this
+ * expects to find applied to #market-analysis-wrapper in the
+ * Squarespace code block.
+ *
  * This template is fetched ONCE, early — right after config loads and
  * before the NeighborhoodID param is even checked — because that check
  * is itself one of the three places showError() can be called from, so
@@ -359,8 +373,25 @@
           document.dispatchEvent(new CustomEvent("eqr:trackRecordRendered"));
         }
 
-        // Reveal the wrapper now that its contents are populated.
+        // Reveal the wrapper now that its contents are populated, and
+        // set its background photo to this neighborhood's own hero
+        // image (same folder/heroImage fields the hero block itself
+        // uses — see display-neighborhood-hero.html). The photo is
+        // passed to CSS as a custom property rather than a full inline
+        // background shorthand, so the constant part of the treatment
+        // (tint overlay, sizing, fallback color) stays owned by CSS —
+        // this script only ever supplies the one piece of per-
+        // neighborhood data. If heroImage is missing for this record,
+        // the property is left unset and .eqr-market-bg's `none`
+        // fallback applies, showing the flat tint color instead of a
+        // broken image reference.
         if (marketWrapper) {
+          if (neighborhood.heroImage) {
+            var heroImageUrl = imageBaseUrl + "/" + neighborhood.heroImage;
+            marketWrapper.style.setProperty("--eqr-market-photo", 'url("' + heroImageUrl + '")');
+          } else {
+            marketWrapper.style.removeProperty("--eqr-market-photo");
+          }
           marketWrapper.style.display = "";
         }
 
