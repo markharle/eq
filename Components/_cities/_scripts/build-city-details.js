@@ -34,12 +34,23 @@
  * folder/imageRootUrl — uses identical field names and semantics to
  * Neighborhood, confirmed against a real cities.json sample.
  *
- * NOT included in this revision: the price-trajectory chart block
- * (market-analysis-chart-text / market-analysis-history-chart). That's
- * rendered by the separate build-entity-chart.js script, which already
- * supports City pages with zero changes (it auto-detects CityID and
- * falls back to reading "city-details-config") — it's just not wired
- * into the CONFIG yet, pending a City-equivalent chart JSON data source.
+ * UPDATE: the price-trajectory chart (market-analysis-chart-text /
+ * market-analysis-history-chart) is now wired in via CONFIG, once a
+ * City-equivalent chart JSON became available. No changes were needed
+ * here — build-entity-chart.js already supported City pages natively.
+ *
+ * REVISION NOTE — dynamic market-analysis-wrapper background photo
+ * -----------------------------------------------------------------------
+ * #market-analysis-wrapper's background photo is now set to the
+ * CURRENT CITY's own hero image, rather than a hardcoded photo, reusing
+ * the same "folder" + "heroImage" fields the hero block itself already
+ * uses (see display-city-hero.html, confirmed identical to
+ * Neighborhood's) via the previously-unused imageBaseUrl variable. The
+ * URL is handed to CSS through a custom property (--eqr-market-photo)
+ * rather than a full inline background shorthand — see the
+ * .eqr-market-bg class this expects to find applied to
+ * #market-analysis-wrapper in the Squarespace code block. Same CSS
+ * class, same behavior, as the Neighborhood implementation.
  *
  * Architecture note
  * -----------------
@@ -381,8 +392,22 @@
           document.dispatchEvent(new CustomEvent("eqr:trackRecordRendered"));
         }
 
-        // Reveal the wrapper now that its contents are populated.
+        // Reveal the wrapper now that its contents are populated, and
+        // set its background photo to this city's own hero image
+        // (same folder/heroImage fields the hero block itself uses —
+        // see display-city-hero.html, confirmed identical to
+        // Neighborhood's). Passed to CSS via a custom property so the
+        // constant part of the treatment (tint, sizing, fallback
+        // color) stays owned by CSS. If heroImage is missing for this
+        // record, the property is left unset and .eqr-market-bg's
+        // `none` fallback applies.
         if (marketWrapper) {
+          if (city.heroImage) {
+            var heroImageUrl = imageBaseUrl + "/" + city.heroImage;
+            marketWrapper.style.setProperty("--eqr-market-photo", 'url("' + heroImageUrl + '")');
+          } else {
+            marketWrapper.style.removeProperty("--eqr-market-photo");
+          }
           marketWrapper.style.display = "";
         }
 
