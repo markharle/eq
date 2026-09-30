@@ -11,6 +11,27 @@
  *     hidden entirely if no images are present)
  *   - Hero background image (resolved via token replacement in template)
  *
+ * REVISION NOTE — custom "not found" markup + failure-path cleanup
+ * -----------------------------------------------------------------------
+ * Any failure to resolve a school (missing schoolId param, no matching
+ * record, or a fetch/network error) now fetches and injects a
+ * configurable custom template (config key "notFoundHtmlUrl") into the
+ * main details div, instead of a hardcoded plain-text message — falls
+ * back to that plain text if the template isn't configured or fails to
+ * load. See fetchTemplateSafe()/showError() below. This is the SAME
+ * pattern used on the Neighborhood and City components, but with its
+ * own dedicated not-found template rather than a shared one.
+ *
+ * ALSO FIXED: on any failure, ALL secondary target divs (hero,
+ * citiesServed, imageGallery, socialMedia) are now consistently cleared
+ * to empty — previously, CitiesServed/ImageGallery/SocialMedia were
+ * left completely untouched on an unmatched schoolId (they'd keep
+ * showing a stuck spinner or stale content), and ImageGallery/
+ * SocialMedia showed a second, redundant error alert box on a fetch
+ * error instead of just clearing. Now there is exactly ONE error
+ * message shown (in the main details div), and everything else goes
+ * quiet, matching the Neighborhood/City convention.
+ *
  * Architecture note
  * -----------------
  * Data-fetching  ->  fetchSchoolData()        returns the full raw array
@@ -30,6 +51,7 @@
  *   "jsonUrl":                  "https://...schoolJSON.json",
  *   "jsUrl":                    "https://...build-school-details.js",
  *   "htmlUrl":                  "https://...display-school-details.html",
+ *   "notFoundHtmlUrl":          "https://...display-not-found.html",
  *   "heroHtmlUrl":              "https://...display-school-hero.html",
  *   "citiesServedHtmlUrl":      "https://...display-citiesServed-card-deck.html",
  *   "cssUrl":                   "https://...school-component.css",
@@ -44,6 +66,7 @@
  *   "socialMediaTargetDivID":   "school-social-media",
  *   "socialMediaRootURL":       "https://...display-school-social-media.html"
  * }
+ * </script>
  *
  * CitiesServed field note
  * -----------------------
@@ -51,16 +74,12 @@
  * is needed.  Each element contains: ID, City, thumbnailImage, urlSlugCity.
  * The full image URL is constructed at render time as:
  *   cityImageRootUrl + "/" + city.urlSlugCity + "/" + city.thumbnailImage
- * </script>
  *
  * CONFIG key notes
  * ----------------
  * imageRootUrl   - Root S3 path for school images (no slug, no trailing slash).
  *                  The JS appends school.urlSlugSchool + "/" at render time.
  *                  Example: "https://...amazonaws.com/eq-realtor/_schools"
- *
- * heroHtmlUrl    - Standardized key name (was "heroURL" in earlier drafts).
- *                  Update your CONFIG block to use "heroHtmlUrl".
  *
  * URL querystring parameter
  * -------------------------
@@ -92,6 +111,7 @@
 
     var jsonUrl                  = config.jsonUrl;
     var htmlUrl                  = config.htmlUrl;
+    var notFoundHtmlUrl          = config.notFoundHtmlUrl;
     var heroHtmlUrl              = config.heroHtmlUrl;
     var citiesServedHtmlUrl      = config.citiesServedHtmlUrl;
     var cssUrl                   = config.cssUrl;
@@ -118,6 +138,17 @@
     // -- 1c. Inject CSS assets (non-blocking) --------------------------------
     if (bootstrapUrl) { injectStylesheet(bootstrapUrl); }
     if (cssUrl)       { injectStylesheet(cssUrl); }
+
+    // -- 1c2. Fetch the custom "not found" template early and independently --
+    // Needed by THREE different failure paths below (missing param, no
+    // matching record, fetch error), including one that happens before
+    // any other fetch is even attempted. fetchTemplateSafe() resolves to
+    // null on any failure rather than throwing, so a broken/unset
+    // notFoundHtmlUrl falls back to the plain-text message in showError()
+    // instead of leaving the page broken.
+    var notFoundTemplate = notFoundHtmlUrl
+      ? await fetchTemplateSafe(notFoundHtmlUrl)
+      : null;
 
     // -- 1d. Locate the details target div -----------------------------------
     var targetDiv = document.getElementById(targetDivId);
@@ -183,7 +214,11 @@
 
     if (!schoolId) {
       console.error("[SchoolDetails] schoolId querystring parameter is missing from the URL.");
-      showError(targetDiv);
+      showError(targetDiv, notFoundTemplate, schoolId);
+      if (heroTargetDiv)          { heroTargetDiv.innerHTML = ""; }
+      if (citiesServedTargetDiv)  { citiesServedTargetDiv.innerHTML = ""; }
+      if (imageGalleryTargetDiv)  { imageGalleryTargetDiv.innerHTML = ""; }
+      if (socialMediaTargetDiv)   { socialMediaTargetDiv.innerHTML = ""; }
       return;
     }
 
@@ -219,8 +254,11 @@
 
       if (!school) {
         console.error("[SchoolDetails] No school found with ID = " + schoolId + ".");
-        showError(targetDiv);
-        if (heroTargetDiv) { heroTargetDiv.innerHTML = ""; }
+        showError(targetDiv, notFoundTemplate, schoolId);
+        if (heroTargetDiv)          { heroTargetDiv.innerHTML = ""; }
+        if (citiesServedTargetDiv)  { citiesServedTargetDiv.innerHTML = ""; }
+        if (imageGalleryTargetDiv)  { imageGalleryTargetDiv.innerHTML = ""; }
+        if (socialMediaTargetDiv)   { socialMediaTargetDiv.innerHTML = ""; }
         return;
       }
 
@@ -256,11 +294,11 @@
 
     } catch (err) {
       console.error("[SchoolDetails] Failed to load school details:", err);
-      showError(targetDiv);
+      showError(targetDiv, notFoundTemplate, schoolId);
       if (heroTargetDiv)          { heroTargetDiv.innerHTML = ""; }
       if (citiesServedTargetDiv)  { citiesServedTargetDiv.innerHTML = ""; }
-      if (imageGalleryTargetDiv)  { showError(imageGalleryTargetDiv); }
-      if (socialMediaTargetDiv)   { showError(socialMediaTargetDiv); }
+      if (imageGalleryTargetDiv)  { imageGalleryTargetDiv.innerHTML = ""; }
+      if (socialMediaTargetDiv)   { socialMediaTargetDiv.innerHTML = ""; }
     }
   }
 
@@ -361,6 +399,29 @@
     return response.text();
   }
 
+  /**
+   * Same as fetchTemplate(), but never throws — resolves to null on any
+   * failure. Used specifically for the "not found" template, since a
+   * broken/unset URL for THAT template must not prevent showError() from
+   * still showing something (the plain-text fallback) — it's the
+   * fallback content itself, so it can't have a hard dependency on its
+   * own success.
+   *
+   * @param  {string} url  - absolute URL to the not-found template
+   * @returns {Promise<string|null>}
+   */
+  async function fetchTemplateSafe(url) {
+    try {
+      return await fetchTemplate(url);
+    } catch (err) {
+      console.warn(
+        "[SchoolDetails] Could not load the custom not-found template " +
+        "(falling back to the default message):", err
+      );
+      return null;
+    }
+  }
+
 
   /* =====================================================================
      6.  SCHOOL LOOKUP
@@ -370,7 +431,8 @@
    * Finds a single school by ID.
    * Uses loose equality (==) to handle the common case where the
    * querystring value is a string ("1") but the JSON ID is a number (1).
-   * Note: JSON primary key field is "ID" (all caps) for this component.
+   * Note: JSON primary key field is "ID" (all caps) for this component —
+   * confirmed against a real schoolJSON.json sample.
    *
    * @param  {Array}        schoolData  - full JSON array
    * @param  {string}       id          - value from the querystring
@@ -477,11 +539,6 @@
    * A virtual field "thumbnailImageUrl" is added to each city object
    * before token replacement so the template can reference it as
    * [thumbnailImageUrl] without needing to know the base URL.
-   *
-   * Template fixes applied in display-citiesServed-card-deck.html:
-   *   - [Name] corrected to [City] to match JSON field name
-   *   - src="[thumbnailImageUrl]" replaces the relative path placeholder
-   *   - Stray CSS comment between </style> and <div> removed
    *
    * @param  {object}      school           - the matched school record
    * @param  {string}      templateHtml     - raw HTML string for the card deck
@@ -621,10 +678,6 @@
    * If the school has no images, processImageGallery() hides the entire
    * .school-image-gallery section automatically.
    *
-   * initLightboxControls() is called on the gallery target div (not the
-   * school-details div) since the gallery now lives in its own Squarespace
-   * section.
-   *
    * @param  {object}      school       - the matched school record
    * @param  {string}      templateHtml - raw HTML from display-school-image-gallery.html
    * @param  {HTMLElement} targetDiv    - the #school-image-gallery DOM node
@@ -666,14 +719,6 @@
   /**
    * Renders the Social Media block in its own target div.
    *
-   * The social media template contains the .contact-card with the school
-   * logo, intro text, and social icon row.  Logo is resolved from a
-   * filename to a full S3 URL before token replacement.  Social icon
-   * divs with empty URL fields are hidden by processSocialRow().
-   *
-   * Note: the template also contains an empty .social-media-links div
-   * above the contact card.  This div is preserved as-is for future use.
-   *
    * @param  {object}      school       - the matched school record
    * @param  {string}      templateHtml - raw HTML from display-school-social-media.html
    * @param  {HTMLElement} targetDiv    - the #school-social-media DOM node
@@ -710,15 +755,6 @@
      12.  IMAGE URL RESOLVER
      ===================================================================== */
 
-  /**
-   * Returns a shallow copy of the school object with ThumbnailImage and
-   * Logo fields prepended with imageBaseUrl if they are filenames rather
-   * than fully-qualified URLs.
-   *
-   * @param  {object} school       - original school record
-   * @param  {string} imageBaseUrl - full S3 path for this school's images
-   * @returns {object}             - copy with resolved image URLs
-   */
   function resolveImageUrls(school, imageBaseUrl) {
     var resolved = Object.assign({}, school);
 
@@ -743,18 +779,14 @@
 
   /**
    * Replaces every [FieldName] token in a string with the matching value
-   * from the school data object.
-   *
-   * Tokens are case-sensitive and must match JSON field names exactly.
+   * from the supplied data object — a school record, or (for the
+   * not-found template) a small object like { requestedId: "99" }.
+   * Tokens are case-sensitive and must match field names exactly.
    * Missing/null/undefined fields produce an empty string.
-   *
-   * @param  {string} template - HTML string containing [tokens]
-   * @param  {object} school   - one school record
-   * @returns {string}         - HTML string with tokens replaced
    */
-  function replaceTokens(template, school) {
+  function replaceTokens(template, data) {
     return template.replace(/\[([^\]]+)\]/g, function (match, key) {
-      var value = school[key];
+      var value = data[key];
       if (value === null || value === undefined) { return ""; }
       return String(value);
     });
@@ -765,13 +797,6 @@
      14.  SOCIAL ROW PROCESSOR
      ===================================================================== */
 
-  /**
-   * Iterates over the seven social media icon divs and hides any whose
-   * corresponding URL field is empty or null in the school record.
-   *
-   * @param  {Document} doc    - the parsed DOMParser document
-   * @param  {object}   school - the resolved school record
-   */
   function processSocialRow(doc, school) {
 
     var socialFields = [
@@ -802,29 +827,6 @@
      15.  IMAGE GALLERY PROCESSOR
      ===================================================================== */
 
-  /**
-   * Builds the CSS masonry lightbox gallery from the school's ImageGallery
-   * field, or hides the entire gallery section if no images are present.
-   *
-   * The ImageGallery field is stored in the JSON as a stringified array
-   * (e.g. "[\"img1.jpg\",\"img2.jpg\"]") and must be JSON.parsed first.
-   *
-   * The lightbox uses the CSS :target pseudo-class - no custom JS needed.
-   * Each thumbnail links to href="#gallery-img-N" which triggers
-   * .gallery-lightbox:target { display: flex } on the matching overlay.
-   *
-   * Prev / Next navigation
-   * ----------------------
-   * Each lightbox overlay contains prev and next anchor links that point
-   * to the adjacent #gallery-img-N fragment.  Clicking them changes the
-   * :target, which closes the current overlay and opens the adjacent one -
-   * pure CSS, no JavaScript.  The prev link is omitted on the first image
-   * and the next link is omitted on the last image.
-   *
-   * @param  {Document} doc          - the parsed DOMParser document
-   * @param  {object}   school       - the original (pre-resolved) school record
-   * @param  {string}   imageBaseUrl - full S3 path for this school's images
-   */
   function processImageGallery(doc, school, imageBaseUrl) {
 
     var gallerySection = doc.querySelector(".school-image-gallery");
@@ -866,28 +868,22 @@
 
       html += '<div class="gallery-item">';
 
-      // Thumbnail link - JS intercepts click, opens lightbox without scrolling
       html +=   '<a href="#" data-lightbox="open" data-target="' + imgId + '" class="gallery-thumb-link">';
       html +=     '<img src="' + imgSrc + '" alt="' + altText + '" class="gallery-thumb" loading="lazy">';
       html +=   '</a>';
 
-      // Lightbox overlay - shown/hidden via .is-open class (toggled by JS)
       html +=   '<div id="' + imgId + '" class="gallery-lightbox" role="dialog" aria-modal="true" aria-label="Image ' + (i + 1) + ' of ' + total + '">';
 
-      // Close button - JS intercepts, removes .is-open without scrolling
       html +=     '<a href="#" data-lightbox="close" class="gallery-lightbox__close" aria-label="Close lightbox">&times;</a>';
 
-      // Prev button - omitted for the first image
       if (i > 0) {
         html +=   '<a href="#" data-lightbox="prev" data-target="gallery-img-' + (i - 1) + '" class="gallery-lightbox__prev" aria-label="Previous image">&#10094;</a>';
       }
 
-      // Next button - omitted for the last image
       if (i < total - 1) {
         html +=   '<a href="#" data-lightbox="next" data-target="gallery-img-' + (i + 1) + '" class="gallery-lightbox__next" aria-label="Next image">&#10095;</a>';
       }
 
-      // Image counter label (e.g. "3 / 8")
       html +=     '<span class="gallery-lightbox__counter">' + (i + 1) + ' / ' + total + '</span>';
 
       html +=     '<img src="' + imgSrc + '" alt="' + altText + '" class="gallery-lightbox__img">';
@@ -906,35 +902,12 @@
 
   /* =====================================================================
      16.  LIGHTBOX CONTROLLER
-     =====================================================================
-     Handles three interactions that cannot be solved with CSS alone:
-       1. Opening a lightbox without scrolling the page
-       2. Closing a lightbox without scrolling to top (was caused by href="#")
-       3. ESC key to close the active lightbox
-
-     Mechanism
-     ---------
-     Lightboxes are shown/hidden by toggling a .is-open CSS class rather
-     than relying on the :target pseudo-class.  All link clicks within the
-     gallery are intercepted via event delegation on the container div;
-     e.preventDefault() stops the browser's native hash-scroll behavior.
-
-     This function must be called AFTER the gallery HTML is in the live DOM.
      ===================================================================== */
 
-  /**
-   * Attaches click (event delegation) and keydown (ESC) handlers to
-   * control the lightbox.  Called once per renderDetails() invocation.
-   *
-   * @param {HTMLElement} container - the details target div containing the gallery
-   */
   function initLightboxControls(container) {
 
-    // -- Click handler (event delegation on container) ----------------------
-    // Catches clicks on open / close / prev / next controls in one listener.
     container.addEventListener("click", function (e) {
 
-      // Walk up from the clicked element to find a data-lightbox anchor
       var link = e.target;
       while (link && link !== container) {
         if (link.getAttribute && link.getAttribute("data-lightbox")) { break; }
@@ -943,7 +916,7 @@
 
       if (!link || !link.getAttribute || !link.getAttribute("data-lightbox")) { return; }
 
-      e.preventDefault(); // prevent hash navigation and page scroll
+      e.preventDefault();
 
       var action = link.getAttribute("data-lightbox");
       var target = link.getAttribute("data-target");
@@ -955,9 +928,6 @@
       }
     });
 
-    // -- ESC key handler ----------------------------------------------------
-    // Stored as a named function so it can be removed if the component is
-    // ever torn down (prevents stacking listeners on repeated renders).
     if (container._lightboxKeyHandler) {
       document.removeEventListener("keydown", container._lightboxKeyHandler);
     }
@@ -971,27 +941,14 @@
     document.addEventListener("keydown", container._lightboxKeyHandler);
   }
 
-  /**
-   * Opens a specific lightbox by adding .is-open to its element.
-   * Closes any currently open lightbox first.
-   *
-   * @param {HTMLElement} container - the details target div
-   * @param {string}      imgId     - the id of the lightbox div to open
-   */
   function openLightbox(container, imgId) {
-    closeLightbox(container); // ensure only one lightbox is open at a time
+    closeLightbox(container);
     var lightbox = container.querySelector("#" + imgId);
     if (lightbox) {
       lightbox.classList.add("is-open");
     }
   }
 
-  /**
-   * Closes the currently open lightbox by removing .is-open.
-   * Page scroll position is not affected.
-   *
-   * @param {HTMLElement} container - the details target div
-   */
   function closeLightbox(container) {
     var open = container.querySelector(".gallery-lightbox.is-open");
     if (open) {
@@ -1011,7 +968,20 @@
       '</div>';
   }
 
-  function showError(targetDiv) {
+  /**
+   * Shows the "not found" state inside targetDiv. If notFoundTemplate was
+   * successfully fetched, it's token-replaced (with [requestedId]
+   * available for the template to optionally reference) and injected.
+   * Falls back to the original plain-text message if no template was
+   * configured or its fetch failed.
+   */
+  function showError(targetDiv, notFoundTemplate, requestedId) {
+    if (notFoundTemplate) {
+      var populatedHtml = replaceTokens(notFoundTemplate, { requestedId: requestedId || "" });
+      targetDiv.innerHTML = populatedHtml;
+      return;
+    }
+
     targetDiv.innerHTML =
       '<div class="alert alert-warning d-flex align-items-center gap-2" role="alert">' +
         '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>' +
