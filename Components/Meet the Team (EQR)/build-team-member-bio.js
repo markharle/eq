@@ -8,6 +8,23 @@
  * [tokens] in the template, with special handling for optional social
  * media icon divs (hidden when the URL field is empty/null).
  *
+ * REVISION NOTE — custom "not found" markup + failure-path cleanup
+ * -----------------------------------------------------------------------
+ * Any failure to resolve a team member (missing TeamMemberId param, no
+ * matching record, or a fetch/network error) now fetches and injects a
+ * configurable custom template (config key "notFoundHtmlUrl") into the
+ * main bio div, instead of a hardcoded plain-text message — falls back
+ * to that plain text if the template isn't configured or fails to load.
+ * See fetchTemplateSafe()/showError() below. Same pattern as the
+ * Neighborhood/City/School components, with its own dedicated
+ * not-found template.
+ *
+ * ALSO FIXED: previously, a failure showed the SAME plain-text error
+ * alert box in BOTH the hero div and the bio div — two stacked,
+ * redundant error messages. The hero now simply clears to empty on any
+ * failure, matching the convention used elsewhere, so there is exactly
+ * ONE error message shown (in the main bio div).
+ *
  * Architecture note
  * -----------------
  * Data-fetching  ->  fetchTeamData()      returns the full raw array
@@ -23,6 +40,7 @@
  *   "jsonUrl":          "https://...team-members.json",
  *   "jsUrl":            "https://...build-team-member-bio.js",
  *   "htmlUrl":          "https://...display-team-member-bio.html",
+ *   "notFoundHtmlUrl":  "https://...display-eqr-team-member-not-found.html",
  *   "cssUrl":           "https://...team-member-bio.css",
  *   "bootstrapUrl":     "https://cdn.jsdelivr.net/.../bootstrap.min.css",
  *   "imageBaseUrl":     "https://YOUR-BUCKET.s3.amazonaws.com/eq-realtor",
@@ -80,13 +98,14 @@
     if (!config) return; // loadConfig() already logged the error
 
     var jsonUrl         = config.jsonUrl;
-    var htmlUrl         = config.htmlUrl;
-    var cssUrl          = config.cssUrl;
-    var bootstrapUrl    = config.bootstrapUrl;
-    var imageBaseUrl    = config.imageBaseUrl;
-    var targetDivId     = config.targetDivId;
-    var heroHtmlUrl     = config.heroHtmlUrl;
-    var heroTargetDivId = config.heroTargetDivId;
+    var htmlUrl          = config.htmlUrl;
+    var notFoundHtmlUrl  = config.notFoundHtmlUrl;
+    var cssUrl           = config.cssUrl;
+    var bootstrapUrl     = config.bootstrapUrl;
+    var imageBaseUrl     = config.imageBaseUrl;
+    var targetDivId      = config.targetDivId;
+    var heroHtmlUrl      = config.heroHtmlUrl;
+    var heroTargetDivId  = config.heroTargetDivId;
 
     // -- 1b. Validate required fields ----------------------------------------
     if (!jsonUrl || !htmlUrl || !targetDivId) {
@@ -100,6 +119,17 @@
     // -- 1c. Inject CSS assets (non-blocking) --------------------------------
     if (bootstrapUrl) { injectStylesheet(bootstrapUrl); }
     if (cssUrl)       { injectStylesheet(cssUrl); }
+
+    // -- 1c2. Fetch the custom "not found" template early and independently --
+    // Needed by THREE different failure paths below (missing param, no
+    // matching record, fetch error), including one that happens before
+    // any other fetch is attempted. fetchTemplateSafe() resolves to null
+    // on any failure rather than throwing, so a broken/unset
+    // notFoundHtmlUrl falls back to the plain-text message in showError()
+    // instead of leaving the page broken.
+    var notFoundTemplate = notFoundHtmlUrl
+      ? await fetchTemplateSafe(notFoundHtmlUrl)
+      : null;
 
     // -- 1d. Locate the bio target div ---------------------------------------
     var targetDiv = document.getElementById(targetDivId);
@@ -128,7 +158,8 @@
 
     if (!memberId) {
       console.error("[TeamBio] TeamMemberId querystring parameter is missing from the URL.");
-      showError(targetDiv);
+      showError(targetDiv, notFoundTemplate, memberId);
+      if (heroTargetDiv) { heroTargetDiv.innerHTML = ""; }
       return;
     }
 
@@ -155,8 +186,8 @@
 
       if (!member) {
         console.error("[TeamBio] No team member found with Id = " + memberId + ".");
-        showError(targetDiv);
-        if (heroTargetDiv) { showError(heroTargetDiv); }
+        showError(targetDiv, notFoundTemplate, memberId);
+        if (heroTargetDiv) { heroTargetDiv.innerHTML = ""; }
         return;
       }
 
@@ -169,8 +200,8 @@
 
     } catch (err) {
       console.error("[TeamBio] Failed to load team member bio:", err);
-      showError(targetDiv);
-      if (heroTargetDiv) { showError(heroTargetDiv); }
+      showError(targetDiv, notFoundTemplate, memberId);
+      if (heroTargetDiv) { heroTargetDiv.innerHTML = ""; }
     }
   }
 
@@ -179,11 +210,6 @@
      2.  CONFIG LOADER
      ===================================================================== */
 
-  /**
-   * Reads and parses the JSON configuration block embedded on the page.
-   * @param  {string} scriptId  - the id attribute of the <script> block
-   * @returns {object|null}     - parsed config object, or null on failure
-   */
   function loadConfig(scriptId) {
     var configEl = document.getElementById(scriptId);
 
@@ -208,13 +234,6 @@
      3.  QUERYSTRING PARSER
      ===================================================================== */
 
-  /**
-   * Extracts a single parameter value from the current page URL querystring.
-   * Uses the native URLSearchParams API for reliable encoded-value handling.
-   *
-   * @param  {string} param  - the querystring key to look up
-   * @returns {string|null}  - the decoded value, or null if not present
-   */
   function getQueryParam(param) {
     var params = new URLSearchParams(window.location.search);
     return params.get(param);
@@ -222,16 +241,9 @@
 
 
   /* =====================================================================
-     4.  DATA FETCH  (same pattern as card deck - reusable across components)
+     4.  DATA FETCH
      ===================================================================== */
 
-  /**
-   * Fetches the team-members JSON array from S3.
-   * Throws on network failure or non-OK HTTP status.
-   *
-   * @param  {string} url  - absolute URL to the JSON file
-   * @returns {Promise<Array>}
-   */
   async function fetchTeamData(url) {
     var response = await fetch(url);
 
@@ -256,11 +268,6 @@
      5.  HTML TEMPLATE FETCH
      ===================================================================== */
 
-  /**
-   * Fetches an HTML template file as plain text.
-   * @param  {string} url  - absolute URL to the HTML template
-   * @returns {Promise<string>}
-   */
   async function fetchTemplate(url) {
     var response = await fetch(url);
 
@@ -273,19 +280,34 @@
     return response.text();
   }
 
+  /**
+   * Same as fetchTemplate(), but never throws — resolves to null on any
+   * failure. Used specifically for the "not found" template, since a
+   * broken/unset URL for THAT template must not prevent showError() from
+   * still showing something (the plain-text fallback).
+   */
+  async function fetchTemplateSafe(url) {
+    try {
+      return await fetchTemplate(url);
+    } catch (err) {
+      console.warn(
+        "[TeamBio] Could not load the custom not-found template " +
+        "(falling back to the default message):", err
+      );
+      return null;
+    }
+  }
+
 
   /* =====================================================================
      6.  MEMBER LOOKUP
      ===================================================================== */
 
   /**
-   * Finds a single team member by Id.
-   * Uses loose equality (==) to handle the common case where the
-   * querystring value is a string ("1") but the JSON Id is a number (1).
-   *
-   * @param  {Array}        teamData  - full JSON array
-   * @param  {string}       id        - value from the querystring
-   * @returns {object|null}           - matched member record, or null
+   * Finds a single team member by Id. Uses loose equality (==) to handle
+   * the common case where the querystring value is a string ("1") but
+   * the JSON Id is a number (1). Field is "Id" (capital I only) —
+   * confirmed against a real teamMemberJSON.json sample.
    */
   function findMemberById(teamData, id) {
     return teamData.find(function (member) { return member.Id == id; }) || null;
@@ -296,17 +318,6 @@
      7.  HERO RENDERER
      ===================================================================== */
 
-  /**
-   * Renders the hero content block - lightweight token-replace with no
-   * special processing needed (no social row, no complex image logic).
-   * Image URL resolution is included for forward-compatibility in case a
-   * future hero template references [Headshot] or another image field.
-   *
-   * @param  {object}      member       - the matched team member record
-   * @param  {string}      templateHtml - raw HTML string with [tokens]
-   * @param  {HTMLElement} targetDiv    - the DOM node to inject into
-   * @param  {string}      imageBaseUrl - S3 base URL prepended to image filenames
-   */
   function renderHero(member, templateHtml, targetDiv, imageBaseUrl) {
     var resolvedMember = resolveImageUrls(member, imageBaseUrl);
     var populatedHtml  = replaceTokens(templateHtml, resolvedMember);
@@ -319,16 +330,6 @@
      8.  BIO RENDERER
      ===================================================================== */
 
-  /**
-   * Replaces all [tokens] in the bio template with the team member's data,
-   * applies special social-media show/hide logic, then injects the result
-   * into the target div.
-   *
-   * @param  {object}      member       - the matched team member record
-   * @param  {string}      templateHtml - raw HTML string with [tokens]
-   * @param  {HTMLElement} targetDiv    - the DOM node to inject into
-   * @param  {string}      imageBaseUrl - S3 base URL prepended to image filenames
-   */
   function renderBio(member, templateHtml, targetDiv, imageBaseUrl) {
 
     // -- 8a. Resolve image URLs ----------------------------------------------
@@ -345,7 +346,6 @@
     processSocialRow(doc, resolvedMember);
 
     // -- 8e. Extract the rendered body and inject into the target div --------
-    // We want everything inside <body>, not the full document wrapper.
     targetDiv.innerHTML = "";
     var bioContent = doc.body;
 
@@ -361,20 +361,11 @@
      9.  IMAGE URL RESOLVER  (shared by renderHero and renderBio)
      ===================================================================== */
 
-  /**
-   * Returns a shallow copy of the member object with Headshot and Logo
-   * fields prepended with the S3 imageBaseUrl when they are filenames
-   * rather than fully-qualified URLs.
-   *
-   * @param  {object} member       - original team member record
-   * @param  {string} imageBaseUrl - S3 base path from config (may be empty)
-   * @returns {object}             - copy with resolved image URLs
-   */
   function resolveImageUrls(member, imageBaseUrl) {
     var resolved = Object.assign({}, member);
 
     if (imageBaseUrl) {
-      var base = imageBaseUrl.replace(/\/$/, ""); // strip any trailing slash
+      var base = imageBaseUrl.replace(/\/$/, "");
       if (resolved.Headshot && resolved.Headshot.indexOf("http") !== 0) {
         resolved.Headshot = base + "/" + resolved.Headshot;
       }
@@ -393,18 +384,14 @@
 
   /**
    * Replaces every [FieldName] token in a string with the matching value
-   * from the team member data object.
-   *
-   * Tokens are case-sensitive and must match JSON field names exactly.
-   * Missing/null/undefined fields produce an empty string.
-   *
-   * @param  {string} template - HTML string containing [tokens]
-   * @param  {object} member   - one team member record
-   * @returns {string}         - HTML string with tokens replaced
+   * from the supplied data object — a team member record, or (for the
+   * not-found template) a small object like { requestedId: "99" }.
+   * Tokens are case-sensitive. Missing/null/undefined fields produce an
+   * empty string.
    */
-  function replaceTokens(template, member) {
+  function replaceTokens(template, data) {
     return template.replace(/\[([^\]]+)\]/g, function (match, key) {
-      var value = member[key];
+      var value = data[key];
       if (value === null || value === undefined) { return ""; }
       return String(value);
     });
@@ -415,17 +402,6 @@
      11.  SOCIAL ROW PROCESSOR
      ===================================================================== */
 
-  /**
-   * Iterates over the four social media icon divs and hides any whose
-   * corresponding URL field is empty or null in the team member record.
-   *
-   * - If the URL field has a value  -> the icon displays normally.
-   * - If the URL field is null/empty -> the entire icon div is hidden
-   *   (display: none) so it takes up no space in the social row.
-   *
-   * @param  {Document} doc     - the parsed DOMParser document
-   * @param  {object}   member  - the resolved team member record
-   */
   function processSocialRow(doc, member) {
 
     var socialFields = [
@@ -437,16 +413,14 @@
 
     socialFields.forEach(function (item) {
       var iconDiv = doc.querySelector(item.selector);
-      if (!iconDiv) { return; } // div not present in template - skip
+      if (!iconDiv) { return; }
 
       var url    = member[item.field];
       var hasUrl = url && String(url).trim() !== "";
 
       if (!hasUrl) {
-        // Hide the entire icon div - no space consumed in the row
         iconDiv.style.display = "none";
       }
-      // If the URL is present, replaceTokens() above already set the href.
     });
   }
 
@@ -455,10 +429,6 @@
      12.  UI HELPERS  (spinner, error, stylesheet injection)
      ===================================================================== */
 
-  /**
-   * Replaces the target div contents with the CSS spinner while data loads.
-   * Uses the .ripple-ring-spinner class defined in team-member-bio.css.
-   */
   function showSpinner(targetDiv) {
     targetDiv.innerHTML =
       '<div class="d-flex justify-content-center align-items-center py-5">' +
@@ -467,9 +437,19 @@
   }
 
   /**
-   * Replaces the target div with a Bootstrap 5 warning alert on error.
+   * Shows the "not found" state inside targetDiv. If notFoundTemplate was
+   * successfully fetched, it's token-replaced (with [requestedId]
+   * available for the template to optionally reference) and injected.
+   * Falls back to the original plain-text message if no template was
+   * configured or its fetch failed.
    */
-  function showError(targetDiv) {
+  function showError(targetDiv, notFoundTemplate, requestedId) {
+    if (notFoundTemplate) {
+      var populatedHtml = replaceTokens(notFoundTemplate, { requestedId: requestedId || "" });
+      targetDiv.innerHTML = populatedHtml;
+      return;
+    }
+
     targetDiv.innerHTML =
       '<div class="alert alert-warning d-flex align-items-center gap-2" role="alert">' +
         '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>' +
@@ -478,11 +458,6 @@
       '</div>';
   }
 
-  /**
-   * Dynamically injects a <link rel="stylesheet"> into <head> if not
-   * already present - prevents duplicate loads on repeated navigation.
-   * @param {string} href - absolute URL to the CSS file
-   */
   function injectStylesheet(href) {
     if (document.querySelector('link[href="' + href + '"]')) { return; }
 
